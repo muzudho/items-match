@@ -36,6 +36,7 @@ impl Machine {
                     MatchingResult::Matched => {
                         // println!("(trace.30) マッチしたという判断。ループ続行。");
                         self.expected_index += 1;
+                        self.matched_length_in_repeat = 0; // reset.
                     }
                     MatchingResult::NotMatch => {
                         // println!("(trace.35) マッチしていないという判断。");
