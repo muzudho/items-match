@@ -14,12 +14,4 @@ impl<T> ExpectedItems<T> {
             None
         }
     }
-
-    pub fn get_mut(&mut self, index: usize) -> Option<&mut Controls<T>> {
-        if index < self.items.len() {
-            Some(&mut self.items[index])
-        } else {
-            None
-        }
-    }
 }

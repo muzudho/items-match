@@ -19,7 +19,7 @@ impl Machine {
     pub fn matching<T>(
         &mut self,
         actual_items: &ActualItems<T>,
-        expected_items: &mut ExpectedItems<T>,
+        expected_items: &ExpectedItems<T>,
     ) -> bool
     where
         T: std::cmp::PartialEq + std::cmp::PartialOrd,
@@ -31,7 +31,7 @@ impl Machine {
             }
 
             // TODO expected_index カーソルを勧めるのはあとで。
-            if let Some(mut exp) = expected_items.get_mut(self.expected_index) {
+            if let Some(mut exp) = expected_items.get(self.expected_index) {
                 match self.matching2(act, &mut exp) {
                     MatchingResult::Matched => {
                         // println!("(trace.30) マッチしたという判断。ループ続行。");
@@ -57,7 +57,7 @@ impl Machine {
         return true;
     }
 
-    pub fn matching2<T>(&mut self, act: &T, exp: &mut Controls<T>) -> MatchingResult
+    pub fn matching2<T>(&mut self, act: &T, exp: &Controls<T>) -> MatchingResult
     where
         T: std::cmp::PartialEq + std::cmp::PartialOrd,
     {
@@ -69,7 +69,7 @@ impl Machine {
             Controls::Repeat(rep) => {
                 if rep.is_cutoff(self.matched_length_in_repeat) {
                     //  || self.is_final
-                    match self.matching3_quantity(act, &mut rep.quantity) {
+                    match self.matching3_quantity(act, &rep.quantity) {
                         MatchingResult::NotMatch => {
                             // println!("(trace.85) rep={}", rep);
                             return MatchingResult::NotMatch;
@@ -94,7 +94,7 @@ impl Machine {
                         }
                     }
                 } else {
-                    match self.matching3_quantity(act, &mut rep.quantity) {
+                    match self.matching3_quantity(act, &rep.quantity) {
                         MatchingResult::NotMatch => {
                             if rep.is_cutoff(self.matched_length_in_repeat) {
                                 /*
@@ -133,7 +133,7 @@ impl Machine {
         }
     }
 
-    pub fn matching3_quantity<T>(&mut self, act: &T, exp: &mut Quantity<T>) -> MatchingResult
+    pub fn matching3_quantity<T>(&mut self, act: &T, exp: &Quantity<T>) -> MatchingResult
     where
         T: std::cmp::PartialEq + std::cmp::PartialOrd,
     {
