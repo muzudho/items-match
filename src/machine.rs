@@ -1,3 +1,4 @@
+use crate::MatchingResult;
 use crate::{ActualItems, Expected, ExpectedItems, Machine};
 
 impl Default for Machine {
@@ -24,7 +25,11 @@ impl Machine {
 
         if let Some(act) = act {
             if let Some(mut exp) = exp {
-                return self.matching2(act, &mut exp);
+                match self.matching2(act, &mut exp) {
+                    MatchingResult::Matched => return true,
+                    MatchingResult::NotMatch => return false,
+                    MatchingResult::Ongoing => panic!("ここでOngoingはおかしい。"),
+                }
             } else {
                 // マッチしていないという判断。
                 return false;
@@ -41,7 +46,7 @@ impl Machine {
         }
     }
 
-    pub fn matching2<T>(&mut self, act: &T, exp: &mut Expected<T>) -> bool
+    pub fn matching2<T>(&mut self, act: &T, exp: &mut Expected<T>) -> MatchingResult
     where
         T: std::cmp::PartialEq,
     {
@@ -49,36 +54,46 @@ impl Machine {
             Expected::Any(any) => {
                 for exp in &any.items {
                     if *exp == *act {
-                        return true;
+                        return MatchingResult::Matched;
                     }
                 }
-                return false;
+                return MatchingResult::NotMatch;
             }
             Expected::Exact(exp) => {
                 if *exp == *act {
-                    true
+                    MatchingResult::Matched
                 } else {
-                    false
+                    MatchingResult::NotMatch
                 }
             }
             Expected::Repeat(rep) => {
-                if rep.is_allow() {
+                if rep.is_final() {
                     // 再帰的
-                    let ret = self.matching2(act, &mut rep.expected);
-                    rep.cursor += 1;
-                    if ret {
-                        // マッチ中。
-                        return true;
-                    } else {
-                        // マッチしていないという判断。
-                        return false;
+                    match self.matching2(act, &mut rep.expected) {
+                        MatchingResult::NotMatch => return MatchingResult::NotMatch,
+                        MatchingResult::Matched | MatchingResult::Ongoing => {
+                            if rep.is_success() {
+                                rep.cursor += 1;
+                                return MatchingResult::Matched;
+                            } else {
+                                return MatchingResult::NotMatch;
+                            }
+                        }
                     }
                 } else {
-                    if rep.is_success() {
-                        return true;
-                    } else {
-                        // マッチしていないという判断。
-                        return false;
+                    // 再帰的
+                    match self.matching2(act, &mut rep.expected) {
+                        MatchingResult::NotMatch => return MatchingResult::NotMatch,
+                        MatchingResult::Matched => {
+                            if rep.is_success() {
+                                return MatchingResult::Matched;
+                            } else {
+                                return MatchingResult::NotMatch;
+                            }
+                        }
+                        MatchingResult::Ongoing => {
+                            return MatchingResult::Ongoing;
+                        }
                     }
                 }
             }

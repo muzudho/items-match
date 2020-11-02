@@ -75,3 +75,9 @@ pub struct Repeat<T> {
     max: usize,
     cursor: usize,
 }
+
+pub enum MatchingResult {
+    Ongoing,
+    Matched,
+    NotMatch,
+}
