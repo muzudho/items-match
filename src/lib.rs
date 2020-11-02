@@ -21,6 +21,8 @@ pub mod any_builder;
 pub mod expected_items;
 pub mod expected_items_builder;
 pub mod machine;
+pub mod repeat;
+pub mod repeat_builder;
 
 pub struct Machine {
     index: usize,
@@ -47,6 +49,7 @@ pub struct ExpectedItems<T> {
 pub enum Expected<T> {
     Exact(T),
     Any(Any<T>),
+    Repeat(Repeat<T>),
 }
 
 pub struct AnyBuilder<T> {
@@ -56,4 +59,18 @@ pub struct AnyBuilder<T> {
 #[derive(Clone)]
 pub struct Any<T> {
     items: Vec<T>,
+}
+
+pub struct RepeatBuilder<T> {
+    expected: Option<Box<Expected<T>>>,
+    min: usize,
+    max: usize,
+}
+
+#[derive(Clone)]
+pub struct Repeat<T> {
+    expected: Box<Expected<T>>,
+    min: usize,
+    max: usize,
+    cursor: usize,
 }

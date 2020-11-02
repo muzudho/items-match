@@ -36,6 +36,9 @@ impl Machine {
                             false
                         }
                     }
+                    Expected::Repeat(_rep) => {
+                        panic!("WIP."); // TODO
+                    }
                 }
             } else {
                 return false;
