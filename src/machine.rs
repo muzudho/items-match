@@ -1,5 +1,7 @@
+use crate::Any;
 use crate::MatchingResult;
-use crate::{ActualItems, Expected, ExpectedItems, Machine};
+use crate::RangeContainsMax;
+use crate::{ActualItems, Expected, ExpectedItems, Machine, UncountableExpected};
 use std::fmt;
 
 impl Default for Machine {
@@ -56,38 +58,16 @@ impl Machine {
         T: std::cmp::PartialEq + std::cmp::PartialOrd,
     {
         match exp {
-            Expected::Any(any) => {
-                for exp in &any.items {
-                    if *exp == *act {
-                        // println!("(trace.63) matching2/matched.");
-                        return MatchingResult::Matched;
-                    }
+            Expected::Any(any) => self.matching_any(act, any),
+            Expected::RangeContainsMax(rng) => self.matching_range_contains_max(act, rng),
+            Expected::Exact(exa) => self.matching_exact(act, exa),
+            Expected::UncountableExpected(exp) => match exp {
+                UncountableExpected::Any(any) => self.matching_any(act, any),
+                UncountableExpected::Exact(exa) => self.matching_exact(act, exa),
+                UncountableExpected::RangeContainsMax(rng) => {
+                    self.matching_range_contains_max(act, rng)
                 }
-                // println!("(trace.67) Anyで不一致。");
-                return MatchingResult::NotMatch;
-            }
-            Expected::RangeContainsMax(rng) => {
-                if let Some(min) = &rng.min {
-                    if *act < *min {
-                        return MatchingResult::NotMatch;
-                    }
-                }
-                if let Some(max) = &rng.max {
-                    if *max < *act {
-                        return MatchingResult::NotMatch;
-                    }
-                }
-                return MatchingResult::Matched;
-            }
-            Expected::Exact(exp) => {
-                if *exp == *act {
-                    // println!("(trace.72)");
-                    MatchingResult::Matched
-                } else {
-                    // println!("(trace.75)");
-                    MatchingResult::NotMatch
-                }
-            }
+            },
             Expected::Repeat(rep) => {
                 if rep.is_final() {
                     // 再帰的
@@ -137,6 +117,52 @@ impl Machine {
                     }
                 }
             }
+        }
+    }
+
+    fn matching_any<T>(&mut self, act: &T, any: &Any<T>) -> MatchingResult
+    where
+        T: std::cmp::PartialEq + std::cmp::PartialOrd,
+    {
+        for exp in &any.items {
+            if *exp == *act {
+                // println!("(trace.63) matching2/matched.");
+                return MatchingResult::Matched;
+            }
+        }
+        // println!("(trace.67) Anyで不一致。");
+        return MatchingResult::NotMatch;
+    }
+    fn matching_range_contains_max<T>(
+        &mut self,
+        act: &T,
+        rng: &RangeContainsMax<T>,
+    ) -> MatchingResult
+    where
+        T: std::cmp::PartialEq + std::cmp::PartialOrd,
+    {
+        if let Some(min) = &rng.min {
+            if *act < *min {
+                return MatchingResult::NotMatch;
+            }
+        }
+        if let Some(max) = &rng.max {
+            if *max < *act {
+                return MatchingResult::NotMatch;
+            }
+        }
+        return MatchingResult::Matched;
+    }
+    fn matching_exact<T>(&mut self, act: &T, exp: &T) -> MatchingResult
+    where
+        T: std::cmp::PartialEq + std::cmp::PartialOrd,
+    {
+        if *exp == *act {
+            // println!("(trace.72)");
+            MatchingResult::Matched
+        } else {
+            // println!("(trace.75)");
+            MatchingResult::NotMatch
         }
     }
 }

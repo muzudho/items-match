@@ -47,12 +47,19 @@ pub struct ExpectedItems<T> {
     items: Vec<Expected<T>>,
 }
 
+#[derive(Clone)]
+pub enum UncountableExpected<T> {
+    Exact(T),
+    Any(Any<T>),
+    RangeContainsMax(RangeContainsMax<T>),
+}
 /// Expected item.  
 #[derive(Clone)]
 pub enum Expected<T> {
     Exact(T),
     Any(Any<T>),
     RangeContainsMax(RangeContainsMax<T>),
+    UncountableExpected(UncountableExpected<T>),
     Repeat(Repeat<T>),
 }
 
