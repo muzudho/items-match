@@ -1,27 +1,27 @@
-//! Create `ActualItems`.  
-//! `ActualItems` を作成します。  
-use crate::{ActualItems, ActualItemsBuilder};
+//! Create `Actual`.  
+//! `Actual` を作成します。  
+use crate::{Actual, ActualBuilder};
 
-impl<T> Default for ActualItemsBuilder<T>
+impl<T> Default for ActualBuilder<T>
 where
     T: std::clone::Clone,
 {
     fn default() -> Self {
-        ActualItemsBuilder { items: Vec::new() }
+        ActualBuilder { items: Vec::new() }
     }
 }
 
-impl<T> ActualItemsBuilder<T>
+impl<T> ActualBuilder<T>
 where
     T: std::clone::Clone,
 {
-    //! Create `ActualItems`.  
-    //! `ActualItems` を作成します。  
-    pub fn build(&self) -> ActualItems<T>
+    //! Create `Actual`.  
+    //! `Actual` を作成します。  
+    pub fn build(&self) -> Actual<T>
     where
         T: std::clone::Clone,
     {
-        ActualItems {
+        Actual {
             items: self.items.clone(),
         }
     }

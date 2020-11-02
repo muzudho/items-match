@@ -36,13 +36,13 @@ use rattle_items_match::MachineBuilder;
 use rattle_items_match::Quantity;
 use rattle_items_match::RangeContainsMaxBuilder;
 use rattle_items_match::{
-    ActualItemsBuilder, AnyBuilder, Controls, ExpectedBuilder, RepeatBuilder,
+    ActualBuilder, AnyBuilder, Controls, ExpectedBuilder, RepeatBuilder,
 };
 
 fn main() {
     println!("Start.");
 
-    let act1_ssss1 = ActualItemsBuilder::default()
+    let act1_ssss1 = ActualBuilder::default()
         .push(&' ')
         .push(&' ')
         .push(&' ')
@@ -50,7 +50,7 @@ fn main() {
         .push(&'1')
         .build();
 
-    let act2_tsss1 = ActualItemsBuilder::default()
+    let act2_tsss1 = ActualBuilder::default()
         .push(&'\t')
         .push(&' ')
         .push(&' ')
@@ -58,17 +58,17 @@ fn main() {
         .push(&'1')
         .build();
 
-    let act3_xsss1 = ActualItemsBuilder::default()
+    let act3_xsss1 = ActualBuilder::default()
         .push(&'x')
         .push(&' ')
         .push(&' ')
         .push(&' ')
         .push(&'1')
         .build();
-    let act4_a = ActualItemsBuilder::default().push(&'A').build();
-    let act5_bc = ActualItemsBuilder::default().push(&'B').push(&'C').build();
-    let act6_de = ActualItemsBuilder::default().push(&'d').push(&'e').build();
-    let act7_fgh = ActualItemsBuilder::default()
+    let act4_a = ActualBuilder::default().push(&'A').build();
+    let act5_bc = ActualBuilder::default().push(&'B').push(&'C').build();
+    let act6_de = ActualBuilder::default().push(&'d').push(&'e').build();
+    let act7_fgh = ActualBuilder::default()
         .push(&'f')
         .push(&'g')
         .push(&'h')

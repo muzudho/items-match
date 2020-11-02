@@ -1,12 +1,12 @@
-use crate::ActualItems;
+use crate::Actual;
 
-impl<T> Default for ActualItems<T> {
+impl<T> Default for Actual<T> {
     fn default() -> Self {
-        ActualItems { items: Vec::new() }
+        Actual { items: Vec::new() }
     }
 }
 
-impl<T> ActualItems<T> {
+impl<T> Actual<T> {
     pub fn get(&self, index: usize) -> Option<&T> {
         if index < self.items.len() {
             Some(&self.items[index])

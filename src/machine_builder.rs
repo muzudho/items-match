@@ -1,4 +1,4 @@
-use crate::ActualItems;
+use crate::Actual;
 use crate::Expected;
 use crate::{Machine, MachineBuilder};
 
@@ -27,7 +27,7 @@ where
         }
     }
 
-    pub fn set_actual_items<'a>(&'a mut self, item: &ActualItems<T>) -> &'a mut Self {
+    pub fn set_actual_items<'a>(&'a mut self, item: &Actual<T>) -> &'a mut Self {
         self.actual_items = Some(item.clone());
         self
     }
