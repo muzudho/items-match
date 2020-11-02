@@ -1,6 +1,6 @@
 extern crate rattle_items_match;
 
-use rattle_items_match::Expected;
+use rattle_items_match::Quantity;
 use rattle_items_match::RangeContainsMaxBuilder;
 use rattle_items_match::{
     ActualItemsBuilder, AnyBuilder, Controls, ExpectedItemsBuilder, Machine, RepeatBuilder,
@@ -43,11 +43,11 @@ fn main() {
         .build();
 
     let mut expected_items1 = ExpectedItemsBuilder::default()
-        .push(&Controls::Once(Expected::Any(wschar.clone())))
-        .push(&Controls::Once(Expected::Exact(' ')))
-        .push(&Controls::Once(Expected::Exact(' ')))
-        .push(&Controls::Once(Expected::Exact(' ')))
-        .push(&Controls::Once(Expected::Exact('1')))
+        .push(&Controls::Once(Quantity::Any(wschar.clone())))
+        .push(&Controls::Once(Quantity::Exact(' ')))
+        .push(&Controls::Once(Quantity::Exact(' ')))
+        .push(&Controls::Once(Quantity::Exact(' ')))
+        .push(&Controls::Once(Quantity::Exact('1')))
         .build();
 
     assert!(Machine::default().matching(&actual_items1, &mut expected_items1));
@@ -56,42 +56,42 @@ fn main() {
     let mut expected_items2 = ExpectedItemsBuilder::default()
         .push(&Controls::Repeat(
             RepeatBuilder::default()
-                .set_expected(&Expected::Any(wschar.clone()))
+                .set_expected(&Quantity::Any(wschar.clone()))
                 .set_min(1)
                 .set_max(usize::MAX)
                 .build(),
         ))
-        .push(&Controls::Once(Expected::Exact('1')))
+        .push(&Controls::Once(Quantity::Exact('1')))
         .build();
     let mut expected_items3 = ExpectedItemsBuilder::default()
         .push(&Controls::Repeat(
             RepeatBuilder::default()
-                .set_expected(&Expected::Any(wschar.clone()))
+                .set_expected(&Quantity::Any(wschar.clone()))
                 .set_min(5)
                 .set_max(usize::MAX)
                 .build(),
         ))
-        .push(&Controls::Once(Expected::Exact('1')))
+        .push(&Controls::Once(Quantity::Exact('1')))
         .build();
     let mut expected_items4 = ExpectedItemsBuilder::default()
         .push(&Controls::Repeat(
             RepeatBuilder::default()
-                .set_expected(&Expected::Any(wschar.clone()))
+                .set_expected(&Quantity::Any(wschar.clone()))
                 .set_min(0)
                 .set_max(3)
                 .build(),
         ))
-        .push(&Controls::Once(Expected::Exact('1')))
+        .push(&Controls::Once(Quantity::Exact('1')))
         .build();
     let mut expected_items5 = ExpectedItemsBuilder::default()
         .push(&Controls::Repeat(
             RepeatBuilder::default()
-                .set_expected(&Expected::Any(wschar.clone()))
+                .set_expected(&Quantity::Any(wschar.clone()))
                 .set_min(1)
                 .set_max(usize::MAX)
                 .build(),
         ))
-        .push(&Controls::Once(Expected::RangeContainsMax(digit)))
+        .push(&Controls::Once(Quantity::RangeContainsMax(digit)))
         .build();
 
     {

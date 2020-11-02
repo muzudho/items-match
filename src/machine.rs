@@ -1,7 +1,7 @@
 use crate::Any;
 use crate::MatchingResult;
 use crate::RangeContainsMax;
-use crate::{ActualItems, Controls, Expected, ExpectedItems, Machine};
+use crate::{ActualItems, Controls, ExpectedItems, Machine, Quantity};
 use std::fmt;
 
 impl Default for Machine {
@@ -64,9 +64,9 @@ impl Machine {
             Controls::Exact(exa) => self.matching_exact(act, exa),
             */
             Controls::Once(exp) => match exp {
-                Expected::Any(any) => self.matching_any(act, any),
-                Expected::Exact(exa) => self.matching_exact(act, exa),
-                Expected::RangeContainsMax(rng) => self.matching_range_contains_max(act, rng),
+                Quantity::Any(any) => self.matching_any(act, any),
+                Quantity::Exact(exa) => self.matching_exact(act, exa),
+                Quantity::RangeContainsMax(rng) => self.matching_range_contains_max(act, rng),
             },
             Controls::Repeat(rep) => {
                 if rep.is_final() {
@@ -118,14 +118,14 @@ impl Machine {
         }
     }
 
-    pub fn matching3<T>(&mut self, act: &T, exp: &mut Expected<T>) -> MatchingResult
+    pub fn matching3<T>(&mut self, act: &T, exp: &mut Quantity<T>) -> MatchingResult
     where
         T: std::cmp::PartialEq + std::cmp::PartialOrd,
     {
         match exp {
-            Expected::Any(any) => self.matching_any(act, any),
-            Expected::Exact(exa) => self.matching_exact(act, exa),
-            Expected::RangeContainsMax(rng) => self.matching_range_contains_max(act, rng),
+            Quantity::Any(any) => self.matching_any(act, any),
+            Quantity::Exact(exa) => self.matching_exact(act, exa),
+            Quantity::RangeContainsMax(rng) => self.matching_range_contains_max(act, rng),
         }
     }
 

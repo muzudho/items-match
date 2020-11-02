@@ -51,11 +51,13 @@ pub struct ExpectedItems<T> {
 /// 制御項目。  
 #[derive(Clone)]
 pub enum Controls<T> {
-    Once(Expected<T>),
+    Once(Quantity<T>),
     Repeat(Repeat<T>),
 }
+/// Quantity.  
+/// 量。  
 #[derive(Clone)]
-pub enum Expected<T> {
+pub enum Quantity<T> {
     Exact(T),
     Any(Any<T>),
     RangeContainsMax(RangeContainsMax<T>),
@@ -84,14 +86,14 @@ pub struct Any<T> {
 }
 
 pub struct RepeatBuilder<T> {
-    expected: Option<Box<Expected<T>>>,
+    expected: Option<Box<Quantity<T>>>,
     min: usize,
     max: usize,
 }
 
 #[derive(Clone)]
 pub struct Repeat<T> {
-    expected: Box<Expected<T>>,
+    expected: Box<Quantity<T>>,
     min: usize,
     max: usize,
     matched_length: usize,
