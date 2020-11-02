@@ -1,10 +1,14 @@
 extern crate items_match;
 extern crate look_ahead_items;
 
+use items_match::AnyBuilder;
 use items_match::{ActualItemsBuilder, ExpectedItemsBuilder, Machine};
 
 fn main() {
     println!("Start.");
+
+    // Whitespace characters.
+    let wschar = AnyBuilder::default().push(&'\t').push(&' ');
 
     let actual_items = ActualItemsBuilder::default()
         .push(&' ')
