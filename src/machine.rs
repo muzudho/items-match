@@ -22,24 +22,32 @@ impl Machine {
     {
         for (i, act) in actual_items.get_items().iter().enumerate() {
             self.actual_index = i;
-            let exp = expected_items.get_mut(self.expected_index); // TODO カーソルを勧めるのはあとで。
 
-            if let Some(mut exp) = exp {
+            // TODO expected_index カーソルを勧めるのはあとで。
+            if let Some(mut exp) = expected_items.get_mut(self.expected_index) {
                 match self.matching2(act, &mut exp) {
                     MatchingResult::Matched => {
+                        println!("(trace.30)");
                         self.expected_index += 1;
                         return true;
                     }
-                    MatchingResult::NotMatch => return false,
-                    MatchingResult::Ongoing => return true,
+                    MatchingResult::NotMatch => {
+                        println!("(trace.35)");
+                        return false;
+                    }
+                    MatchingResult::Ongoing => {
+                        println!("(trace.38) ループ続行。");
+                    }
                 }
             } else {
                 // マッチしていないという判断。
+                println!("(trace.44)");
                 return false;
             }
         }
 
         // 失敗していなければ成功という判断。
+        println!("(trace.51)");
         return true;
     }
 
@@ -51,44 +59,50 @@ impl Machine {
             Expected::Any(any) => {
                 for exp in &any.items {
                     if *exp == *act {
+                        println!("(trace.63) matching2/matched.");
                         return MatchingResult::Matched;
                     }
                 }
+                println!("(trace.67) Anyで不一致。");
                 return MatchingResult::NotMatch;
             }
             Expected::Exact(exp) => {
                 if *exp == *act {
+                    println!("(trace.72)");
                     MatchingResult::Matched
                 } else {
+                    println!("(trace.75)");
                     MatchingResult::NotMatch
                 }
             }
             Expected::Repeat(rep) => {
                 if rep.is_final() {
+                    rep.cursor += 1;
+
                     // 再帰的
                     match self.matching2(act, &mut rep.expected) {
                         MatchingResult::NotMatch => return MatchingResult::NotMatch,
                         MatchingResult::Matched | MatchingResult::Ongoing => {
                             if rep.is_success() {
-                                rep.cursor += 1;
+                                println!("(trace.87) rep={}", rep);
                                 return MatchingResult::Matched;
                             } else {
+                                println!("(trace.90) rep={}", rep);
                                 return MatchingResult::NotMatch;
                             }
                         }
                     }
                 } else {
+                    rep.cursor += 1;
                     // 再帰的
                     match self.matching2(act, &mut rep.expected) {
                         MatchingResult::NotMatch => return MatchingResult::NotMatch,
                         MatchingResult::Matched => {
-                            if rep.is_success() {
-                                return MatchingResult::Matched;
-                            } else {
-                                return MatchingResult::NotMatch;
-                            }
+                            println!("(trace.101) マッチ中なので続行。 rep={}", rep);
+                            return MatchingResult::Ongoing;
                         }
                         MatchingResult::Ongoing => {
+                            println!("(trace.109) rep={}", rep);
                             return MatchingResult::Ongoing;
                         }
                     }

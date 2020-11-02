@@ -43,9 +43,11 @@ fn main() {
         .push(&Expected::Exact('a'))
         .build();
 
+    /*
     assert!(Machine::default().matching(&actual_items1, &mut expected_items1));
     assert!(Machine::default().matching(&actual_items2, &mut expected_items1));
     assert!(!Machine::default().matching(&actual_items3, &mut expected_items1));
+    */
 
     let mut expected_items2 = ExpectedItemsBuilder::default()
         .push(&Expected::Repeat(
