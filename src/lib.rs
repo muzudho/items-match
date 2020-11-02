@@ -61,6 +61,8 @@ pub struct RangeContainsMaxBuilder<T> {
     max: Option<T>,
 }
 
+/// Specify by range. Includes maximum value.  
+/// 範囲で指定。最大値を含みます。  
 #[derive(Clone)]
 pub struct RangeContainsMax<T> {
     min: Option<T>,
