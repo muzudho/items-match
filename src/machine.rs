@@ -85,7 +85,7 @@ impl Machine {
                                 println!("(trace.87) rep={}", rep);
                                 return MatchingResult::Matched;
                             } else {
-                                println!("(trace.90) rep={}", rep);
+                                println!("(trace.90) fail. rep={}", rep);
                                 return MatchingResult::NotMatch;
                             }
                         }

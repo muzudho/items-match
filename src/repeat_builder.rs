@@ -11,7 +11,7 @@ where
         RepeatBuilder {
             quantity: None,
             min: 0,
-            max: 0,
+            max_not_included: 0,
         }
     }
 }
@@ -29,7 +29,7 @@ where
         Repeat {
             quantity: self.quantity.clone().unwrap(),
             min: self.min,
-            max: self.max,
+            max_not_included: self.max_not_included,
             matched_length: 0,
         }
     }
@@ -45,9 +45,9 @@ where
         self
     }
 
-    /// 最大何回繰り返すか。  
-    pub fn set_max<'a>(&'a mut self, val: usize) -> &'a mut Self {
-        self.max = val;
+    /// 最大何回繰り返すか。最大値は含まない。  
+    pub fn set_max_not_included<'a>(&'a mut self, val: usize) -> &'a mut Self {
+        self.max_not_included = val;
         self
     }
 }
