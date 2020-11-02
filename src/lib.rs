@@ -40,11 +40,11 @@ pub struct ActualItems<T> {
 }
 
 pub struct ExpectedItemsBuilder<T> {
-    items: Vec<Expected<T>>,
+    items: Vec<Controls<T>>,
 }
 
 pub struct ExpectedItems<T> {
-    items: Vec<Expected<T>>,
+    items: Vec<Controls<T>>,
 }
 
 #[derive(Clone)]
@@ -53,9 +53,9 @@ pub enum UncountableExpected<T> {
     Any(Any<T>),
     RangeContainsMax(RangeContainsMax<T>),
 }
-/// Expected item.  
+/// Controls item.  
 #[derive(Clone)]
-pub enum Expected<T> {
+pub enum Controls<T> {
     Exact(T),
     Any(Any<T>),
     RangeContainsMax(RangeContainsMax<T>),
@@ -86,14 +86,14 @@ pub struct Any<T> {
 }
 
 pub struct RepeatBuilder<T> {
-    expected: Option<Box<Expected<T>>>,
+    expected: Option<Box<Controls<T>>>,
     min: usize,
     max: usize,
 }
 
 #[derive(Clone)]
 pub struct Repeat<T> {
-    expected: Box<Expected<T>>,
+    expected: Box<Controls<T>>,
     min: usize,
     max: usize,
     matched_length: usize,

@@ -1,7 +1,7 @@
 use crate::Any;
 use crate::MatchingResult;
 use crate::RangeContainsMax;
-use crate::{ActualItems, Expected, ExpectedItems, Machine, UncountableExpected};
+use crate::{ActualItems, Controls, ExpectedItems, Machine, UncountableExpected};
 use std::fmt;
 
 impl Default for Machine {
@@ -53,22 +53,22 @@ impl Machine {
         return true;
     }
 
-    pub fn matching2<T>(&mut self, act: &T, exp: &mut Expected<T>) -> MatchingResult
+    pub fn matching2<T>(&mut self, act: &T, exp: &mut Controls<T>) -> MatchingResult
     where
         T: std::cmp::PartialEq + std::cmp::PartialOrd,
     {
         match exp {
-            Expected::Any(any) => self.matching_any(act, any),
-            Expected::RangeContainsMax(rng) => self.matching_range_contains_max(act, rng),
-            Expected::Exact(exa) => self.matching_exact(act, exa),
-            Expected::UncountableExpected(exp) => match exp {
+            Controls::Any(any) => self.matching_any(act, any),
+            Controls::RangeContainsMax(rng) => self.matching_range_contains_max(act, rng),
+            Controls::Exact(exa) => self.matching_exact(act, exa),
+            Controls::UncountableExpected(exp) => match exp {
                 UncountableExpected::Any(any) => self.matching_any(act, any),
                 UncountableExpected::Exact(exa) => self.matching_exact(act, exa),
                 UncountableExpected::RangeContainsMax(rng) => {
                     self.matching_range_contains_max(act, rng)
                 }
             },
-            Expected::Repeat(rep) => {
+            Controls::Repeat(rep) => {
                 if rep.is_final() {
                     // 再帰的
                     match self.matching2(act, &mut rep.expected) {
