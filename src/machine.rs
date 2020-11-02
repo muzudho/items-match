@@ -2,7 +2,7 @@ use crate::Any;
 use crate::MachineState;
 use crate::MatchingResult;
 use crate::RangeContainsMax;
-use crate::{Controls, Expected, Machine, Quantity};
+use crate::{Controls, Element, Machine, Quantity};
 // use std::fmt;
 
 impl<T> Machine<T>
@@ -143,13 +143,13 @@ where
     {
         for exp in &any.items {
             match exp {
-                Expected::Exact(exa) => {
+                Element::Exact(exa) => {
                     if *exa == *act {
                         // println!("(trace.138) matching_any/matched.");
                         return MatchingResult::Matched;
                     }
                 }
-                Expected::RangeContainsMax(rng) => {
+                Element::RangeContainsMax(rng) => {
                     match self.matching5_range_contains_max(act, rng) {
                         MatchingResult::Matched => {
                             // println!("(trace.138) matching_any/rng/matched.");
@@ -170,12 +170,12 @@ where
         // println!("(trace.67) Anyでぜんぶ不一致。");
         return MatchingResult::NotMatch;
     }
-    fn matching4_one(&self, act: &T, exp: &Expected<T>) -> MatchingResult
+    fn matching4_one(&self, act: &T, exp: &Element<T>) -> MatchingResult
     where
         T: std::cmp::PartialEq + std::cmp::PartialOrd,
     {
         match exp {
-            Expected::Exact(exa) => {
+            Element::Exact(exa) => {
                 if *exa == *act {
                     // println!("(trace.72)");
                     MatchingResult::Matched
@@ -184,7 +184,7 @@ where
                     MatchingResult::NotMatch
                 }
             }
-            Expected::RangeContainsMax(rng) => {
+            Element::RangeContainsMax(rng) => {
                 return self.matching5_range_contains_max(act, rng);
             }
         }

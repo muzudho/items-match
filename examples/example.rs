@@ -1,11 +1,8 @@
 extern crate rattle_items_match;
 
-use rattle_items_match::Expected;
-use rattle_items_match::MachineBuilder;
-use rattle_items_match::Quantity;
-use rattle_items_match::RangeContainsMaxBuilder;
 use rattle_items_match::{
-    ActualItemsBuilder, AnyBuilder, Controls, ExpectedItemsBuilder, RepeatBuilder,
+    ActualItemsBuilder, AnyBuilder, Controls as Co, Element as El, ExpectedItemsBuilder,
+    MachineBuilder, Quantity as Qu, RangeContainsMaxBuilder, RepeatBuilder,
 };
 
 fn main() {
@@ -45,8 +42,8 @@ fn main() {
 
     // Whitespace characters.
     let wschar = AnyBuilder::default()
-        .push(&Expected::Exact('\t'))
-        .push(&Expected::Exact(' '))
+        .push(&El::Exact('\t'))
+        .push(&El::Exact(' '))
         .build();
 
     // Digit.
@@ -55,13 +52,13 @@ fn main() {
         .set_max(&'9')
         .build();
     // Alphabet.
-    let upper_case = Expected::RangeContainsMax(
+    let upper_case = El::RangeContainsMax(
         RangeContainsMaxBuilder::default()
             .set_min(&'A')
             .set_max(&'Z')
             .build(),
     );
-    let lower_case = Expected::RangeContainsMax(
+    let lower_case = El::RangeContainsMax(
         RangeContainsMaxBuilder::default()
             .set_min(&'a')
             .set_max(&'z')
@@ -73,71 +70,69 @@ fn main() {
         .build();
 
     let expected1_wsss1 = ExpectedItemsBuilder::default()
-        .push(&Controls::Once(Quantity::Any(wschar.clone())))
-        .push(&Controls::Once(Quantity::One(Expected::Exact(' '))))
-        .push(&Controls::Once(Quantity::One(Expected::Exact(' '))))
-        .push(&Controls::Once(Quantity::One(Expected::Exact(' '))))
-        .push(&Controls::Once(Quantity::One(Expected::Exact('1'))))
+        .push(&Co::Once(Qu::Any(wschar.clone())))
+        .push(&Co::Once(Qu::One(El::Exact(' '))))
+        .push(&Co::Once(Qu::One(El::Exact(' '))))
+        .push(&Co::Once(Qu::One(El::Exact(' '))))
+        .push(&Co::Once(Qu::One(El::Exact('1'))))
         .build();
 
     let expected2_ws1max = ExpectedItemsBuilder::default()
-        .push(&Controls::Repeat(
+        .push(&Co::Repeat(
             RepeatBuilder::default()
-                .set_quantity(&Quantity::Any(wschar.clone()))
+                .set_quantity(&Qu::Any(wschar.clone()))
                 .set_min(1)
                 .set_max_not_included(usize::MAX)
                 .build(),
         ))
-        .push(&Controls::Once(Quantity::One(Expected::Exact('1'))))
+        .push(&Co::Once(Qu::One(El::Exact('1'))))
         .build();
     let expected3_ws5max = ExpectedItemsBuilder::default()
-        .push(&Controls::Repeat(
+        .push(&Co::Repeat(
             RepeatBuilder::default()
-                .set_quantity(&Quantity::Any(wschar.clone()))
+                .set_quantity(&Qu::Any(wschar.clone()))
                 .set_min(5)
                 .set_max_not_included(usize::MAX)
                 .build(),
         ))
-        .push(&Controls::Once(Quantity::One(Expected::Exact('1'))))
+        .push(&Co::Once(Qu::One(El::Exact('1'))))
         .build();
     let expected4_ws03 = ExpectedItemsBuilder::default()
-        .push(&Controls::Repeat(
+        .push(&Co::Repeat(
             RepeatBuilder::default()
-                .set_quantity(&Quantity::Any(wschar.clone()))
+                .set_quantity(&Qu::Any(wschar.clone()))
                 .set_min(0)
                 .set_max_not_included(3)
                 .build(),
         ))
-        .push(&Controls::Once(Quantity::One(Expected::Exact('1'))))
+        .push(&Co::Once(Qu::One(El::Exact('1'))))
         .build();
     let expected5_ws1max = ExpectedItemsBuilder::default()
-        .push(&Controls::Repeat(
+        .push(&Co::Repeat(
             RepeatBuilder::default()
-                .set_quantity(&Quantity::Any(wschar.clone()))
+                .set_quantity(&Qu::Any(wschar.clone()))
                 .set_min(1)
                 .set_max_not_included(usize::MAX)
                 .build(),
         ))
-        .push(&Controls::Once(Quantity::One(Expected::RangeContainsMax(
-            digit,
-        ))))
+        .push(&Co::Once(Qu::One(El::RangeContainsMax(digit))))
         .build();
     let expected6_alpha = ExpectedItemsBuilder::default()
-        .push(&Controls::Once(Quantity::Any(alpha.clone())))
+        .push(&Co::Once(Qu::Any(alpha.clone())))
         .build();
     let expected7_alpha1to3 = ExpectedItemsBuilder::default()
-        .push(&Controls::Repeat(
+        .push(&Co::Repeat(
             RepeatBuilder::default()
-                .set_quantity(&Quantity::Any(alpha.clone()))
+                .set_quantity(&Qu::Any(alpha.clone()))
                 .set_min(1)
                 .set_max_not_included(3)
                 .build(),
         ))
         .build();
     let expected8_alpha1to_max = ExpectedItemsBuilder::default()
-        .push(&Controls::Repeat(
+        .push(&Co::Repeat(
             RepeatBuilder::default()
-                .set_quantity(&Quantity::Any(alpha.clone()))
+                .set_quantity(&Qu::Any(alpha.clone()))
                 .set_min(1)
                 .set_max_not_included(usize::MAX)
                 .build(),

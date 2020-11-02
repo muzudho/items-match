@@ -74,13 +74,13 @@ pub enum Controls<T> {
 /// 量。  
 #[derive(Clone)]
 pub enum Quantity<T> {
-    One(Expected<T>),
+    One(Element<T>),
     Any(Any<T>),
 }
-/// Expected.
+/// Element.
 /// 期待値。
 #[derive(Clone)]
-pub enum Expected<T> {
+pub enum Element<T> {
     Exact(T),
     RangeContainsMax(RangeContainsMax<T>),
 }
@@ -99,12 +99,12 @@ pub struct RangeContainsMax<T> {
 }
 
 pub struct AnyBuilder<T> {
-    items: Vec<Expected<T>>,
+    items: Vec<Element<T>>,
 }
 
 #[derive(Clone)]
 pub struct Any<T> {
-    items: Vec<Expected<T>>,
+    items: Vec<Element<T>>,
 }
 
 pub struct RepeatBuilder<T> {
