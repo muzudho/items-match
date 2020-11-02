@@ -21,6 +21,8 @@ pub mod any_builder;
 pub mod expected_items;
 pub mod expected_items_builder;
 pub mod machine;
+pub mod range_contains_max;
+pub mod range_contains_max_builder;
 pub mod repeat;
 pub mod repeat_builder;
 
@@ -51,6 +53,17 @@ pub enum Expected<T> {
     Exact(T),
     Any(Any<T>),
     Repeat(Repeat<T>),
+}
+
+pub struct RangeContainsMaxBuilder<T> {
+    min: Option<T>,
+    max: Option<T>,
+}
+
+#[derive(Clone)]
+pub struct RangeContainsMax<T> {
+    min: Option<T>,
+    max: Option<T>,
 }
 
 pub struct AnyBuilder<T> {
