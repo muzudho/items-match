@@ -1,5 +1,6 @@
 use crate::MatchingResult;
 use crate::{ActualItems, Expected, ExpectedItems, Machine};
+use std::fmt;
 
 impl Default for Machine {
     fn default() -> Self {
@@ -26,9 +27,12 @@ impl Machine {
         if let Some(act) = act {
             if let Some(mut exp) = exp {
                 match self.matching2(act, &mut exp) {
-                    MatchingResult::Matched => return true,
+                    MatchingResult::Matched => {
+                        self.expected_index += 1;
+                        return true;
+                    }
                     MatchingResult::NotMatch => return false,
-                    MatchingResult::Ongoing => panic!("ここでOngoingはおかしい。"),
+                    MatchingResult::Ongoing => return true,
                 }
             } else {
                 // マッチしていないという判断。
@@ -98,5 +102,22 @@ impl Machine {
                 }
             }
         }
+    }
+}
+
+impl fmt::Display for Machine {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let mut buf = String::new();
+        buf.push_str(&format!("actual_index={} ", self.actual_index));
+        buf.push_str(&format!("expected_index={} ", self.expected_index));
+        write!(f, "{}", buf)
+    }
+}
+impl fmt::Debug for Machine {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let mut buf = String::new();
+        buf.push_str(&format!("actual_index={:?} ", self.actual_index));
+        buf.push_str(&format!("expected_index={:?} ", self.expected_index));
+        write!(f, "{}", buf)
     }
 }
