@@ -1,10 +1,11 @@
 extern crate rattle_items_match;
 
 use rattle_items_match::Expected;
+use rattle_items_match::MachineBuilder;
 use rattle_items_match::Quantity;
 use rattle_items_match::RangeContainsMaxBuilder;
 use rattle_items_match::{
-    ActualItemsBuilder, AnyBuilder, Controls, ExpectedItemsBuilder, Machine, RepeatBuilder,
+    ActualItemsBuilder, AnyBuilder, Controls, ExpectedItemsBuilder, RepeatBuilder,
 };
 
 fn main() {
@@ -71,7 +72,7 @@ fn main() {
         .push(&lower_case)
         .build();
 
-    let mut expected1_wsss1 = ExpectedItemsBuilder::default()
+    let expected1_wsss1 = ExpectedItemsBuilder::default()
         .push(&Controls::Once(Quantity::Any(wschar.clone())))
         .push(&Controls::Once(Quantity::One(Expected::Exact(' '))))
         .push(&Controls::Once(Quantity::One(Expected::Exact(' '))))
@@ -79,7 +80,7 @@ fn main() {
         .push(&Controls::Once(Quantity::One(Expected::Exact('1'))))
         .build();
 
-    let mut expected2_ws1max = ExpectedItemsBuilder::default()
+    let expected2_ws1max = ExpectedItemsBuilder::default()
         .push(&Controls::Repeat(
             RepeatBuilder::default()
                 .set_quantity(&Quantity::Any(wschar.clone()))
@@ -89,7 +90,7 @@ fn main() {
         ))
         .push(&Controls::Once(Quantity::One(Expected::Exact('1'))))
         .build();
-    let mut expected3_ws5max = ExpectedItemsBuilder::default()
+    let expected3_ws5max = ExpectedItemsBuilder::default()
         .push(&Controls::Repeat(
             RepeatBuilder::default()
                 .set_quantity(&Quantity::Any(wschar.clone()))
@@ -99,7 +100,7 @@ fn main() {
         ))
         .push(&Controls::Once(Quantity::One(Expected::Exact('1'))))
         .build();
-    let mut expected4_ws03 = ExpectedItemsBuilder::default()
+    let expected4_ws03 = ExpectedItemsBuilder::default()
         .push(&Controls::Repeat(
             RepeatBuilder::default()
                 .set_quantity(&Quantity::Any(wschar.clone()))
@@ -109,7 +110,7 @@ fn main() {
         ))
         .push(&Controls::Once(Quantity::One(Expected::Exact('1'))))
         .build();
-    let mut expected5_ws1max = ExpectedItemsBuilder::default()
+    let expected5_ws1max = ExpectedItemsBuilder::default()
         .push(&Controls::Repeat(
             RepeatBuilder::default()
                 .set_quantity(&Quantity::Any(wschar.clone()))
@@ -121,10 +122,10 @@ fn main() {
             digit,
         ))))
         .build();
-    let mut expected6_alpha = ExpectedItemsBuilder::default()
+    let expected6_alpha = ExpectedItemsBuilder::default()
         .push(&Controls::Once(Quantity::Any(alpha.clone())))
         .build();
-    let mut expected7_alpha1to3 = ExpectedItemsBuilder::default()
+    let expected7_alpha1to3 = ExpectedItemsBuilder::default()
         .push(&Controls::Repeat(
             RepeatBuilder::default()
                 .set_quantity(&Quantity::Any(alpha.clone()))
@@ -133,7 +134,7 @@ fn main() {
                 .build(),
         ))
         .build();
-    let mut expected8_alpha1to_max = ExpectedItemsBuilder::default()
+    let expected8_alpha1to_max = ExpectedItemsBuilder::default()
         .push(&Controls::Repeat(
             RepeatBuilder::default()
                 .set_quantity(&Quantity::Any(alpha.clone()))
@@ -143,63 +144,60 @@ fn main() {
         ))
         .build();
 
-    //*
-    assert!(Machine::default().matching(&act1_ssss1, &mut expected1_wsss1));
-    assert!(Machine::default().matching(&act2_tsss1, &mut expected1_wsss1));
-    assert!(!Machine::default().matching(&act3_xsss1, &mut expected1_wsss1));
-    // */
-    //*
-    {
-        let mut machine = Machine::default();
-        let matched = machine.matching(&act1_ssss1, &mut expected2_ws1max);
-        // println!("(trace.84) machine={} matched={}", machine, matched);
-        assert!(matched);
-    }
-    {
-        let mut machine = Machine::default();
-        let matched = machine.matching(&act1_ssss1, &mut expected3_ws5max);
-        // println!("(trace.91) machine={} matched={}", machine, matched);
-        assert!(!matched);
-    }
-    {
-        let mut machine = Machine::default();
-        let matched = machine.matching(&act1_ssss1, &mut expected4_ws03);
-        // println!("(trace.99) machine={} matched={}", machine, matched);
-        assert!(!matched);
-    }
-    {
-        let mut machine = Machine::default();
-        let matched = machine.matching(&act1_ssss1, &mut expected5_ws1max);
-        assert!(matched);
-    }
-    // */
-    //*
-    {
-        let mut machine = Machine::default();
-        let matched = machine.matching(&act4_a, &mut expected6_alpha);
-        // println!("(trace.162) machine={} matched={}", machine, matched);
-        assert!(matched);
-    }
-    // */
-    //*
-    {
-        let mut machine = Machine::default();
-        let matched = machine.matching(&act5_bc, &mut expected7_alpha1to3);
-        // println!("(trace.191) machine={} matched={}", machine, matched);
-        assert!(matched);
-    }
-    // */
-    {
-        let mut machine = Machine::default();
-        let matched = machine.matching(&act6_de, &mut expected7_alpha1to3);
-        // println!("(trace.199) machine={} matched={}", machine, matched);
-        assert!(matched);
-    }
-    {
-        let mut machine = Machine::default();
-        let matched = machine.matching(&act7_fgh, &mut expected8_alpha1to_max);
-        // println!("(trace.196) machine={} matched={}", machine, matched);
-        assert!(matched);
-    }
+    assert!(MachineBuilder::default()
+        .set_actual_items(&act1_ssss1)
+        .set_expected_items(&expected1_wsss1)
+        .build()
+        .matching());
+    assert!(MachineBuilder::default()
+        .set_actual_items(&act2_tsss1)
+        .set_expected_items(&expected1_wsss1)
+        .build()
+        .matching());
+    assert!(!MachineBuilder::default()
+        .set_actual_items(&act3_xsss1)
+        .set_expected_items(&expected1_wsss1)
+        .build()
+        .matching());
+    assert!(MachineBuilder::default()
+        .set_actual_items(&act1_ssss1)
+        .set_expected_items(&expected2_ws1max)
+        .build()
+        .matching());
+    assert!(!MachineBuilder::default()
+        .set_actual_items(&act1_ssss1)
+        .set_expected_items(&expected3_ws5max)
+        .build()
+        .matching());
+    assert!(!MachineBuilder::default()
+        .set_actual_items(&act1_ssss1)
+        .set_expected_items(&expected4_ws03)
+        .build()
+        .matching());
+    assert!(MachineBuilder::default()
+        .set_actual_items(&act1_ssss1)
+        .set_expected_items(&expected5_ws1max)
+        .build()
+        .matching());
+    assert!(MachineBuilder::default()
+        .set_actual_items(&act4_a)
+        .set_expected_items(&expected6_alpha)
+        .build()
+        .matching());
+    assert!(MachineBuilder::default()
+        .set_actual_items(&act5_bc)
+        .set_expected_items(&expected7_alpha1to3)
+        .build()
+        .matching());
+    assert!(MachineBuilder::default()
+        .set_actual_items(&act6_de)
+        .set_expected_items(&expected7_alpha1to3)
+        .build()
+        .matching());
+    assert!(MachineBuilder::default()
+        .set_actual_items(&act7_fgh)
+        .set_expected_items(&expected8_alpha1to_max)
+        .build()
+        .matching());
     println!("Finished.");
 }

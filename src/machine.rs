@@ -1,42 +1,30 @@
 use crate::Any;
+use crate::MachineState;
 use crate::MatchingResult;
 use crate::RangeContainsMax;
-use crate::{ActualItems, Controls, Expected, ExpectedItems, Machine, Quantity};
-use std::fmt;
+use crate::{Controls, Expected, Machine, Quantity};
+// use std::fmt;
 
-impl Default for Machine {
-    fn default() -> Self {
-        Machine {
-            actual_index: 0,
-            expected_index: 0,
-            is_final: false,
-            matched_length_in_repeat: 0,
-        }
-    }
-}
+impl<T> Machine<T>
+where
+    T: std::cmp::PartialEq + std::cmp::PartialOrd,
+{
+    pub fn matching(&self) -> bool {
+        let mut machine_state = MachineState::default();
 
-impl Machine {
-    pub fn matching<T>(
-        &mut self,
-        actual_items: &ActualItems<T>,
-        expected_items: &ExpectedItems<T>,
-    ) -> bool
-    where
-        T: std::cmp::PartialEq + std::cmp::PartialOrd,
-    {
-        for (i, act) in actual_items.get_items().iter().enumerate() {
-            self.actual_index = i;
-            if self.actual_index + 1 == actual_items.len() {
-                self.is_final = true;
+        for (i, act) in self.actual_items.get_items().iter().enumerate() {
+            machine_state.actual_index = i;
+            if machine_state.actual_index + 1 == self.actual_items.len() {
+                machine_state.is_final = true;
             }
 
             // TODO expected_index カーソルを勧めるのはあとで。
-            if let Some(mut exp) = expected_items.get(self.expected_index) {
-                match self.matching2(act, &mut exp) {
+            if let Some(mut exp) = self.expected_items.get(machine_state.expected_index) {
+                match self.matching2(&mut machine_state, act, &mut exp) {
                     MatchingResult::Matched => {
                         // println!("(trace.30) マッチしたという判断。ループ続行。");
-                        self.expected_index += 1;
-                        self.matched_length_in_repeat = 0; // reset.
+                        machine_state.expected_index += 1;
+                        machine_state.matched_length_in_repeat = 0; // reset.
                     }
                     MatchingResult::NotMatch => {
                         // println!("(trace.35) マッチしていないという判断。");
@@ -58,7 +46,12 @@ impl Machine {
         return true;
     }
 
-    pub fn matching2<T>(&mut self, act: &T, exp: &Controls<T>) -> MatchingResult
+    pub fn matching2(
+        &self,
+        machine_state: &mut MachineState,
+        act: &T,
+        exp: &Controls<T>,
+    ) -> MatchingResult
     where
         T: std::cmp::PartialEq + std::cmp::PartialOrd,
     {
@@ -68,7 +61,7 @@ impl Machine {
                 Quantity::One(exp) => self.matching4_one(act, exp),
             },
             Controls::Repeat(rep) => {
-                if rep.is_cutoff(self.matched_length_in_repeat) {
+                if rep.is_cutoff(machine_state.matched_length_in_repeat) {
                     //  || self.is_final
                     match self.matching3_quantity(act, &rep.quantity) {
                         MatchingResult::NotMatch => {
@@ -76,8 +69,8 @@ impl Machine {
                             return MatchingResult::NotMatch;
                         }
                         MatchingResult::Matched | MatchingResult::Ongoing => {
-                            self.matched_length_in_repeat += 1;
-                            if rep.is_cutoff(self.matched_length_in_repeat) {
+                            machine_state.matched_length_in_repeat += 1;
+                            if rep.is_cutoff(machine_state.matched_length_in_repeat) {
                                 /*
                                 // println!(
                                     "(trace.93) Cutoff. 上限までマッチしたので切上げ。 rep={}",
@@ -85,7 +78,7 @@ impl Machine {
                                 );
                                 */
                                 return MatchingResult::Matched;
-                            } else if rep.is_success(self.matched_length_in_repeat) {
+                            } else if rep.is_success(machine_state.matched_length_in_repeat) {
                                 // println!("(trace.87) rep={}", rep);
                                 return MatchingResult::Matched;
                             } else {
@@ -97,7 +90,7 @@ impl Machine {
                 } else {
                     match self.matching3_quantity(act, &rep.quantity) {
                         MatchingResult::NotMatch => {
-                            if rep.is_cutoff(self.matched_length_in_repeat) {
+                            if rep.is_cutoff(machine_state.matched_length_in_repeat) {
                                 /*
                                 // println!(
                                     "(trace.93) Cutoff. 上限までマッチしたので切上げ。 rep={}",
@@ -105,7 +98,7 @@ impl Machine {
                                 );
                                 */
                                 return MatchingResult::Matched;
-                            } else if rep.is_success(self.matched_length_in_repeat) {
+                            } else if rep.is_success(machine_state.matched_length_in_repeat) {
                                 /*
                                 // println!(
                                     "(trace.104) マッチしなくなったところで再判定。 rep={}",
@@ -119,12 +112,12 @@ impl Machine {
                             }
                         }
                         MatchingResult::Matched => {
-                            self.matched_length_in_repeat += 1;
+                            machine_state.matched_length_in_repeat += 1;
                             // println!("(trace.112) マッチ中なので続行。 rep={}", rep);
                             return MatchingResult::Ongoing;
                         }
                         MatchingResult::Ongoing => {
-                            self.matched_length_in_repeat += 1;
+                            machine_state.matched_length_in_repeat += 1;
                             // println!("(trace.115) rep={}", rep);
                             return MatchingResult::Ongoing;
                         }
@@ -134,7 +127,7 @@ impl Machine {
         }
     }
 
-    pub fn matching3_quantity<T>(&mut self, act: &T, exp: &Quantity<T>) -> MatchingResult
+    pub fn matching3_quantity(&self, act: &T, exp: &Quantity<T>) -> MatchingResult
     where
         T: std::cmp::PartialEq + std::cmp::PartialOrd,
     {
@@ -144,7 +137,7 @@ impl Machine {
         }
     }
 
-    fn matching4_any<T>(&mut self, act: &T, any: &Any<T>) -> MatchingResult
+    fn matching4_any(&self, act: &T, any: &Any<T>) -> MatchingResult
     where
         T: std::cmp::PartialEq + std::cmp::PartialOrd,
     {
@@ -177,7 +170,7 @@ impl Machine {
         // println!("(trace.67) Anyでぜんぶ不一致。");
         return MatchingResult::NotMatch;
     }
-    fn matching4_one<T>(&mut self, act: &T, exp: &Expected<T>) -> MatchingResult
+    fn matching4_one(&self, act: &T, exp: &Expected<T>) -> MatchingResult
     where
         T: std::cmp::PartialEq + std::cmp::PartialOrd,
     {
@@ -196,11 +189,7 @@ impl Machine {
             }
         }
     }
-    fn matching5_range_contains_max<T>(
-        &mut self,
-        act: &T,
-        rng: &RangeContainsMax<T>,
-    ) -> MatchingResult
+    fn matching5_range_contains_max(&self, act: &T, rng: &RangeContainsMax<T>) -> MatchingResult
     where
         T: std::cmp::PartialEq + std::cmp::PartialOrd,
     {
@@ -217,8 +206,8 @@ impl Machine {
         return MatchingResult::Matched;
     }
 }
-
-impl fmt::Display for Machine {
+/*
+impl<T> fmt::Display for Machine<T> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let mut buf = String::new();
         buf.push_str(&format!("actual_index={} ", self.actual_index));
@@ -230,7 +219,7 @@ impl fmt::Display for Machine {
         write!(f, "{}", buf)
     }
 }
-impl fmt::Debug for Machine {
+impl<T> fmt::Debug for Machine<T> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let mut buf = String::new();
         buf.push_str(&format!("actual_index={} ", self.actual_index));
@@ -242,3 +231,4 @@ impl fmt::Debug for Machine {
         write!(f, "{}", buf)
     }
 }
+*/

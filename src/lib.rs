@@ -21,22 +21,35 @@ pub mod any_builder;
 pub mod expected_items;
 pub mod expected_items_builder;
 pub mod machine;
+pub mod machine_builder;
+pub mod machine_state;
 pub mod range_contains_max;
 pub mod range_contains_max_builder;
 pub mod repeat;
 pub mod repeat_builder;
 
-pub struct Machine {
+pub struct MachineBuilder<T> {
+    actual_items: Option<ActualItems<T>>,
+    expected_items: Option<ExpectedItems<T>>,
+}
+
+pub struct MachineState {
     actual_index: usize,
     expected_index: usize,
     is_final: bool,
     matched_length_in_repeat: usize,
 }
 
+pub struct Machine<T> {
+    actual_items: ActualItems<T>,
+    expected_items: ExpectedItems<T>,
+}
+
 pub struct ActualItemsBuilder<T> {
     items: Vec<T>,
 }
 
+#[derive(Clone)]
 pub struct ActualItems<T> {
     items: Vec<T>,
 }
@@ -45,6 +58,7 @@ pub struct ExpectedItemsBuilder<T> {
     items: Vec<Controls<T>>,
 }
 
+#[derive(Clone)]
 pub struct ExpectedItems<T> {
     items: Vec<Controls<T>>,
 }
