@@ -4,10 +4,7 @@ use std::fmt;
 
 impl Default for Machine {
     fn default() -> Self {
-        Machine {
-            actual_index: 0,
-            expected_index: 0,
-        }
+        Machine { expected_index: 0 }
     }
 }
 
@@ -20,11 +17,9 @@ impl Machine {
     where
         T: std::cmp::PartialEq,
     {
-        let act = actual_items.get(self.actual_index);
-        self.actual_index += 1;
-        let exp = expected_items.get_mut(self.expected_index); // TODO カーソルを勧めるのはあとで。
+        for act in actual_items.get_items() {
+            let exp = expected_items.get_mut(self.expected_index); // TODO カーソルを勧めるのはあとで。
 
-        if let Some(act) = act {
             if let Some(mut exp) = exp {
                 match self.matching2(act, &mut exp) {
                     MatchingResult::Matched => {
@@ -38,16 +33,10 @@ impl Machine {
                 // マッチしていないという判断。
                 return false;
             }
-        } else {
-            if let Some(_exp) = exp {
-                // マッチしていないという判断。
-                return false;
-            } else {
-                // None vs None はマッチしていないという判断。
-                return false;
-                // return act == exp;
-            }
         }
+
+        // 失敗していなければ成功という判断。
+        return true;
     }
 
     pub fn matching2<T>(&mut self, act: &T, exp: &mut Expected<T>) -> MatchingResult
@@ -108,7 +97,6 @@ impl Machine {
 impl fmt::Display for Machine {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let mut buf = String::new();
-        buf.push_str(&format!("actual_index={} ", self.actual_index));
         buf.push_str(&format!("expected_index={} ", self.expected_index));
         write!(f, "{}", buf)
     }
@@ -116,7 +104,6 @@ impl fmt::Display for Machine {
 impl fmt::Debug for Machine {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let mut buf = String::new();
-        buf.push_str(&format!("actual_index={:?} ", self.actual_index));
         buf.push_str(&format!("expected_index={:?} ", self.expected_index));
         write!(f, "{}", buf)
     }

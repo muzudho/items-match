@@ -25,7 +25,6 @@ pub mod repeat;
 pub mod repeat_builder;
 
 pub struct Machine {
-    actual_index: usize,
     expected_index: usize,
 }
 

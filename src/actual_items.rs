@@ -14,4 +14,8 @@ impl<T> ActualItems<T> {
             None
         }
     }
+
+    pub fn get_items(&self) -> &Vec<T> {
+        &self.items
+    }
 }
