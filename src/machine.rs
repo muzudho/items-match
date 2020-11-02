@@ -61,11 +61,11 @@ impl Machine {
             /*
             Controls::Any(any) => self.matching_any(act, any),
             Controls::RangeContainsMax(rng) => self.matching_range_contains_max(act, rng),
-            Controls::Exact(exa) => self.matching_exact(act, exa),
+            Controls::One(exa) => self.matching_exact(act, exa),
             */
             Controls::Once(exp) => match exp {
                 Quantity::Any(any) => self.matching_any(act, any),
-                Quantity::Exact(exa) => self.matching_exact(act, exa),
+                Quantity::One(exa) => self.matching_exact(act, exa),
                 Quantity::RangeContainsMax(rng) => self.matching_range_contains_max(act, rng),
             },
             Controls::Repeat(rep) => {
@@ -124,7 +124,7 @@ impl Machine {
     {
         match exp {
             Quantity::Any(any) => self.matching_any(act, any),
-            Quantity::Exact(exa) => self.matching_exact(act, exa),
+            Quantity::One(exa) => self.matching_exact(act, exa),
             Quantity::RangeContainsMax(rng) => self.matching_range_contains_max(act, rng),
         }
     }

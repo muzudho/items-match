@@ -58,10 +58,20 @@ pub enum Controls<T> {
 /// 量。  
 #[derive(Clone)]
 pub enum Quantity<T> {
+    One(T),
+    Any(Any<T>),
+    RangeContainsMax(RangeContainsMax<T>),
+}
+/*
+/// Expected.
+/// 期待値。
+#[derive(Clone)]
+pub enum Expected<T> {
     Exact(T),
     Any(Any<T>),
     RangeContainsMax(RangeContainsMax<T>),
 }
+*/
 
 pub struct RangeContainsMaxBuilder<T> {
     min: Option<T>,
