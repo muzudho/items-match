@@ -48,7 +48,7 @@ pub struct ExpectedItems<T> {
 }
 
 #[derive(Clone)]
-pub enum UncountableExpected<T> {
+pub enum Expected<T> {
     Exact(T),
     Any(Any<T>),
     RangeContainsMax(RangeContainsMax<T>),
@@ -59,7 +59,7 @@ pub enum Controls<T> {
     Exact(T),
     Any(Any<T>),
     RangeContainsMax(RangeContainsMax<T>),
-    UncountableExpected(UncountableExpected<T>),
+    Expected(Expected<T>),
     Repeat(Repeat<T>),
 }
 

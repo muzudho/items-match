@@ -1,7 +1,7 @@
 use crate::Any;
 use crate::MatchingResult;
 use crate::RangeContainsMax;
-use crate::{ActualItems, Controls, ExpectedItems, Machine, UncountableExpected};
+use crate::{ActualItems, Controls, Expected, ExpectedItems, Machine};
 use std::fmt;
 
 impl Default for Machine {
@@ -61,12 +61,10 @@ impl Machine {
             Controls::Any(any) => self.matching_any(act, any),
             Controls::RangeContainsMax(rng) => self.matching_range_contains_max(act, rng),
             Controls::Exact(exa) => self.matching_exact(act, exa),
-            Controls::UncountableExpected(exp) => match exp {
-                UncountableExpected::Any(any) => self.matching_any(act, any),
-                UncountableExpected::Exact(exa) => self.matching_exact(act, exa),
-                UncountableExpected::RangeContainsMax(rng) => {
-                    self.matching_range_contains_max(act, rng)
-                }
+            Controls::Expected(exp) => match exp {
+                Expected::Any(any) => self.matching_any(act, any),
+                Expected::Exact(exa) => self.matching_exact(act, exa),
+                Expected::RangeContainsMax(rng) => self.matching_range_contains_max(act, rng),
             },
             Controls::Repeat(rep) => {
                 if rep.is_final() {
