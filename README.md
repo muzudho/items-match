@@ -29,11 +29,12 @@ You can think that you can't do anything that isn't written here.
 ./examples/example.rs:  
 
 ```rust
-extern crate items_match;
 extern crate look_ahead_items;
+extern crate rattle_items_match;
 
-use items_match::AnyBuilder;
-use items_match::{ActualItemsBuilder, Expected, ExpectedItemsBuilder, Machine};
+use rattle_items_match::{
+    ActualItemsBuilder, AnyBuilder, Expected, ExpectedItemsBuilder, Machine, RepeatBuilder,
+};
 
 fn main() {
     println!("Start.");
@@ -65,18 +66,66 @@ fn main() {
     // Whitespace characters.
     let wschar = AnyBuilder::default().push(&'\t').push(&' ').build();
 
-    let expected_items = ExpectedItemsBuilder::default()
-        .push(&Expected::Any(wschar))
+    let mut expected_items1 = ExpectedItemsBuilder::default()
+        .push(&Expected::Any(wschar.clone()))
         .push(&Expected::Exact(' '))
         .push(&Expected::Exact(' '))
         .push(&Expected::Exact(' '))
         .push(&Expected::Exact('a'))
         .build();
 
-    let mut machine = Machine::default();
-    assert!(machine.matching(&actual_items1, &expected_items));
-    assert!(machine.matching(&actual_items2, &expected_items));
-    assert!(!machine.matching(&actual_items3, &expected_items));
+    assert!(Machine::default().matching(&actual_items1, &mut expected_items1));
+    assert!(Machine::default().matching(&actual_items2, &mut expected_items1));
+    assert!(!Machine::default().matching(&actual_items3, &mut expected_items1));
+    let mut expected_items2 = ExpectedItemsBuilder::default()
+        .push(&Expected::Repeat(
+            RepeatBuilder::default()
+                .set_expected(&Expected::Any(wschar.clone()))
+                .set_min(1)
+                .set_max(usize::MAX)
+                .build(),
+        ))
+        .push(&Expected::Exact('a'))
+        .build();
+    let mut expected_items3 = ExpectedItemsBuilder::default()
+        .push(&Expected::Repeat(
+            RepeatBuilder::default()
+                .set_expected(&Expected::Any(wschar.clone()))
+                .set_min(5)
+                .set_max(usize::MAX)
+                .build(),
+        ))
+        .push(&Expected::Exact('a'))
+        .build();
+    let mut expected_items4 = ExpectedItemsBuilder::default()
+        .push(&Expected::Repeat(
+            RepeatBuilder::default()
+                .set_expected(&Expected::Any(wschar.clone()))
+                .set_min(0)
+                .set_max(3)
+                .build(),
+        ))
+        .push(&Expected::Exact('a'))
+        .build();
+
+    {
+        let mut machine = Machine::default();
+        let matched = machine.matching(&actual_items1, &mut expected_items2);
+        // println!("(trace.84) machine={} matched={}", machine, matched);
+        assert!(matched);
+    }
+    {
+        let mut machine = Machine::default();
+        let matched = machine.matching(&actual_items1, &mut expected_items3);
+        // println!("(trace.91) machine={} matched={}", machine, matched);
+        assert!(!matched);
+    }
+    {
+        let mut machine = Machine::default();
+        let matched = machine.matching(&actual_items1, &mut expected_items4);
+        // println!("(trace.99) machine={} matched={}", machine, matched);
+        assert!(!matched);
+    }
 
     println!("Finished.");
 }

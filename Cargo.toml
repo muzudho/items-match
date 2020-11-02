@@ -1,6 +1,6 @@
 [package]
 name = "rattle_items_match"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["むずでょ <muzudho1@gmail.com>"]
 edition = "2018"
 description = """
@@ -16,4 +16,4 @@ exclude = ["doc/*", "examples/*", "resource/*"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-look_ahead_items = "0.1.1"
+# look_ahead_items = "0.1.1"

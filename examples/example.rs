@@ -1,4 +1,4 @@
-extern crate look_ahead_items;
+// extern crate look_ahead_items;
 extern crate rattle_items_match;
 
 use rattle_items_match::{
@@ -43,11 +43,9 @@ fn main() {
         .push(&Expected::Exact('a'))
         .build();
 
-    /*
     assert!(Machine::default().matching(&actual_items1, &mut expected_items1));
     assert!(Machine::default().matching(&actual_items2, &mut expected_items1));
     assert!(!Machine::default().matching(&actual_items3, &mut expected_items1));
-    // */
     let mut expected_items2 = ExpectedItemsBuilder::default()
         .push(&Expected::Repeat(
             RepeatBuilder::default()
@@ -79,23 +77,24 @@ fn main() {
         .push(&Expected::Exact('a'))
         .build();
 
-    /*
     {
         let mut machine = Machine::default();
         let matched = machine.matching(&actual_items1, &mut expected_items2);
-        println!("(84) machine={} matched={}", machine, matched);
+        // println!("(trace.84) machine={} matched={}", machine, matched);
         assert!(matched);
     }
-    */
     {
         let mut machine = Machine::default();
         let matched = machine.matching(&actual_items1, &mut expected_items3);
-        println!("(91) machine={} matched={}", machine, matched);
+        // println!("(trace.91) machine={} matched={}", machine, matched);
         assert!(!matched);
     }
-    /*
-    assert!(!Machine::default().matching(&actual_items1, &mut expected_items4));
-    */
+    {
+        let mut machine = Machine::default();
+        let matched = machine.matching(&actual_items1, &mut expected_items4);
+        // println!("(trace.99) machine={} matched={}", machine, matched);
+        assert!(!matched);
+    }
 
     println!("Finished.");
 }
