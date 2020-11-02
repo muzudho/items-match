@@ -47,22 +47,18 @@ pub struct ExpectedItems<T> {
     items: Vec<Controls<T>>,
 }
 
+/// Controls item.  
+/// 制御項目。  
+#[derive(Clone)]
+pub enum Controls<T> {
+    Once(Expected<T>),
+    Repeat(Repeat<T>),
+}
 #[derive(Clone)]
 pub enum Expected<T> {
     Exact(T),
     Any(Any<T>),
     RangeContainsMax(RangeContainsMax<T>),
-}
-/// Controls item.  
-#[derive(Clone)]
-pub enum Controls<T> {
-    /*
-    Exact(T),
-    Any(Any<T>),
-    RangeContainsMax(RangeContainsMax<T>),
-    */
-    Once(Expected<T>),
-    Repeat(Repeat<T>),
 }
 
 pub struct RangeContainsMaxBuilder<T> {
@@ -88,14 +84,14 @@ pub struct Any<T> {
 }
 
 pub struct RepeatBuilder<T> {
-    expected: Option<Box<Controls<T>>>,
+    expected: Option<Box<Expected<T>>>,
     min: usize,
     max: usize,
 }
 
 #[derive(Clone)]
 pub struct Repeat<T> {
-    expected: Box<Controls<T>>,
+    expected: Box<Expected<T>>,
     min: usize,
     max: usize,
     matched_length: usize,

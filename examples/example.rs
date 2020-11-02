@@ -1,4 +1,3 @@
-// extern crate look_ahead_items;
 extern crate rattle_items_match;
 
 use rattle_items_match::Expected;
@@ -57,7 +56,7 @@ fn main() {
     let mut expected_items2 = ExpectedItemsBuilder::default()
         .push(&Controls::Repeat(
             RepeatBuilder::default()
-                .set_expected(&Controls::Once(Expected::Any(wschar.clone())))
+                .set_expected(&Expected::Any(wschar.clone()))
                 .set_min(1)
                 .set_max(usize::MAX)
                 .build(),
@@ -67,7 +66,7 @@ fn main() {
     let mut expected_items3 = ExpectedItemsBuilder::default()
         .push(&Controls::Repeat(
             RepeatBuilder::default()
-                .set_expected(&Controls::Once(Expected::Any(wschar.clone())))
+                .set_expected(&Expected::Any(wschar.clone()))
                 .set_min(5)
                 .set_max(usize::MAX)
                 .build(),
@@ -77,7 +76,7 @@ fn main() {
     let mut expected_items4 = ExpectedItemsBuilder::default()
         .push(&Controls::Repeat(
             RepeatBuilder::default()
-                .set_expected(&Controls::Once(Expected::Any(wschar.clone())))
+                .set_expected(&Expected::Any(wschar.clone()))
                 .set_min(0)
                 .set_max(3)
                 .build(),
@@ -87,7 +86,7 @@ fn main() {
     let mut expected_items5 = ExpectedItemsBuilder::default()
         .push(&Controls::Repeat(
             RepeatBuilder::default()
-                .set_expected(&Controls::Once(Expected::Any(wschar.clone())))
+                .set_expected(&Expected::Any(wschar.clone()))
                 .set_min(1)
                 .set_max(usize::MAX)
                 .build(),

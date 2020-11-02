@@ -1,6 +1,6 @@
 //! Create `Repeat`.  
 //! `Repeat` を作成します。  
-use crate::Controls;
+use crate::Expected;
 use crate::{Repeat, RepeatBuilder};
 
 impl<T> Default for RepeatBuilder<T>
@@ -35,7 +35,7 @@ where
     }
 
     /// 最低何回繰り返すか。  
-    pub fn set_expected<'a>(&'a mut self, expected: &Controls<T>) -> &'a mut Self {
+    pub fn set_expected<'a>(&'a mut self, expected: &Expected<T>) -> &'a mut Self {
         self.expected = Some(Box::new(expected.clone()));
         self
     }

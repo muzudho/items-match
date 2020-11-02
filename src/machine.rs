@@ -70,8 +70,7 @@ impl Machine {
             },
             Controls::Repeat(rep) => {
                 if rep.is_final() {
-                    // 再帰的
-                    match self.matching2(act, &mut rep.expected) {
+                    match self.matching3(act, &mut rep.expected) {
                         MatchingResult::NotMatch => {
                             // println!("(trace.85) rep={}", rep);
                             return MatchingResult::NotMatch;
@@ -88,8 +87,7 @@ impl Machine {
                         }
                     }
                 } else {
-                    // 再帰的
-                    match self.matching2(act, &mut rep.expected) {
+                    match self.matching3(act, &mut rep.expected) {
                         MatchingResult::NotMatch => {
                             if rep.is_success() {
                                 /*
@@ -117,6 +115,17 @@ impl Machine {
                     }
                 }
             }
+        }
+    }
+
+    pub fn matching3<T>(&mut self, act: &T, exp: &mut Expected<T>) -> MatchingResult
+    where
+        T: std::cmp::PartialEq + std::cmp::PartialOrd,
+    {
+        match exp {
+            Expected::Any(any) => self.matching_any(act, any),
+            Expected::Exact(exa) => self.matching_exact(act, exa),
+            Expected::RangeContainsMax(rng) => self.matching_range_contains_max(act, rng),
         }
     }
 
