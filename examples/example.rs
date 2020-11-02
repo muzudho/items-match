@@ -43,10 +43,9 @@ fn main() {
         .push(&Expected::Exact('a'))
         .build();
 
-    let mut machine = Machine::default();
-    assert!(machine.matching(&actual_items1, &mut expected_items1));
-    assert!(machine.matching(&actual_items2, &mut expected_items1));
-    assert!(!machine.matching(&actual_items3, &mut expected_items1));
+    assert!(Machine::default().matching(&actual_items1, &mut expected_items1));
+    assert!(Machine::default().matching(&actual_items2, &mut expected_items1));
+    assert!(!Machine::default().matching(&actual_items3, &mut expected_items1));
 
     let mut expected_items2 = ExpectedItemsBuilder::default()
         .push(&Expected::Repeat(
@@ -79,9 +78,9 @@ fn main() {
         .push(&Expected::Exact('a'))
         .build();
 
-    assert!(machine.matching(&actual_items1, &mut expected_items2));
-    assert!(!machine.matching(&actual_items1, &mut expected_items3));
-    assert!(!machine.matching(&actual_items1, &mut expected_items4));
+    assert!(Machine::default().matching(&actual_items1, &mut expected_items2));
+    assert!(!Machine::default().matching(&actual_items1, &mut expected_items3));
+    assert!(!Machine::default().matching(&actual_items1, &mut expected_items4));
 
     println!("Finished.");
 }
