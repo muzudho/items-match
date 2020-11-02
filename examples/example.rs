@@ -58,8 +58,30 @@ fn main() {
         ))
         .push(&Expected::Exact('a'))
         .build();
+    let mut expected_items3 = ExpectedItemsBuilder::default()
+        .push(&Expected::Repeat(
+            RepeatBuilder::default()
+                .set_expected(&Expected::Any(wschar.clone()))
+                .set_min(5)
+                .set_max(usize::MAX)
+                .build(),
+        ))
+        .push(&Expected::Exact('a'))
+        .build();
+    let mut expected_items4 = ExpectedItemsBuilder::default()
+        .push(&Expected::Repeat(
+            RepeatBuilder::default()
+                .set_expected(&Expected::Any(wschar.clone()))
+                .set_min(0)
+                .set_max(3)
+                .build(),
+        ))
+        .push(&Expected::Exact('a'))
+        .build();
 
     assert!(machine.matching(&actual_items1, &mut expected_items2));
+    assert!(!machine.matching(&actual_items1, &mut expected_items3));
+    assert!(!machine.matching(&actual_items1, &mut expected_items4));
 
     println!("Finished.");
 }

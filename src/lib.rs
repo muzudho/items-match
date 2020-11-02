@@ -25,7 +25,8 @@ pub mod repeat;
 pub mod repeat_builder;
 
 pub struct Machine {
-    index: usize,
+    actual_index: usize,
+    expected_index: usize,
 }
 
 pub struct ActualItemsBuilder<T> {

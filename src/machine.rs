@@ -2,7 +2,10 @@ use crate::{ActualItems, Expected, ExpectedItems, Machine};
 
 impl Default for Machine {
     fn default() -> Self {
-        Machine { index: 0 }
+        Machine {
+            actual_index: 0,
+            expected_index: 0,
+        }
     }
 }
 
@@ -15,17 +18,20 @@ impl Machine {
     where
         T: std::cmp::PartialEq,
     {
-        let act = actual_items.get(self.index);
-        let exp = expected_items.get_mut(self.index);
+        let act = actual_items.get(self.actual_index);
+        self.actual_index += 1;
+        let exp = expected_items.get_mut(self.expected_index); // TODO カーソルを勧めるのはあとで。
 
         if let Some(act) = act {
             if let Some(mut exp) = exp {
                 return self.matching2(act, &mut exp);
             } else {
+                // マッチしていないという判断。
                 return false;
             }
         } else {
             if let Some(_exp) = exp {
+                // マッチしていないという判断。
                 return false;
             } else {
                 // None vs None はマッチしていないという判断。
@@ -60,7 +66,13 @@ impl Machine {
                     // 再帰的
                     let ret = self.matching2(act, &mut rep.expected);
                     rep.cursor += 1;
-                    return ret;
+                    if ret {
+                        // マッチ中。
+                        return true;
+                    } else {
+                        // マッチしていないという判断。
+                        return false;
+                    }
                 } else {
                     if rep.is_success() {
                         return true;
