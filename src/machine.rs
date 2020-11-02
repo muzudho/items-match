@@ -56,14 +56,18 @@ impl Machine {
                 }
             }
             Expected::Repeat(rep) => {
-                if rep.is_active() {
+                if rep.is_allow() {
                     // 再帰的
                     let ret = self.matching2(act, &mut rep.expected);
                     rep.cursor += 1;
                     return ret;
                 } else {
-                    // マッチしていないという判断。
-                    return false;
+                    if rep.is_success() {
+                        return true;
+                    } else {
+                        // マッチしていないという判断。
+                        return false;
+                    }
                 }
             }
         }
