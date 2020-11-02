@@ -1,4 +1,4 @@
-use crate::{ActualItems, ExpectedItems, Machine};
+use crate::{ActualItems, ExpectedItem, ExpectedItems, Machine};
 
 impl Default for Machine {
     fn default() -> Self {
@@ -20,7 +20,23 @@ impl Machine {
 
         if let Some(act) = act {
             if let Some(exp) = exp {
-                return *act == *exp;
+                match exp {
+                    ExpectedItem::Any(any) => {
+                        for exp in &any.items {
+                            if *exp == *act {
+                                return true;
+                            }
+                        }
+                        return false;
+                    }
+                    ExpectedItem::Exact(exp) => {
+                        if *exp == *act {
+                            true
+                        } else {
+                            false
+                        }
+                    }
+                }
             } else {
                 return false;
             }

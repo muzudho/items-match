@@ -1,6 +1,6 @@
 //! Create `ExpectedItems`.  
 //! `ExpectedItems` を作成します。  
-use crate::{ExpectedItems, ExpectedItemsBuilder};
+use crate::{ExpectedItem, ExpectedItems, ExpectedItemsBuilder};
 
 impl<T> Default for ExpectedItemsBuilder<T>
 where
@@ -28,7 +28,7 @@ where
 
     /// Set the number of items to read ahead.  
     /// 先読みする項目数を設定します。  
-    pub fn push<'a>(&'a mut self, item: &T) -> &'a mut Self {
+    pub fn push<'a>(&'a mut self, item: &ExpectedItem<T>) -> &'a mut Self {
         self.items.push(item.clone());
         self
     }

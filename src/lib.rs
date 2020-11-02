@@ -19,13 +19,14 @@ pub struct ActualItems<T> {
 }
 
 pub struct ExpectedItemsBuilder<T> {
-    items: Vec<T>,
+    items: Vec<ExpectedItem<T>>,
 }
 
 pub struct ExpectedItems<T> {
-    items: Vec<T>,
+    items: Vec<ExpectedItem<T>>,
 }
 
+#[derive(Clone)]
 pub enum ExpectedItem<T> {
     Exact(T),
     Any(Any<T>),
@@ -35,6 +36,7 @@ pub struct AnyBuilder<T> {
     items: Vec<T>,
 }
 
+#[derive(Clone)]
 pub struct Any<T> {
     items: Vec<T>,
 }
