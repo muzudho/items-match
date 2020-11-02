@@ -129,8 +129,9 @@ fn main() {
     // */
 
     let actual_items4 = ActualItemsBuilder::default().push(&'A').build();
-    let actual_items5 = ActualItemsBuilder::default().push(&'A').push(&'A').build();
-    let actual_items6 = ActualItemsBuilder::default()
+    let actual_items5 = ActualItemsBuilder::default().push(&'A').push(&'B').build();
+    let actual_items6 = ActualItemsBuilder::default().push(&'a').push(&'b').build();
+    let actual_items7 = ActualItemsBuilder::default()
         .push(&'a')
         .push(&'b')
         .push(&'c')
@@ -184,15 +185,23 @@ fn main() {
         assert!(matched);
     }
     */
+    //*
     {
         let mut machine = Machine::default();
         let matched = machine.matching(&actual_items5, &mut expected_items7);
         println!("(trace.191) machine={} matched={}", machine, matched);
         assert!(matched);
     }
+    // */
     {
         let mut machine = Machine::default();
-        let matched = machine.matching(&actual_items6, &mut expected_items8);
+        let matched = machine.matching(&actual_items6, &mut expected_items7);
+        println!("(trace.199) machine={} matched={}", machine, matched);
+        assert!(matched);
+    }
+    {
+        let mut machine = Machine::default();
+        let matched = machine.matching(&actual_items7, &mut expected_items8);
         println!("(trace.196) machine={} matched={}", machine, matched);
         assert!(matched);
     }
