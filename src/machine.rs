@@ -4,7 +4,10 @@ use std::fmt;
 
 impl Default for Machine {
     fn default() -> Self {
-        Machine { expected_index: 0 }
+        Machine {
+            actual_index: 0,
+            expected_index: 0,
+        }
     }
 }
 
@@ -17,7 +20,8 @@ impl Machine {
     where
         T: std::cmp::PartialEq,
     {
-        for act in actual_items.get_items() {
+        for (i, act) in actual_items.get_items().iter().enumerate() {
+            self.actual_index = i;
             let exp = expected_items.get_mut(self.expected_index); // TODO カーソルを勧めるのはあとで。
 
             if let Some(mut exp) = exp {
@@ -97,6 +101,7 @@ impl Machine {
 impl fmt::Display for Machine {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let mut buf = String::new();
+        buf.push_str(&format!("actual_index={} ", self.actual_index));
         buf.push_str(&format!("expected_index={} ", self.expected_index));
         write!(f, "{}", buf)
     }
@@ -104,6 +109,7 @@ impl fmt::Display for Machine {
 impl fmt::Debug for Machine {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let mut buf = String::new();
+        buf.push_str(&format!("actual_index={} ", self.actual_index));
         buf.push_str(&format!("expected_index={:?} ", self.expected_index));
         write!(f, "{}", buf)
     }
