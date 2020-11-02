@@ -30,7 +30,7 @@ where
             expected: self.expected.clone().unwrap(),
             min: self.min,
             max: self.max,
-            cursor: 0,
+            matched_length: 0,
         }
     }
 

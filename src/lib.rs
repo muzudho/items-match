@@ -73,7 +73,7 @@ pub struct Repeat<T> {
     expected: Box<Expected<T>>,
     min: usize,
     max: usize,
-    cursor: usize,
+    matched_length: usize,
 }
 
 pub enum MatchingResult {

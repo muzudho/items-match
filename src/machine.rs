@@ -77,8 +77,6 @@ impl Machine {
             }
             Expected::Repeat(rep) => {
                 if rep.is_final() {
-                    rep.cursor += 1;
-
                     // 再帰的
                     match self.matching2(act, &mut rep.expected) {
                         MatchingResult::NotMatch => {
@@ -86,6 +84,7 @@ impl Machine {
                             return MatchingResult::NotMatch;
                         }
                         MatchingResult::Matched | MatchingResult::Ongoing => {
+                            rep.matched_length += 1;
                             if rep.is_success() {
                                 println!("(trace.87) rep={}", rep);
                                 return MatchingResult::Matched;
@@ -96,12 +95,14 @@ impl Machine {
                         }
                     }
                 } else {
-                    rep.cursor += 1;
                     // 再帰的
                     match self.matching2(act, &mut rep.expected) {
                         MatchingResult::NotMatch => {
                             if rep.is_success() {
-                                println!("(trace.104) rep={}", rep);
+                                println!(
+                                    "(trace.104) マッチしなくなったところで再判定。 rep={}",
+                                    rep
+                                );
                                 return MatchingResult::Matched;
                             } else {
                                 println!("(trace.107) rep={}", rep);
@@ -109,10 +110,12 @@ impl Machine {
                             }
                         }
                         MatchingResult::Matched => {
+                            rep.matched_length += 1;
                             println!("(trace.112) マッチ中なので続行。 rep={}", rep);
                             return MatchingResult::Ongoing;
                         }
                         MatchingResult::Ongoing => {
+                            rep.matched_length += 1;
                             println!("(trace.115) rep={}", rep);
                             return MatchingResult::Ongoing;
                         }
