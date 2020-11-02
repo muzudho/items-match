@@ -35,7 +35,7 @@ where
     }
 
     /// 最低何回繰り返すか。  
-    pub fn set_expected<'a>(&'a mut self, quantity: &Quantity<T>) -> &'a mut Self {
+    pub fn set_quantity<'a>(&'a mut self, quantity: &Quantity<T>) -> &'a mut Self {
         self.quantity = Some(Box::new(quantity.clone()));
         self
     }

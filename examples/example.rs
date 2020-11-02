@@ -54,13 +54,15 @@ fn main() {
         .push(&Controls::Once(Quantity::One(Expected::Exact('1'))))
         .build();
 
+    /*
     assert!(Machine::default().matching(&actual_items1, &mut expected_items1));
     assert!(Machine::default().matching(&actual_items2, &mut expected_items1));
     assert!(!Machine::default().matching(&actual_items3, &mut expected_items1));
+    // */
     let mut expected_items2 = ExpectedItemsBuilder::default()
         .push(&Controls::Repeat(
             RepeatBuilder::default()
-                .set_expected(&Quantity::Any(wschar.clone()))
+                .set_quantity(&Quantity::Any(wschar.clone()))
                 .set_min(1)
                 .set_max(usize::MAX)
                 .build(),
@@ -70,7 +72,7 @@ fn main() {
     let mut expected_items3 = ExpectedItemsBuilder::default()
         .push(&Controls::Repeat(
             RepeatBuilder::default()
-                .set_expected(&Quantity::Any(wschar.clone()))
+                .set_quantity(&Quantity::Any(wschar.clone()))
                 .set_min(5)
                 .set_max(usize::MAX)
                 .build(),
@@ -80,7 +82,7 @@ fn main() {
     let mut expected_items4 = ExpectedItemsBuilder::default()
         .push(&Controls::Repeat(
             RepeatBuilder::default()
-                .set_expected(&Quantity::Any(wschar.clone()))
+                .set_quantity(&Quantity::Any(wschar.clone()))
                 .set_min(0)
                 .set_max(3)
                 .build(),
@@ -90,7 +92,7 @@ fn main() {
     let mut expected_items5 = ExpectedItemsBuilder::default()
         .push(&Controls::Repeat(
             RepeatBuilder::default()
-                .set_expected(&Quantity::Any(wschar.clone()))
+                .set_quantity(&Quantity::Any(wschar.clone()))
                 .set_min(1)
                 .set_max(usize::MAX)
                 .build(),
@@ -100,6 +102,7 @@ fn main() {
         ))))
         .build();
 
+    /*
     {
         let mut machine = Machine::default();
         let matched = machine.matching(&actual_items1, &mut expected_items2);
@@ -123,6 +126,59 @@ fn main() {
         let matched = machine.matching(&actual_items1, &mut expected_items5);
         assert!(matched);
     }
+    // */
 
+    let actual_items4 = ActualItemsBuilder::default().push(&'A').build();
+    let actual_items5 = ActualItemsBuilder::default()
+        .push(&'a')
+        .push(&'b')
+        .push(&'c')
+        .build();
+
+    // Alphabet.
+    let upper_case = Expected::RangeContainsMax(
+        RangeContainsMaxBuilder::default()
+            .set_min(&'A')
+            .set_max(&'Z')
+            .build(),
+    );
+    let lower_case = Expected::RangeContainsMax(
+        RangeContainsMaxBuilder::default()
+            .set_min(&'a')
+            .set_max(&'z')
+            .build(),
+    );
+    let alpha = AnyBuilder::default()
+        .push(&upper_case)
+        .push(&lower_case)
+        .build();
+
+    let mut expected_items6 = ExpectedItemsBuilder::default()
+        .push(&Controls::Once(Quantity::Any(alpha.clone())))
+        .build();
+    let mut expected_items7 = ExpectedItemsBuilder::default()
+        .push(&Controls::Repeat(
+            RepeatBuilder::default()
+                .set_quantity(&Quantity::Any(alpha.clone()))
+                .set_min(1)
+                .set_max(usize::MAX)
+                .build(),
+        ))
+        .build();
+
+    /*
+    {
+        let mut machine = Machine::default();
+        let matched = machine.matching(&actual_items4, &mut expected_items6);
+        println!("(trace.162) machine={} matched={}", machine, matched);
+        assert!(matched);
+    }
+    */
+    {
+        let mut machine = Machine::default();
+        let matched = machine.matching(&actual_items5, &mut expected_items7);
+        println!("(trace.162) machine={} matched={}", machine, matched);
+        assert!(matched);
+    }
     println!("Finished.");
 }

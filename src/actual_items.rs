@@ -18,4 +18,8 @@ impl<T> ActualItems<T> {
     pub fn get_items(&self) -> &Vec<T> {
         &self.items
     }
+
+    pub fn len(&self) -> usize {
+        self.items.len()
+    }
 }
