@@ -1,10 +1,10 @@
 //! Specify by range. Includes maximum value.  
 //! 範囲で指定。最大値を含みます。  
-use crate::RangeContainsMax;
+use crate::RangeIncludesMax;
 
-impl<T> Default for RangeContainsMax<T> {
+impl<T> Default for RangeIncludesMax<T> {
     fn default() -> Self {
-        RangeContainsMax {
+        RangeIncludesMax {
             min: None,
             max: None,
         }

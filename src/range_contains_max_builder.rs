@@ -1,6 +1,6 @@
-//! Create `RangeContainsMax`.  
-//! `RangeContainsMax` を作成します。  
-use crate::{RangeContainsMax, RangeContainsMaxBuilder};
+//! Create `RangeIncludesMax`.  
+//! `RangeIncludesMax` を作成します。  
+use crate::{RangeContainsMaxBuilder, RangeIncludesMax};
 
 impl<T> Default for RangeContainsMaxBuilder<T>
 where
@@ -18,13 +18,13 @@ impl<T> RangeContainsMaxBuilder<T>
 where
     T: std::clone::Clone,
 {
-    //! Create `RangeContainsMax`.  
-    //! `RangeContainsMax` を作成します。  
-    pub fn build(&self) -> RangeContainsMax<T>
+    //! Create `RangeIncludesMax`.  
+    //! `RangeIncludesMax` を作成します。  
+    pub fn build(&self) -> RangeIncludesMax<T>
     where
         T: std::clone::Clone,
     {
-        RangeContainsMax {
+        RangeIncludesMax {
             min: self.min.clone(),
             max: self.max.clone(),
         }

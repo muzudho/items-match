@@ -1,7 +1,7 @@
 use crate::Any;
 use crate::MachineState;
 use crate::MatchingResult;
-use crate::RangeContainsMax;
+use crate::RangeIncludesMax;
 use crate::{Controls, Element, Machine, Quantity};
 // use std::fmt;
 
@@ -149,7 +149,7 @@ where
                         return MatchingResult::Matched;
                     }
                 }
-                Element::RangeContainsMax(rng) => {
+                Element::RangeIncludesMax(rng) => {
                     match self.matching5_range_contains_max(act, rng) {
                         MatchingResult::Matched => {
                             // println!("(trace.138) matching_any/rng/matched.");
@@ -184,12 +184,12 @@ where
                     MatchingResult::NotMatch
                 }
             }
-            Element::RangeContainsMax(rng) => {
+            Element::RangeIncludesMax(rng) => {
                 return self.matching5_range_contains_max(act, rng);
             }
         }
     }
-    fn matching5_range_contains_max(&self, act: &T, rng: &RangeContainsMax<T>) -> MatchingResult
+    fn matching5_range_contains_max(&self, act: &T, rng: &RangeIncludesMax<T>) -> MatchingResult
     where
         T: std::cmp::PartialEq + std::cmp::PartialOrd,
     {

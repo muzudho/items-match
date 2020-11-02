@@ -52,13 +52,13 @@ fn main() {
         .set_max(&'9')
         .build();
     // Alphabet.
-    let upper_case = El::RangeContainsMax(
+    let upper_case = El::RangeIncludesMax(
         RangeContainsMaxBuilder::default()
             .set_min(&'A')
             .set_max(&'Z')
             .build(),
     );
-    let lower_case = El::RangeContainsMax(
+    let lower_case = El::RangeIncludesMax(
         RangeContainsMaxBuilder::default()
             .set_min(&'a')
             .set_max(&'z')
@@ -115,7 +115,7 @@ fn main() {
                 .set_max_not_included(usize::MAX)
                 .build(),
         ))
-        .push(&Co::Once(Qu::One(El::RangeContainsMax(digit))))
+        .push(&Co::Once(Qu::One(El::RangeIncludesMax(digit))))
         .build();
     let expected6_alpha = ExpectedBuilder::default()
         .push(&Co::Once(Qu::Any(alpha.clone())))

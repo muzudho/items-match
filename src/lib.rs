@@ -82,7 +82,7 @@ pub enum Quantity<T> {
 #[derive(Clone)]
 pub enum Element<T> {
     Exact(T),
-    RangeContainsMax(RangeContainsMax<T>),
+    RangeIncludesMax(RangeIncludesMax<T>),
 }
 
 pub struct RangeContainsMaxBuilder<T> {
@@ -93,7 +93,7 @@ pub struct RangeContainsMaxBuilder<T> {
 /// Specify by range. Includes maximum value.  
 /// 範囲で指定。最大値を含みます。  
 #[derive(Clone)]
-pub struct RangeContainsMax<T> {
+pub struct RangeIncludesMax<T> {
     min: Option<T>,
     max: Option<T>,
 }

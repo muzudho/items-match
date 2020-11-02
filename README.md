@@ -86,13 +86,13 @@ fn main() {
         .set_max(&'9')
         .build();
     // Alphabet.
-    let upper_case = Element::RangeContainsMax(
+    let upper_case = Element::RangeIncludesMax(
         RangeContainsMaxBuilder::default()
             .set_min(&'A')
             .set_max(&'Z')
             .build(),
     );
-    let lower_case = Element::RangeContainsMax(
+    let lower_case = Element::RangeIncludesMax(
         RangeContainsMaxBuilder::default()
             .set_min(&'a')
             .set_max(&'z')
@@ -149,7 +149,7 @@ fn main() {
                 .set_max_not_included(usize::MAX)
                 .build(),
         ))
-        .push(&Controls::Once(Quantity::One(Element::RangeContainsMax(
+        .push(&Controls::Once(Quantity::One(Element::RangeIncludesMax(
             digit,
         ))))
         .build();
