@@ -1,4 +1,4 @@
-use crate::{ExpectedItem, ExpectedItems};
+use crate::{Expected, ExpectedItems};
 
 impl<T> Default for ExpectedItems<T> {
     fn default() -> Self {
@@ -14,7 +14,7 @@ impl<T> ExpectedItems<T> {
     {
         if 0 < self.items.len() {
             match self.items[0] {
-                ExpectedItem::Any(any) => {
+                Expected::Any(any) => {
                     for exp in any.items {
                         if *exp == *actual {
                             return true;
@@ -22,7 +22,7 @@ impl<T> ExpectedItems<T> {
                     }
                     return false;
                 }
-                ExpectedItem::Exact(exp) => {
+                Expected::Exact(exp) => {
                     if *exp == *actual {
                         true
                     } else {
@@ -36,7 +36,7 @@ impl<T> ExpectedItems<T> {
     }
     */
 
-    pub fn get(&self, index: usize) -> Option<&ExpectedItem<T>> {
+    pub fn get(&self, index: usize) -> Option<&Expected<T>> {
         if index < self.items.len() {
             Some(&self.items[index])
         } else {

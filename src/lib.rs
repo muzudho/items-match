@@ -1,3 +1,19 @@
+//! Matching is not limited to character strings. I'm trying to make a game AI.  
+//! 文字列に限らないマッチングです。 ゲームAIを作ろうとしています。  
+
+// Publish:
+//
+// (1) `cargo test`
+// (2) `cargo run --example example`
+// (3) Open auto-generated log file. I check it.
+// (4) Remove the log file.
+// (5) Update `README.md`.
+// (6) Version up on Cargo.toml.
+// (7) `cargo doc --open`
+// (8) Comit to Git-hub.
+// (9) `cargo publish --dry-run`
+// (10) `cargo publish`
+
 pub mod actual_items;
 pub mod actual_items_builder;
 pub mod any;
@@ -19,15 +35,16 @@ pub struct ActualItems<T> {
 }
 
 pub struct ExpectedItemsBuilder<T> {
-    items: Vec<ExpectedItem<T>>,
+    items: Vec<Expected<T>>,
 }
 
 pub struct ExpectedItems<T> {
-    items: Vec<ExpectedItem<T>>,
+    items: Vec<Expected<T>>,
 }
 
+/// Expected item.  
 #[derive(Clone)]
-pub enum ExpectedItem<T> {
+pub enum Expected<T> {
     Exact(T),
     Any(Any<T>),
 }
