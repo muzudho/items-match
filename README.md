@@ -31,6 +31,7 @@ You can think that you can't do anything that isn't written here.
 ```rust
 extern crate rattle_items_match;
 
+use rattle_items_match::Expected;
 use rattle_items_match::Quantity;
 use rattle_items_match::RangeContainsMaxBuilder;
 use rattle_items_match::{
@@ -65,7 +66,10 @@ fn main() {
         .build();
 
     // Whitespace characters.
-    let wschar = AnyBuilder::default().push(&'\t').push(&' ').build();
+    let wschar = AnyBuilder::default()
+        .push(&Expected::Exact('\t'))
+        .push(&Expected::Exact(' '))
+        .build();
 
     // Digit.
     let digit = RangeContainsMaxBuilder::default()
@@ -75,10 +79,10 @@ fn main() {
 
     let mut expected_items1 = ExpectedItemsBuilder::default()
         .push(&Controls::Once(Quantity::Any(wschar.clone())))
-        .push(&Controls::Once(Quantity::One(' ')))
-        .push(&Controls::Once(Quantity::One(' ')))
-        .push(&Controls::Once(Quantity::One(' ')))
-        .push(&Controls::Once(Quantity::One('1')))
+        .push(&Controls::Once(Quantity::One(Expected::Exact(' '))))
+        .push(&Controls::Once(Quantity::One(Expected::Exact(' '))))
+        .push(&Controls::Once(Quantity::One(Expected::Exact(' '))))
+        .push(&Controls::Once(Quantity::One(Expected::Exact('1'))))
         .build();
 
     assert!(Machine::default().matching(&actual_items1, &mut expected_items1));
@@ -92,7 +96,7 @@ fn main() {
                 .set_max(usize::MAX)
                 .build(),
         ))
-        .push(&Controls::Once(Quantity::One('1')))
+        .push(&Controls::Once(Quantity::One(Expected::Exact('1'))))
         .build();
     let mut expected_items3 = ExpectedItemsBuilder::default()
         .push(&Controls::Repeat(
@@ -102,7 +106,7 @@ fn main() {
                 .set_max(usize::MAX)
                 .build(),
         ))
-        .push(&Controls::Once(Quantity::One('1')))
+        .push(&Controls::Once(Quantity::One(Expected::Exact('1'))))
         .build();
     let mut expected_items4 = ExpectedItemsBuilder::default()
         .push(&Controls::Repeat(
@@ -112,7 +116,7 @@ fn main() {
                 .set_max(3)
                 .build(),
         ))
-        .push(&Controls::Once(Quantity::One('1')))
+        .push(&Controls::Once(Quantity::One(Expected::Exact('1'))))
         .build();
     let mut expected_items5 = ExpectedItemsBuilder::default()
         .push(&Controls::Repeat(
@@ -122,7 +126,9 @@ fn main() {
                 .set_max(usize::MAX)
                 .build(),
         ))
-        .push(&Controls::Once(Quantity::RangeContainsMax(digit)))
+        .push(&Controls::Once(Quantity::One(Expected::RangeContainsMax(
+            digit,
+        ))))
         .build();
 
     {

@@ -48,10 +48,10 @@ fn main() {
 
     let mut expected_items1 = ExpectedItemsBuilder::default()
         .push(&Controls::Once(Quantity::Any(wschar.clone())))
-        .push(&Controls::Once(Quantity::One(' ')))
-        .push(&Controls::Once(Quantity::One(' ')))
-        .push(&Controls::Once(Quantity::One(' ')))
-        .push(&Controls::Once(Quantity::One('1')))
+        .push(&Controls::Once(Quantity::One(Expected::Exact(' '))))
+        .push(&Controls::Once(Quantity::One(Expected::Exact(' '))))
+        .push(&Controls::Once(Quantity::One(Expected::Exact(' '))))
+        .push(&Controls::Once(Quantity::One(Expected::Exact('1'))))
         .build();
 
     assert!(Machine::default().matching(&actual_items1, &mut expected_items1));
@@ -65,7 +65,7 @@ fn main() {
                 .set_max(usize::MAX)
                 .build(),
         ))
-        .push(&Controls::Once(Quantity::One('1')))
+        .push(&Controls::Once(Quantity::One(Expected::Exact('1'))))
         .build();
     let mut expected_items3 = ExpectedItemsBuilder::default()
         .push(&Controls::Repeat(
@@ -75,7 +75,7 @@ fn main() {
                 .set_max(usize::MAX)
                 .build(),
         ))
-        .push(&Controls::Once(Quantity::One('1')))
+        .push(&Controls::Once(Quantity::One(Expected::Exact('1'))))
         .build();
     let mut expected_items4 = ExpectedItemsBuilder::default()
         .push(&Controls::Repeat(
@@ -85,7 +85,7 @@ fn main() {
                 .set_max(3)
                 .build(),
         ))
-        .push(&Controls::Once(Quantity::One('1')))
+        .push(&Controls::Once(Quantity::One(Expected::Exact('1'))))
         .build();
     let mut expected_items5 = ExpectedItemsBuilder::default()
         .push(&Controls::Repeat(
@@ -95,7 +95,9 @@ fn main() {
                 .set_max(usize::MAX)
                 .build(),
         ))
-        .push(&Controls::Once(Quantity::RangeContainsMax(digit)))
+        .push(&Controls::Once(Quantity::One(Expected::RangeContainsMax(
+            digit,
+        ))))
         .build();
 
     {

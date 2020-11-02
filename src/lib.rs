@@ -58,9 +58,8 @@ pub enum Controls<T> {
 /// 量。  
 #[derive(Clone)]
 pub enum Quantity<T> {
-    One(T),
+    One(Expected<T>),
     Any(Any<T>),
-    RangeContainsMax(RangeContainsMax<T>),
 }
 /// Expected.
 /// 期待値。

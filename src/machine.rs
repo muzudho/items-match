@@ -65,8 +65,7 @@ impl Machine {
             */
             Controls::Once(exp) => match exp {
                 Quantity::Any(any) => self.matching_any(act, any),
-                Quantity::One(exa) => self.matching_exact(act, exa),
-                Quantity::RangeContainsMax(rng) => self.matching_range_contains_max(act, rng),
+                Quantity::One(exp) => self.matching_one(act, exp),
             },
             Controls::Repeat(rep) => {
                 if rep.is_final() {
@@ -124,8 +123,7 @@ impl Machine {
     {
         match exp {
             Quantity::Any(any) => self.matching_any(act, any),
-            Quantity::One(exa) => self.matching_exact(act, exa),
-            Quantity::RangeContainsMax(rng) => self.matching_range_contains_max(act, rng),
+            Quantity::One(exp) => self.matching_one(act, exp),
         }
     }
 
@@ -169,16 +167,23 @@ impl Machine {
         }
         return MatchingResult::Matched;
     }
-    fn matching_exact<T>(&mut self, act: &T, exp: &T) -> MatchingResult
+    fn matching_one<T>(&mut self, act: &T, exp: &Expected<T>) -> MatchingResult
     where
         T: std::cmp::PartialEq + std::cmp::PartialOrd,
     {
-        if *exp == *act {
-            // println!("(trace.72)");
-            MatchingResult::Matched
-        } else {
-            // println!("(trace.75)");
-            MatchingResult::NotMatch
+        match exp {
+            Expected::Exact(exa) => {
+                if *exa == *act {
+                    // println!("(trace.72)");
+                    MatchingResult::Matched
+                } else {
+                    // println!("(trace.75)");
+                    MatchingResult::NotMatch
+                }
+            }
+            Expected::RangeContainsMax(rng) => {
+                return self.matching_range_contains_max(act, rng);
+            }
         }
     }
 }
