@@ -133,16 +133,7 @@ fn main() {
                 .build(),
         ))
         .build();
-    let mut expected8_alpha1to3 = ExpectedItemsBuilder::default()
-        .push(&Controls::Repeat(
-            RepeatBuilder::default()
-                .set_quantity(&Quantity::Any(alpha.clone()))
-                .set_min(1)
-                .set_max_not_included(3)
-                .build(),
-        ))
-        .build();
-    let mut expected9_alpha1to_max = ExpectedItemsBuilder::default()
+    let mut expected8_alpha1to_max = ExpectedItemsBuilder::default()
         .push(&Controls::Repeat(
             RepeatBuilder::default()
                 .set_quantity(&Quantity::Any(alpha.clone()))
@@ -200,13 +191,13 @@ fn main() {
     // */
     {
         let mut machine = Machine::default();
-        let matched = machine.matching(&act6_de, &mut expected8_alpha1to3);
+        let matched = machine.matching(&act6_de, &mut expected7_alpha1to3);
         // println!("(trace.199) machine={} matched={}", machine, matched);
         assert!(matched);
     }
     {
         let mut machine = Machine::default();
-        let matched = machine.matching(&act7_fgh, &mut expected9_alpha1to_max);
+        let matched = machine.matching(&act7_fgh, &mut expected8_alpha1to_max);
         // println!("(trace.196) machine={} matched={}", machine, matched);
         assert!(matched);
     }
