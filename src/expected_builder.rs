@@ -1,27 +1,27 @@
-//! Create `ExpectedItems`.  
-//! `ExpectedItems` を作成します。  
-use crate::{Controls, ExpectedItems, ExpectedItemsBuilder};
+//! Create `Expected`.  
+//! `Expected` を作成します。  
+use crate::{Controls, Expected, ExpectedBuilder};
 
-impl<T> Default for ExpectedItemsBuilder<T>
+impl<T> Default for ExpectedBuilder<T>
 where
     T: std::clone::Clone,
 {
     fn default() -> Self {
-        ExpectedItemsBuilder { items: Vec::new() }
+        ExpectedBuilder { items: Vec::new() }
     }
 }
 
-impl<T> ExpectedItemsBuilder<T>
+impl<T> ExpectedBuilder<T>
 where
     T: std::clone::Clone,
 {
-    //! Create `ExpectedItems`.  
-    //! `ExpectedItems` を作成します。  
-    pub fn build(&self) -> ExpectedItems<T>
+    //! Create `Expected`.  
+    //! `Expected` を作成します。  
+    pub fn build(&self) -> Expected<T>
     where
         T: std::clone::Clone,
     {
-        ExpectedItems {
+        Expected {
             items: self.items.clone(),
         }
     }

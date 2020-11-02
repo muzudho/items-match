@@ -1,5 +1,5 @@
 use crate::ActualItems;
-use crate::ExpectedItems;
+use crate::Expected;
 use crate::{Machine, MachineBuilder};
 
 impl<T> Default for MachineBuilder<T>
@@ -31,7 +31,7 @@ where
         self.actual_items = Some(item.clone());
         self
     }
-    pub fn set_expected_items<'a>(&'a mut self, item: &ExpectedItems<T>) -> &'a mut Self {
+    pub fn set_expected_items<'a>(&'a mut self, item: &Expected<T>) -> &'a mut Self {
         self.expected_items = Some(item.clone());
         self
     }

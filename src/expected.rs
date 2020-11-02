@@ -1,12 +1,12 @@
-use crate::{Controls, ExpectedItems};
+use crate::{Controls, Expected};
 
-impl<T> Default for ExpectedItems<T> {
+impl<T> Default for Expected<T> {
     fn default() -> Self {
-        ExpectedItems { items: Vec::new() }
+        Expected { items: Vec::new() }
     }
 }
 
-impl<T> ExpectedItems<T> {
+impl<T> Expected<T> {
     pub fn get(&self, index: usize) -> Option<&Controls<T>> {
         if index < self.items.len() {
             Some(&self.items[index])

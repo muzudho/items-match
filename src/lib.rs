@@ -18,8 +18,8 @@ pub mod actual_items;
 pub mod actual_items_builder;
 pub mod any;
 pub mod any_builder;
-pub mod expected_items;
-pub mod expected_items_builder;
+pub mod expected;
+pub mod expected_builder;
 pub mod machine;
 pub mod machine_builder;
 pub mod machine_state;
@@ -30,7 +30,7 @@ pub mod repeat_builder;
 
 pub struct MachineBuilder<T> {
     actual_items: Option<ActualItems<T>>,
-    expected_items: Option<ExpectedItems<T>>,
+    expected_items: Option<Expected<T>>,
 }
 
 pub struct MachineState {
@@ -42,7 +42,7 @@ pub struct MachineState {
 
 pub struct Machine<T> {
     actual_items: ActualItems<T>,
-    expected_items: ExpectedItems<T>,
+    expected_items: Expected<T>,
 }
 
 pub struct ActualItemsBuilder<T> {
@@ -54,12 +54,12 @@ pub struct ActualItems<T> {
     items: Vec<T>,
 }
 
-pub struct ExpectedItemsBuilder<T> {
+pub struct ExpectedBuilder<T> {
     items: Vec<Controls<T>>,
 }
 
 #[derive(Clone)]
-pub struct ExpectedItems<T> {
+pub struct Expected<T> {
     items: Vec<Controls<T>>,
 }
 

@@ -1,8 +1,8 @@
 extern crate rattle_items_match;
 
 use rattle_items_match::{
-    ActualItemsBuilder, AnyBuilder, Controls as Co, Element as El, ExpectedItemsBuilder,
-    MachineBuilder, Quantity as Qu, RangeContainsMaxBuilder, RepeatBuilder,
+    ActualItemsBuilder, AnyBuilder, Controls as Co, Element as El, ExpectedBuilder, MachineBuilder,
+    Quantity as Qu, RangeContainsMaxBuilder, RepeatBuilder,
 };
 
 fn main() {
@@ -69,7 +69,7 @@ fn main() {
         .push(&lower_case)
         .build();
 
-    let expected1_wsss1 = ExpectedItemsBuilder::default()
+    let expected1_wsss1 = ExpectedBuilder::default()
         .push(&Co::Once(Qu::Any(wschar.clone())))
         .push(&Co::Once(Qu::One(El::Exact(' '))))
         .push(&Co::Once(Qu::One(El::Exact(' '))))
@@ -77,7 +77,7 @@ fn main() {
         .push(&Co::Once(Qu::One(El::Exact('1'))))
         .build();
 
-    let expected2_ws1max = ExpectedItemsBuilder::default()
+    let expected2_ws1max = ExpectedBuilder::default()
         .push(&Co::Repeat(
             RepeatBuilder::default()
                 .set_quantity(&Qu::Any(wschar.clone()))
@@ -87,7 +87,7 @@ fn main() {
         ))
         .push(&Co::Once(Qu::One(El::Exact('1'))))
         .build();
-    let expected3_ws5max = ExpectedItemsBuilder::default()
+    let expected3_ws5max = ExpectedBuilder::default()
         .push(&Co::Repeat(
             RepeatBuilder::default()
                 .set_quantity(&Qu::Any(wschar.clone()))
@@ -97,7 +97,7 @@ fn main() {
         ))
         .push(&Co::Once(Qu::One(El::Exact('1'))))
         .build();
-    let expected4_ws03 = ExpectedItemsBuilder::default()
+    let expected4_ws03 = ExpectedBuilder::default()
         .push(&Co::Repeat(
             RepeatBuilder::default()
                 .set_quantity(&Qu::Any(wschar.clone()))
@@ -107,7 +107,7 @@ fn main() {
         ))
         .push(&Co::Once(Qu::One(El::Exact('1'))))
         .build();
-    let expected5_ws1max = ExpectedItemsBuilder::default()
+    let expected5_ws1max = ExpectedBuilder::default()
         .push(&Co::Repeat(
             RepeatBuilder::default()
                 .set_quantity(&Qu::Any(wschar.clone()))
@@ -117,10 +117,10 @@ fn main() {
         ))
         .push(&Co::Once(Qu::One(El::RangeContainsMax(digit))))
         .build();
-    let expected6_alpha = ExpectedItemsBuilder::default()
+    let expected6_alpha = ExpectedBuilder::default()
         .push(&Co::Once(Qu::Any(alpha.clone())))
         .build();
-    let expected7_alpha1to3 = ExpectedItemsBuilder::default()
+    let expected7_alpha1to3 = ExpectedBuilder::default()
         .push(&Co::Repeat(
             RepeatBuilder::default()
                 .set_quantity(&Qu::Any(alpha.clone()))
@@ -129,7 +129,7 @@ fn main() {
                 .build(),
         ))
         .build();
-    let expected8_alpha1to_max = ExpectedItemsBuilder::default()
+    let expected8_alpha1to_max = ExpectedBuilder::default()
         .push(&Co::Repeat(
             RepeatBuilder::default()
                 .set_quantity(&Qu::Any(alpha.clone()))
