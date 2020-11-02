@@ -10,6 +10,7 @@ impl Default for Machine {
             actual_index: 0,
             expected_index: 0,
             is_final: false,
+            matched_length_in_repeat: 0,
         }
     }
 }
@@ -66,7 +67,7 @@ impl Machine {
                 Quantity::One(exp) => self.matching4_one(act, exp),
             },
             Controls::Repeat(rep) => {
-                if rep.is_cutoff() {
+                if rep.is_cutoff(self.matched_length_in_repeat) {
                     //  || self.is_final
                     match self.matching3_quantity(act, &mut rep.quantity) {
                         MatchingResult::NotMatch => {
@@ -74,8 +75,8 @@ impl Machine {
                             return MatchingResult::NotMatch;
                         }
                         MatchingResult::Matched | MatchingResult::Ongoing => {
-                            rep.matched_length += 1;
-                            if rep.is_cutoff() {
+                            self.matched_length_in_repeat += 1;
+                            if rep.is_cutoff(self.matched_length_in_repeat) {
                                 /*
                                 // println!(
                                     "(trace.93) Cutoff. 上限までマッチしたので切上げ。 rep={}",
@@ -83,7 +84,7 @@ impl Machine {
                                 );
                                 */
                                 return MatchingResult::Matched;
-                            } else if rep.is_success() {
+                            } else if rep.is_success(self.matched_length_in_repeat) {
                                 // println!("(trace.87) rep={}", rep);
                                 return MatchingResult::Matched;
                             } else {
@@ -95,7 +96,7 @@ impl Machine {
                 } else {
                     match self.matching3_quantity(act, &mut rep.quantity) {
                         MatchingResult::NotMatch => {
-                            if rep.is_cutoff() {
+                            if rep.is_cutoff(self.matched_length_in_repeat) {
                                 /*
                                 // println!(
                                     "(trace.93) Cutoff. 上限までマッチしたので切上げ。 rep={}",
@@ -103,7 +104,7 @@ impl Machine {
                                 );
                                 */
                                 return MatchingResult::Matched;
-                            } else if rep.is_success() {
+                            } else if rep.is_success(self.matched_length_in_repeat) {
                                 /*
                                 // println!(
                                     "(trace.104) マッチしなくなったところで再判定。 rep={}",
@@ -117,12 +118,12 @@ impl Machine {
                             }
                         }
                         MatchingResult::Matched => {
-                            rep.matched_length += 1;
+                            self.matched_length_in_repeat += 1;
                             // println!("(trace.112) マッチ中なので続行。 rep={}", rep);
                             return MatchingResult::Ongoing;
                         }
                         MatchingResult::Ongoing => {
-                            rep.matched_length += 1;
+                            self.matched_length_in_repeat += 1;
                             // println!("(trace.115) rep={}", rep);
                             return MatchingResult::Ongoing;
                         }
@@ -221,6 +222,10 @@ impl fmt::Display for Machine {
         let mut buf = String::new();
         buf.push_str(&format!("actual_index={} ", self.actual_index));
         buf.push_str(&format!("expected_index={} ", self.expected_index));
+        buf.push_str(&format!(
+            "matched_length_in_repeat={} ",
+            self.matched_length_in_repeat
+        ));
         write!(f, "{}", buf)
     }
 }
@@ -229,6 +234,10 @@ impl fmt::Debug for Machine {
         let mut buf = String::new();
         buf.push_str(&format!("actual_index={} ", self.actual_index));
         buf.push_str(&format!("expected_index={:?} ", self.expected_index));
+        buf.push_str(&format!(
+            "matched_length_in_repeat={} ",
+            self.matched_length_in_repeat
+        ));
         write!(f, "{}", buf)
     }
 }

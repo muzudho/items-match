@@ -30,6 +30,7 @@ pub struct Machine {
     actual_index: usize,
     expected_index: usize,
     is_final: bool,
+    matched_length_in_repeat: usize,
 }
 
 pub struct ActualItemsBuilder<T> {
@@ -103,7 +104,6 @@ pub struct Repeat<T> {
     quantity: Box<Quantity<T>>,
     min: usize,
     max_not_included: usize,
-    matched_length: usize,
 }
 
 pub enum MatchingResult {

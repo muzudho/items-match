@@ -30,7 +30,6 @@ where
             quantity: self.quantity.clone().unwrap(),
             min: self.min,
             max_not_included: self.max_not_included,
-            matched_length: 0,
         }
     }
 
