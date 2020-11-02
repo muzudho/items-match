@@ -67,7 +67,7 @@ impl Machine {
                 Quantity::One(exp) => self.matching4_one(act, exp),
             },
             Controls::Repeat(rep) => {
-                if rep.is_final() {
+                if rep.is_cutoff() {
                     //  || self.is_final
                     match self.matching3_quantity(act, &mut rep.quantity) {
                         MatchingResult::NotMatch => {
@@ -76,7 +76,13 @@ impl Machine {
                         }
                         MatchingResult::Matched | MatchingResult::Ongoing => {
                             rep.matched_length += 1;
-                            if rep.is_success() {
+                            if rep.is_cutoff() {
+                                println!(
+                                    "(trace.93) Cutoff. 上限までマッチしたので切上げ。 rep={}",
+                                    rep
+                                );
+                                return MatchingResult::Matched;
+                            } else if rep.is_success() {
                                 println!("(trace.87) rep={}", rep);
                                 return MatchingResult::Matched;
                             } else {
@@ -88,7 +94,13 @@ impl Machine {
                 } else {
                     match self.matching3_quantity(act, &mut rep.quantity) {
                         MatchingResult::NotMatch => {
-                            if rep.is_success() {
+                            if rep.is_cutoff() {
+                                println!(
+                                    "(trace.93) Cutoff. 上限までマッチしたので切上げ。 rep={}",
+                                    rep
+                                );
+                                return MatchingResult::Matched;
+                            } else if rep.is_success() {
                                 //*
                                 println!(
                                     "(trace.104) マッチしなくなったところで再判定。 rep={}",

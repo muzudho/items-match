@@ -2,7 +2,7 @@ use crate::Repeat;
 use std::fmt;
 
 impl<T> Repeat<T> {
-    pub fn is_final(&self) -> bool {
+    pub fn is_cutoff(&self) -> bool {
         self.max_not_included - 1 <= self.matched_length
     }
     pub fn is_success(&self) -> bool {

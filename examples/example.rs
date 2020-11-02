@@ -54,7 +54,7 @@ fn main() {
         .push(&Controls::Once(Quantity::One(Expected::Exact('1'))))
         .build();
 
-    /*
+    //*
     assert!(Machine::default().matching(&actual_items1, &mut expected_items1));
     assert!(Machine::default().matching(&actual_items2, &mut expected_items1));
     assert!(!Machine::default().matching(&actual_items3, &mut expected_items1));
@@ -102,7 +102,7 @@ fn main() {
         ))))
         .build();
 
-    /*
+    //*
     {
         let mut machine = Machine::default();
         let matched = machine.matching(&actual_items1, &mut expected_items2);
@@ -127,7 +127,6 @@ fn main() {
         assert!(matched);
     }
     // */
-
     let actual_items4 = ActualItemsBuilder::default().push(&'A').build();
     let actual_items5 = ActualItemsBuilder::default().push(&'A').push(&'B').build();
     let actual_items6 = ActualItemsBuilder::default().push(&'a').push(&'b').build();
@@ -177,14 +176,14 @@ fn main() {
         ))
         .build();
 
-    /*
+    //*
     {
         let mut machine = Machine::default();
         let matched = machine.matching(&actual_items4, &mut expected_items6);
         println!("(trace.162) machine={} matched={}", machine, matched);
         assert!(matched);
     }
-    */
+    // */
     //*
     {
         let mut machine = Machine::default();
