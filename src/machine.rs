@@ -27,12 +27,12 @@ impl Machine {
             if let Some(mut exp) = expected_items.get_mut(self.expected_index) {
                 match self.matching2(act, &mut exp) {
                     MatchingResult::Matched => {
-                        println!("(trace.30)");
+                        println!("(trace.30) マッチしたという判断。");
                         self.expected_index += 1;
                         return true;
                     }
                     MatchingResult::NotMatch => {
-                        println!("(trace.35)");
+                        println!("(trace.35) マッチしていないという判断。");
                         return false;
                     }
                     MatchingResult::Ongoing => {
@@ -81,7 +81,10 @@ impl Machine {
 
                     // 再帰的
                     match self.matching2(act, &mut rep.expected) {
-                        MatchingResult::NotMatch => return MatchingResult::NotMatch,
+                        MatchingResult::NotMatch => {
+                            println!("(trace.85) rep={}", rep);
+                            return MatchingResult::NotMatch;
+                        }
                         MatchingResult::Matched | MatchingResult::Ongoing => {
                             if rep.is_success() {
                                 println!("(trace.87) rep={}", rep);
@@ -96,13 +99,21 @@ impl Machine {
                     rep.cursor += 1;
                     // 再帰的
                     match self.matching2(act, &mut rep.expected) {
-                        MatchingResult::NotMatch => return MatchingResult::NotMatch,
+                        MatchingResult::NotMatch => {
+                            if rep.is_success() {
+                                println!("(trace.104) rep={}", rep);
+                                return MatchingResult::Matched;
+                            } else {
+                                println!("(trace.107) rep={}", rep);
+                                return MatchingResult::NotMatch;
+                            }
+                        }
                         MatchingResult::Matched => {
-                            println!("(trace.101) マッチ中なので続行。 rep={}", rep);
+                            println!("(trace.112) マッチ中なので続行。 rep={}", rep);
                             return MatchingResult::Ongoing;
                         }
                         MatchingResult::Ongoing => {
-                            println!("(trace.109) rep={}", rep);
+                            println!("(trace.115) rep={}", rep);
                             return MatchingResult::Ongoing;
                         }
                     }
