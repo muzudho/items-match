@@ -18,7 +18,7 @@ impl Machine {
         expected_items: &mut ExpectedItems<T>,
     ) -> bool
     where
-        T: std::cmp::PartialEq,
+        T: std::cmp::PartialEq + std::cmp::PartialOrd,
     {
         for (i, act) in actual_items.get_items().iter().enumerate() {
             self.actual_index = i;
@@ -53,7 +53,7 @@ impl Machine {
 
     pub fn matching2<T>(&mut self, act: &T, exp: &mut Expected<T>) -> MatchingResult
     where
-        T: std::cmp::PartialEq,
+        T: std::cmp::PartialEq + std::cmp::PartialOrd,
     {
         match exp {
             Expected::Any(any) => {
@@ -65,6 +65,19 @@ impl Machine {
                 }
                 // println!("(trace.67) Anyで不一致。");
                 return MatchingResult::NotMatch;
+            }
+            Expected::RangeContainsMax(rng) => {
+                if let Some(min) = &rng.min {
+                    if *act < *min {
+                        return MatchingResult::NotMatch;
+                    }
+                }
+                if let Some(max) = &rng.max {
+                    if *max < *act {
+                        return MatchingResult::NotMatch;
+                    }
+                }
+                return MatchingResult::Matched;
             }
             Expected::Exact(exp) => {
                 if *exp == *act {

@@ -52,6 +52,7 @@ pub struct ExpectedItems<T> {
 pub enum Expected<T> {
     Exact(T),
     Any(Any<T>),
+    RangeContainsMax(RangeContainsMax<T>),
     Repeat(Repeat<T>),
 }
 
