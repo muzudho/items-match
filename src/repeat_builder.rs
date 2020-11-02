@@ -9,7 +9,7 @@ where
 {
     fn default() -> Self {
         RepeatBuilder {
-            expected: None,
+            quantity: None,
             min: 0,
             max: 0,
         }
@@ -27,7 +27,7 @@ where
         T: std::clone::Clone,
     {
         Repeat {
-            expected: self.expected.clone().unwrap(),
+            quantity: self.quantity.clone().unwrap(),
             min: self.min,
             max: self.max,
             matched_length: 0,
@@ -35,8 +35,8 @@ where
     }
 
     /// 最低何回繰り返すか。  
-    pub fn set_expected<'a>(&'a mut self, expected: &Quantity<T>) -> &'a mut Self {
-        self.expected = Some(Box::new(expected.clone()));
+    pub fn set_expected<'a>(&'a mut self, quantity: &Quantity<T>) -> &'a mut Self {
+        self.quantity = Some(Box::new(quantity.clone()));
         self
     }
     /// 最低何回繰り返すか。  

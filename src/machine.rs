@@ -70,7 +70,7 @@ impl Machine {
             },
             Controls::Repeat(rep) => {
                 if rep.is_final() {
-                    match self.matching3(act, &mut rep.expected) {
+                    match self.matching3(act, &mut rep.quantity) {
                         MatchingResult::NotMatch => {
                             // println!("(trace.85) rep={}", rep);
                             return MatchingResult::NotMatch;
@@ -87,7 +87,7 @@ impl Machine {
                         }
                     }
                 } else {
-                    match self.matching3(act, &mut rep.expected) {
+                    match self.matching3(act, &mut rep.quantity) {
                         MatchingResult::NotMatch => {
                             if rep.is_success() {
                                 /*

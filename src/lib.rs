@@ -86,14 +86,14 @@ pub struct Any<T> {
 }
 
 pub struct RepeatBuilder<T> {
-    expected: Option<Box<Quantity<T>>>,
+    quantity: Option<Box<Quantity<T>>>,
     min: usize,
     max: usize,
 }
 
 #[derive(Clone)]
 pub struct Repeat<T> {
-    expected: Box<Quantity<T>>,
+    quantity: Box<Quantity<T>>,
     min: usize,
     max: usize,
     matched_length: usize,
