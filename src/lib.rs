@@ -62,16 +62,13 @@ pub enum Quantity<T> {
     Any(Any<T>),
     RangeContainsMax(RangeContainsMax<T>),
 }
-/*
 /// Expected.
 /// 期待値。
 #[derive(Clone)]
 pub enum Expected<T> {
     Exact(T),
-    Any(Any<T>),
     RangeContainsMax(RangeContainsMax<T>),
 }
-*/
 
 pub struct RangeContainsMaxBuilder<T> {
     min: Option<T>,
@@ -87,12 +84,12 @@ pub struct RangeContainsMax<T> {
 }
 
 pub struct AnyBuilder<T> {
-    items: Vec<T>,
+    items: Vec<Expected<T>>,
 }
 
 #[derive(Clone)]
 pub struct Any<T> {
-    items: Vec<T>,
+    items: Vec<Expected<T>>,
 }
 
 pub struct RepeatBuilder<T> {

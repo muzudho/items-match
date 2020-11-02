@@ -1,5 +1,6 @@
 //! Create `Any`.  
 //! `Any` を作成します。  
+use crate::Expected;
 use crate::{Any, AnyBuilder};
 
 impl<T> Default for AnyBuilder<T>
@@ -28,7 +29,7 @@ where
 
     /// Set the number of items to read ahead.  
     /// 先読みする項目数を設定します。  
-    pub fn push<'a>(&'a mut self, item: &T) -> &'a mut Self {
+    pub fn push<'a>(&'a mut self, item: &Expected<T>) -> &'a mut Self {
         self.items.push(item.clone());
         self
     }

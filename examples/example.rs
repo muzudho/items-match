@@ -1,5 +1,6 @@
 extern crate rattle_items_match;
 
+use rattle_items_match::Expected;
 use rattle_items_match::Quantity;
 use rattle_items_match::RangeContainsMaxBuilder;
 use rattle_items_match::{
@@ -34,7 +35,10 @@ fn main() {
         .build();
 
     // Whitespace characters.
-    let wschar = AnyBuilder::default().push(&'\t').push(&' ').build();
+    let wschar = AnyBuilder::default()
+        .push(&Expected::Exact('\t'))
+        .push(&Expected::Exact(' '))
+        .build();
 
     // Digit.
     let digit = RangeContainsMaxBuilder::default()

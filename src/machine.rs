@@ -1,7 +1,7 @@
 use crate::Any;
 use crate::MatchingResult;
 use crate::RangeContainsMax;
-use crate::{ActualItems, Controls, ExpectedItems, Machine, Quantity};
+use crate::{ActualItems, Controls, Expected, ExpectedItems, Machine, Quantity};
 use std::fmt;
 
 impl Default for Machine {
@@ -134,9 +134,16 @@ impl Machine {
         T: std::cmp::PartialEq + std::cmp::PartialOrd,
     {
         for exp in &any.items {
-            if *exp == *act {
-                // println!("(trace.63) matching2/matched.");
-                return MatchingResult::Matched;
+            match exp {
+                Expected::Exact(exa) => {
+                    if *exa == *act {
+                        // println!("(trace.63) matching2/matched.");
+                        return MatchingResult::Matched;
+                    }
+                }
+                Expected::RangeContainsMax(rng) => {
+                    return self.matching_range_contains_max(act, rng);
+                }
             }
         }
         // println!("(trace.67) Anyで不一致。");
