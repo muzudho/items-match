@@ -58,10 +58,12 @@ impl Machine {
         T: std::cmp::PartialEq + std::cmp::PartialOrd,
     {
         match exp {
+            /*
             Controls::Any(any) => self.matching_any(act, any),
             Controls::RangeContainsMax(rng) => self.matching_range_contains_max(act, rng),
             Controls::Exact(exa) => self.matching_exact(act, exa),
-            Controls::Expected(exp) => match exp {
+            */
+            Controls::Once(exp) => match exp {
                 Expected::Any(any) => self.matching_any(act, any),
                 Expected::Exact(exa) => self.matching_exact(act, exa),
                 Expected::RangeContainsMax(rng) => self.matching_range_contains_max(act, rng),

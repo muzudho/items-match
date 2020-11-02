@@ -56,10 +56,12 @@ pub enum Expected<T> {
 /// Controls item.  
 #[derive(Clone)]
 pub enum Controls<T> {
+    /*
     Exact(T),
     Any(Any<T>),
     RangeContainsMax(RangeContainsMax<T>),
-    Expected(Expected<T>),
+    */
+    Once(Expected<T>),
     Repeat(Repeat<T>),
 }
 
