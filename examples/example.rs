@@ -1,14 +1,16 @@
 extern crate rattle_items_match;
 
 use rattle_items_match::{
-    Actual, Any, Controls as Co, Element as El, Expected, Machine, Quantity as Qu,
+    Actual, Any, Controls as Co, Element as El, Expected, Machine as Ma, Quantity as Qu,
     RangeIncludesMax, Repeat,
 };
 
 fn main() {
     println!("Start.");
 
-    let ac1_ssss1 = Actual::default()
+    // `Actual` is sequence only.
+    // 比較対象値は シーケンスのみです。
+    let ac1 = Actual::default() // "    1"
         .push(&' ')
         .push(&' ')
         .push(&' ')
@@ -16,7 +18,7 @@ fn main() {
         .push(&'1')
         .build();
 
-    let ac2_tsss1 = Actual::default()
+    let ac2 = Actual::default() // "\t   1"
         .push(&'\t')
         .push(&' ')
         .push(&' ')
@@ -24,18 +26,18 @@ fn main() {
         .push(&'1')
         .build();
 
-    let ac3_xsss1 = Actual::default()
+    let ac3 = Actual::default() // 'x   1'
         .push(&'x')
         .push(&' ')
         .push(&' ')
         .push(&' ')
         .push(&'1')
         .build();
-    let ac4_a = Actual::default().push(&'A').build();
-    let ac5_bc = Actual::default().push(&'B').push(&'C').build();
-    let ac6_de = Actual::default().push(&'d').push(&'e').build();
-    let ac7_fgh = Actual::default().push(&'f').push(&'g').push(&'h').build();
-    let ac8_cr_lf = Actual::default().push(&'\r').push(&'\n').build();
+    let ac4 = Actual::default().push(&'A').build(); // 'A'
+    let ac5 = Actual::default().push(&'B').push(&'C').build(); // 'BC'
+    let ac6 = Actual::default().push(&'d').push(&'e').build(); // 'de'
+    let ac7 = Actual::default().push(&'f').push(&'g').push(&'h').build(); // 'fgh'
+    let ac8 = Actual::default().push(&'\r').push(&'\n').build(); // "\r\n"
 
     // Whitespace characters.
     let wschar = Any::default()
@@ -59,7 +61,7 @@ fn main() {
     // #
     // TODO let comment_start_symbol = El::Pin('#');
 
-    let ex1_wsss1 = Expected::default()
+    let ex1 = Expected::default() // "(wschar)   1"
         .push(&Co::Once(Qu::Any(wschar.clone())))
         .push(&Co::Once(Qu::One(El::Pin(' '))))
         .push(&Co::Once(Qu::One(El::Pin(' '))))
@@ -67,7 +69,7 @@ fn main() {
         .push(&Co::Once(Qu::One(El::Pin('1'))))
         .build();
 
-    let ex2_ws1max = Expected::default()
+    let ex2 = Expected::default() // "+(wschar)"
         .push(&Co::Repeat(
             Repeat::default()
                 .quantity(&Qu::Any(wschar.clone()))
@@ -77,7 +79,7 @@ fn main() {
         ))
         .push(&Co::Once(Qu::One(El::Pin('1'))))
         .build();
-    let ex3_ws5max = Expected::default()
+    let ex3 = Expected::default() // "(wschar){5,}"
         .push(&Co::Repeat(
             Repeat::default()
                 .quantity(&Qu::Any(wschar.clone()))
@@ -87,7 +89,7 @@ fn main() {
         ))
         .push(&Co::Once(Qu::One(El::Pin('1'))))
         .build();
-    let ex4_ws03 = Expected::default()
+    let ex4 = Expected::default() // "(wschar){0,3}"
         .push(&Co::Repeat(
             Repeat::default()
                 .quantity(&Qu::Any(wschar.clone()))
@@ -97,7 +99,7 @@ fn main() {
         ))
         .push(&Co::Once(Qu::One(El::Pin('1'))))
         .build();
-    let ex5_ws1max = Expected::default()
+    let ex5 = Expected::default() // "(wschar){1,}"
         .push(&Co::Repeat(
             Repeat::default()
                 .quantity(&Qu::Any(wschar.clone()))
@@ -107,10 +109,10 @@ fn main() {
         ))
         .push(&Co::Once(Qu::One(El::RangeIncludesMax(digit))))
         .build();
-    let ex6_alpha = Expected::default()
+    let ex6 = Expected::default() // "(alpha)"
         .push(&Co::Once(Qu::Any(alpha.clone())))
         .build();
-    let ex7_alpha1to3 = Expected::default()
+    let ex7 = Expected::default() // "(alpha){1,3}"
         .push(&Co::Repeat(
             Repeat::default()
                 .quantity(&Qu::Any(alpha.clone()))
@@ -119,7 +121,7 @@ fn main() {
                 .build(),
         ))
         .build();
-    let ex8_alpha1to_max = Expected::default()
+    let ex8 = Expected::default() // "(alpha){1,}"
         .push(&Co::Repeat(
             Repeat::default()
                 .quantity(&Qu::Any(alpha.clone()))
@@ -128,69 +130,21 @@ fn main() {
                 .build(),
         ))
         .build();
-    let ex9_cr_lf = Expected::default()
+    let ex9 = Expected::default() // "(newline)"
         .push(&Co::Once(Qu::Any(newline.clone())))
         .build();
 
-    assert!(Machine::default()
-        .actual(&ac1_ssss1)
-        .expected(&ex1_wsss1)
-        .build()
-        .matching());
-    assert!(Machine::default()
-        .actual(&ac2_tsss1)
-        .expected(&ex1_wsss1)
-        .build()
-        .matching());
-    assert!(!Machine::default()
-        .actual(&ac3_xsss1)
-        .expected(&ex1_wsss1)
-        .build()
-        .matching());
-    assert!(Machine::default()
-        .actual(&ac1_ssss1)
-        .expected(&ex2_ws1max)
-        .build()
-        .matching());
-    assert!(!Machine::default()
-        .actual(&ac1_ssss1)
-        .expected(&ex3_ws5max)
-        .build()
-        .matching());
-    assert!(!Machine::default()
-        .actual(&ac1_ssss1)
-        .expected(&ex4_ws03)
-        .build()
-        .matching());
-    assert!(Machine::default()
-        .actual(&ac1_ssss1)
-        .expected(&ex5_ws1max)
-        .build()
-        .matching());
-    assert!(Machine::default()
-        .actual(&ac4_a)
-        .expected(&ex6_alpha)
-        .build()
-        .matching());
-    assert!(Machine::default()
-        .actual(&ac5_bc)
-        .expected(&ex7_alpha1to3)
-        .build()
-        .matching());
-    assert!(Machine::default()
-        .actual(&ac6_de)
-        .expected(&ex7_alpha1to3)
-        .build()
-        .matching());
-    assert!(Machine::default()
-        .actual(&ac7_fgh)
-        .expected(&ex8_alpha1to_max)
-        .build()
-        .matching());
-    assert!(Machine::default()
-        .actual(&ac8_cr_lf)
-        .expected(&ex9_cr_lf)
-        .build()
-        .matching());
+    assert!(Ma::default().actual(&ac1).expected(&ex1).build().exec());
+    assert!(Ma::default().actual(&ac2).expected(&ex1).build().exec());
+    assert!(!Ma::default().actual(&ac3).expected(&ex1).build().exec());
+    assert!(Ma::default().actual(&ac1).expected(&ex2).build().exec());
+    assert!(!Ma::default().actual(&ac1).expected(&ex3).build().exec());
+    assert!(!Ma::default().actual(&ac1).expected(&ex4).build().exec());
+    assert!(Ma::default().actual(&ac1).expected(&ex5).build().exec());
+    assert!(Ma::default().actual(&ac4).expected(&ex6).build().exec());
+    assert!(Ma::default().actual(&ac5).expected(&ex7).build().exec());
+    assert!(Ma::default().actual(&ac6).expected(&ex7).build().exec());
+    assert!(Ma::default().actual(&ac7).expected(&ex8).build().exec());
+    assert!(Ma::default().actual(&ac8).expected(&ex9).build().exec());
     println!("Finished.");
 }

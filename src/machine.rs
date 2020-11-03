@@ -48,7 +48,9 @@ impl<T> MachineVal<T>
 where
     T: std::cmp::PartialEq + std::cmp::PartialOrd,
 {
-    pub fn matching(&self) -> bool {
+    /// Compare actual and expected for an exact match.  
+    /// 完全一致するかどうか actual と expected を比較します。  
+    pub fn exec(&self) -> bool {
         let mut machine_state = MachineState::default();
 
         for (i, act) in self.actual.get_items().iter().enumerate() {
