@@ -36,7 +36,7 @@ use rattle_items_match::Machine;
 use rattle_items_match::Quantity;
 use rattle_items_match::RangeIncludesMaxBuilder;
 use rattle_items_match::{
-    Actual, AnyBuilder, Controls, ExpectedBuilder, RepeatBuilder,
+    Actual, AnyBuilder, Controls, Expected, RepeatBuilder,
 };
 
 fn main() {
@@ -103,7 +103,7 @@ fn main() {
         .push(&lower_case)
         .build();
 
-    let expected1_wsss1 = ExpectedBuilder::default()
+    let expected1_wsss1 = Expected::default()
         .push(&Controls::Once(Quantity::Any(wschar.clone())))
         .push(&Controls::Once(Quantity::One(Element::Exact(' '))))
         .push(&Controls::Once(Quantity::One(Element::Exact(' '))))
@@ -111,7 +111,7 @@ fn main() {
         .push(&Controls::Once(Quantity::One(Element::Exact('1'))))
         .build();
 
-    let expected2_ws1max = ExpectedBuilder::default()
+    let expected2_ws1max = Expected::default()
         .push(&Controls::Repeat(
             RepeatBuilder::default()
                 .set_quantity(&Quantity::Any(wschar.clone()))
@@ -121,7 +121,7 @@ fn main() {
         ))
         .push(&Controls::Once(Quantity::One(Element::Exact('1'))))
         .build();
-    let expected3_ws5max = ExpectedBuilder::default()
+    let expected3_ws5max = Expected::default()
         .push(&Controls::Repeat(
             RepeatBuilder::default()
                 .set_quantity(&Quantity::Any(wschar.clone()))
@@ -131,7 +131,7 @@ fn main() {
         ))
         .push(&Controls::Once(Quantity::One(Element::Exact('1'))))
         .build();
-    let expected4_ws03 = ExpectedBuilder::default()
+    let expected4_ws03 = Expected::default()
         .push(&Controls::Repeat(
             RepeatBuilder::default()
                 .set_quantity(&Quantity::Any(wschar.clone()))
@@ -141,7 +141,7 @@ fn main() {
         ))
         .push(&Controls::Once(Quantity::One(Element::Exact('1'))))
         .build();
-    let expected5_ws1max = ExpectedBuilder::default()
+    let expected5_ws1max = Expected::default()
         .push(&Controls::Repeat(
             RepeatBuilder::default()
                 .set_quantity(&Quantity::Any(wschar.clone()))
@@ -153,10 +153,10 @@ fn main() {
             digit,
         ))))
         .build();
-    let expected6_alpha = ExpectedBuilder::default()
+    let expected6_alpha = Expected::default()
         .push(&Controls::Once(Quantity::Any(alpha.clone())))
         .build();
-    let expected7_alpha1to3 = ExpectedBuilder::default()
+    let expected7_alpha1to3 = Expected::default()
         .push(&Controls::Repeat(
             RepeatBuilder::default()
                 .set_quantity(&Quantity::Any(alpha.clone()))
@@ -165,7 +165,7 @@ fn main() {
                 .build(),
         ))
         .build();
-    let expected8_alpha1to_max = ExpectedBuilder::default()
+    let expected8_alpha1to_max = Expected::default()
         .push(&Controls::Repeat(
             RepeatBuilder::default()
                 .set_quantity(&Quantity::Any(alpha.clone()))

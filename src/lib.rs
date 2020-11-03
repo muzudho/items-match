@@ -18,7 +18,6 @@ pub mod actual;
 pub mod any;
 pub mod any_builder;
 pub mod expected;
-pub mod expected_builder;
 pub mod machine;
 pub mod range_contains_max;
 pub mod range_contains_max_builder;
@@ -27,7 +26,7 @@ pub mod repeat_builder;
 
 pub struct Machine<T> {
     actual: Option<ActualVal<T>>,
-    expected: Option<Expected<T>>,
+    expected: Option<ExpectedVal<T>>,
 }
 
 pub struct MachineState {
@@ -39,7 +38,7 @@ pub struct MachineState {
 
 pub struct MachineVal<T> {
     actual: ActualVal<T>,
-    expected: Expected<T>,
+    expected: ExpectedVal<T>,
 }
 
 pub struct Actual<T> {
@@ -51,12 +50,12 @@ pub struct ActualVal<T> {
     items: Vec<T>,
 }
 
-pub struct ExpectedBuilder<T> {
+pub struct Expected<T> {
     items: Vec<Controls<T>>,
 }
 
 #[derive(Clone)]
-pub struct Expected<T> {
+pub struct ExpectedVal<T> {
     items: Vec<Controls<T>>,
 }
 

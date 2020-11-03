@@ -1,7 +1,7 @@
 extern crate rattle_items_match;
 
 use rattle_items_match::{
-    Actual, AnyBuilder, Controls as Co, Element as El, ExpectedBuilder, Machine, Quantity as Qu,
+    Actual, AnyBuilder, Controls as Co, Element as El, Expected, Machine, Quantity as Qu,
     RangeIncludesMaxBuilder, RepeatBuilder,
 };
 
@@ -65,7 +65,7 @@ fn main() {
         .push(&lower_case)
         .build();
 
-    let ex1_wsss1 = ExpectedBuilder::default()
+    let ex1_wsss1 = Expected::default()
         .push(&Co::Once(Qu::Any(wschar.clone())))
         .push(&Co::Once(Qu::One(El::Exact(' '))))
         .push(&Co::Once(Qu::One(El::Exact(' '))))
@@ -73,7 +73,7 @@ fn main() {
         .push(&Co::Once(Qu::One(El::Exact('1'))))
         .build();
 
-    let ex2_ws1max = ExpectedBuilder::default()
+    let ex2_ws1max = Expected::default()
         .push(&Co::Repeat(
             RepeatBuilder::default()
                 .set_quantity(&Qu::Any(wschar.clone()))
@@ -83,7 +83,7 @@ fn main() {
         ))
         .push(&Co::Once(Qu::One(El::Exact('1'))))
         .build();
-    let ex3_ws5max = ExpectedBuilder::default()
+    let ex3_ws5max = Expected::default()
         .push(&Co::Repeat(
             RepeatBuilder::default()
                 .set_quantity(&Qu::Any(wschar.clone()))
@@ -93,7 +93,7 @@ fn main() {
         ))
         .push(&Co::Once(Qu::One(El::Exact('1'))))
         .build();
-    let ex4_ws03 = ExpectedBuilder::default()
+    let ex4_ws03 = Expected::default()
         .push(&Co::Repeat(
             RepeatBuilder::default()
                 .set_quantity(&Qu::Any(wschar.clone()))
@@ -103,7 +103,7 @@ fn main() {
         ))
         .push(&Co::Once(Qu::One(El::Exact('1'))))
         .build();
-    let ex5_ws1max = ExpectedBuilder::default()
+    let ex5_ws1max = Expected::default()
         .push(&Co::Repeat(
             RepeatBuilder::default()
                 .set_quantity(&Qu::Any(wschar.clone()))
@@ -113,10 +113,10 @@ fn main() {
         ))
         .push(&Co::Once(Qu::One(El::RangeIncludesMax(digit))))
         .build();
-    let ex6_alpha = ExpectedBuilder::default()
+    let ex6_alpha = Expected::default()
         .push(&Co::Once(Qu::Any(alpha.clone())))
         .build();
-    let ex7_alpha1to3 = ExpectedBuilder::default()
+    let ex7_alpha1to3 = Expected::default()
         .push(&Co::Repeat(
             RepeatBuilder::default()
                 .set_quantity(&Qu::Any(alpha.clone()))
@@ -125,7 +125,7 @@ fn main() {
                 .build(),
         ))
         .build();
-    let ex8_alpha1to_max = ExpectedBuilder::default()
+    let ex8_alpha1to_max = Expected::default()
         .push(&Co::Repeat(
             RepeatBuilder::default()
                 .set_quantity(&Qu::Any(alpha.clone()))

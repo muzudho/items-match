@@ -1,6 +1,6 @@
 use crate::ActualVal;
 use crate::Any;
-use crate::Expected;
+use crate::ExpectedVal;
 use crate::Machine;
 use crate::MachineState;
 use crate::MatchingResult;
@@ -36,7 +36,7 @@ where
         self.actual = Some(item.clone());
         self
     }
-    pub fn set_expected<'a>(&'a mut self, item: &Expected<T>) -> &'a mut Self {
+    pub fn set_expected<'a>(&'a mut self, item: &ExpectedVal<T>) -> &'a mut Self {
         self.expected = Some(item.clone());
         self
     }
