@@ -32,7 +32,7 @@ You can think that you can't do anything that isn't written here.
 extern crate rattle_items_match;
 
 use rattle_items_match::{
-    Actual, Any, Controls as Co, Operand as El, Expected, Machine as Ma, Quantity as Qu,
+    Actual, Operands, Controls as Co, Operand as El, Expected, Machine as Ma, Quantity as Qu,
     RangeIncludesMax, Repeat,
 };
 
@@ -71,13 +71,13 @@ fn main() {
     let ac8 = Actual::default().push(&'\r').push(&'\n').build(); // "\r\n"
 
     // Whitespace characters.
-    let wschar = Any::default()
+    let wschar = Operands::default()
         .push(&El::Pin('\t'))
         .push(&El::Pin(' '))
         .build();
 
     // Newline.
-    let newline = Any::default()
+    let newline = Operands::default()
         .push(&El::Pin('\n')) // LF
         .push(&El::Seq(vec!['\r', '\n'])) // CR LF
         .build();
@@ -87,7 +87,7 @@ fn main() {
     // Alphabet.
     let upper_case = El::RangeIncludesMax(RangeIncludesMax::default().min(&'A').max(&'Z').build());
     let lower_case = El::RangeIncludesMax(RangeIncludesMax::default().min(&'a').max(&'z').build());
-    let alpha = Any::default().push(&upper_case).push(&lower_case).build();
+    let alpha = Operands::default().push(&upper_case).push(&lower_case).build();
 
     // #
     // TODO let comment_start_symbol = El::Pin('#');

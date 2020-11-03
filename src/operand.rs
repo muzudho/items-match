@@ -1,28 +1,28 @@
-//! Create `Any`.  
-//! `Any` を作成します。  
+//! Create operands.  
+//! 項 を作成します。  
 use crate::Operand;
-use crate::{Any, AnyVal};
+use crate::{Operands, OperandsVal};
 
-impl<T> Default for Any<T>
+impl<T> Default for Operands<T>
 where
     T: std::clone::Clone,
 {
     fn default() -> Self {
-        Any { items: Vec::new() }
+        Operands { items: Vec::new() }
     }
 }
 
-impl<T> Any<T>
+impl<T> Operands<T>
 where
     T: std::clone::Clone,
 {
-    //! Create `Any`.  
-    //! `Any` を作成します。  
-    pub fn build(&self) -> AnyVal<T>
+    //! Create operands.  
+    //! 項 を作成します。  
+    pub fn build(&self) -> OperandsVal<T>
     where
         T: std::clone::Clone,
     {
-        AnyVal {
+        OperandsVal {
             items: self.items.clone(),
         }
     }
@@ -35,8 +35,8 @@ where
     }
 }
 
-impl<T> Default for AnyVal<T> {
+impl<T> Default for OperandsVal<T> {
     fn default() -> Self {
-        AnyVal { items: Vec::new() }
+        OperandsVal { items: Vec::new() }
     }
 }

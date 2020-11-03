@@ -1,9 +1,9 @@
 use crate::ActualVal;
-use crate::AnyVal;
 use crate::ExpectedVal;
 use crate::Machine;
 use crate::MachineState;
 use crate::MatchingResult;
+use crate::OperandsVal;
 use crate::RangeIncludesMaxVal;
 use crate::{Controls, MachineVal, Operand, Quantity};
 
@@ -188,7 +188,7 @@ where
         &self,
         machine_state: &mut MachineState,
         act: &T,
-        any: &AnyVal<T>,
+        any: &OperandsVal<T>,
     ) -> MatchingResult
     where
         T: std::cmp::PartialEq + std::cmp::PartialOrd,

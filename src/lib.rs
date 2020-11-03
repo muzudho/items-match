@@ -15,9 +15,9 @@
 // (10) `cargo publish`
 
 pub mod actual;
-pub mod any;
 pub mod expected;
 pub mod machine;
+pub mod operand;
 pub mod range_includes_max;
 pub mod repeat;
 
@@ -69,7 +69,7 @@ pub enum Controls<T> {
 #[derive(Clone)]
 pub enum Quantity<T> {
     One(Operand<T>),
-    Any(AnyVal<T>),
+    Any(OperandsVal<T>),
 }
 /// Operand. Logical operator not included.  
 /// 項。論理演算子は含みません。  
@@ -97,12 +97,12 @@ pub struct RangeIncludesMaxVal<T> {
     max: Option<T>,
 }
 
-pub struct Any<T> {
+pub struct Operands<T> {
     items: Vec<Operand<T>>,
 }
 
 #[derive(Clone)]
-pub struct AnyVal<T> {
+pub struct OperandsVal<T> {
     items: Vec<Operand<T>>,
 }
 

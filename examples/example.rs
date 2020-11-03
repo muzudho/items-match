@@ -1,8 +1,8 @@
 extern crate rattle_items_match;
 
 use rattle_items_match::{
-    Actual, Any, Controls as Co, Expected, Machine as Ma, Operand as Nd, Quantity as Qu,
-    RangeIncludesMax, Repeat,
+    Actual, Controls as Co, Expected, Machine as Ma, Operand as Nd, Operands as Nds,
+    Quantity as Qu, RangeIncludesMax, Repeat,
 };
 
 fn main() {
@@ -52,13 +52,13 @@ fn main() {
         .build();
 
     // Whitespace characters.
-    let wschar = Any::default()
+    let wschar = Nds::default()
         .push(&Nd::Pin('\t'))
         .push(&Nd::Pin(' '))
         .build();
 
     // Newline.
-    let newline = Any::default()
+    let newline = Nds::default()
         .push(&Nd::Pin('\n')) // LF
         .push(&Nd::Seq(vec!['\r', '\n'])) // CR LF
         .build();
@@ -68,11 +68,11 @@ fn main() {
     // Alphabet.
     let upper_case = Nd::RangeIncludesMax(RangeIncludesMax::default().min(&'A').max(&'Z').build());
     let lower_case = Nd::RangeIncludesMax(RangeIncludesMax::default().min(&'a').max(&'z').build());
-    let alpha = Any::default().push(&upper_case).push(&lower_case).build();
+    let alpha = Nds::default().push(&upper_case).push(&lower_case).build();
 
     let comment_start_symbol = Nd::Pin('#'); // #
     let non_ascii = Qu::Any(
-        Any::default()
+        Nds::default()
             .push(&Nd::RangeIncludesMax(
                 RangeIncludesMax::default()
                     .min(&(0x80 as char))
@@ -82,7 +82,7 @@ fn main() {
             .build(),
     );
     let non_eol = Qu::Any(
-        Any::default()
+        Nds::default()
             .push(&Nd::Pin(0x09 as char))
             .push(&Nd::RangeIncludesMax(
                 RangeIncludesMax::default()
@@ -90,7 +90,7 @@ fn main() {
                     .max(&(0x7F as char))
                     .build(),
             ))
-            // TODO push Any
+            // TODO push non_ascii
             .build(),
     );
 
