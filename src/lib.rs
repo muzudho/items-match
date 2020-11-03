@@ -69,7 +69,7 @@ pub enum Controls<T> {
 #[derive(Clone)]
 pub enum OrOperator<T> {
     /// １つしかなければ、これが簡便。  
-    One(OrOperand<T>),
+    One(Condition<T>),
     /// This is for multinomial operators.  
     /// 多項演算子にするならこれ。どれか１つでもマッチすれば、マッチ。  
     ///
@@ -78,10 +78,10 @@ pub enum OrOperator<T> {
     /// Any はリストにするか？
     Any(OrOperandsVal<T>),
 }
-/// OrOperand. Logical operator not included.  
-/// 項。論理演算子は含みません。  
+/// Condition. Logical operator not included.  
+/// 条件式。この並びに論理演算子は含みません。  
 #[derive(Clone)]
-pub enum OrOperand<T> {
+pub enum Condition<T> {
     /// 1つだけのもの。  
     Pin(T),
     /// Sequence.  
@@ -105,12 +105,12 @@ pub struct RangeIncludesMaxVal<T> {
 }
 
 pub struct OrOperandsBuilder<T> {
-    operands: Vec<OrOperand<T>>,
+    operands: Vec<Condition<T>>,
 }
 
 #[derive(Clone)]
 pub struct OrOperandsVal<T> {
-    operands: Vec<OrOperand<T>>,
+    operands: Vec<Condition<T>>,
 }
 
 pub struct Repeat<T> {

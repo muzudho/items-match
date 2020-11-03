@@ -5,7 +5,7 @@ use crate::MachineState;
 use crate::MatchingResult;
 use crate::OrOperandsVal;
 use crate::RangeIncludesMaxVal;
-use crate::{Controls, MachineVal, OrOperand, OrOperator};
+use crate::{Condition, Controls, MachineVal, OrOperator};
 
 impl<T> Default for MachineBuilder<T>
 where
@@ -207,10 +207,10 @@ where
         &self,
         machine_state: &mut MachineState,
         act: &T,
-        el: &OrOperand<T>,
+        el: &Condition<T>,
     ) -> MatchingResult {
         match el {
-            OrOperand::Pin(exa) => {
+            Condition::Pin(exa) => {
                 if *exa == *act {
                     // println!("(trace.138) matching_any/matched.");
                     MatchingResult::Matched
@@ -218,15 +218,15 @@ where
                     MatchingResult::NotMatch
                 }
             }
-            OrOperand::RangeIncludesMax(rng) => self.matching5_range_contains_max(act, rng),
-            OrOperand::Seq(vec) => self.matching5_seq(machine_state, act, vec),
+            Condition::RangeIncludesMax(rng) => self.matching5_range_contains_max(act, rng),
+            Condition::Seq(vec) => self.matching5_seq(machine_state, act, vec),
         }
     }
     fn matching4_one(
         &self,
         machine_state: &mut MachineState,
         act: &T,
-        nd: &OrOperand<T>,
+        nd: &Condition<T>,
     ) -> MatchingResult
     where
         T: std::cmp::PartialEq + std::cmp::PartialOrd,
