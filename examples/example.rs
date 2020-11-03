@@ -2,7 +2,7 @@ extern crate rattle_items_match;
 
 use rattle_items_match::{
     ActualBuilder, AnyBuilder, Controls as Co, Element as El, ExpectedBuilder, MachineBuilder,
-    Quantity as Qu, RangeContainsMaxBuilder, RepeatBuilder,
+    Quantity as Qu, RangeIncludesMaxBuilder, RepeatBuilder,
 };
 
 fn main() {
@@ -47,19 +47,19 @@ fn main() {
         .build();
 
     // Digit.
-    let digit = RangeContainsMaxBuilder::default()
+    let digit = RangeIncludesMaxBuilder::default()
         .set_min(&'0')
         .set_max(&'9')
         .build();
     // Alphabet.
     let upper_case = El::RangeIncludesMax(
-        RangeContainsMaxBuilder::default()
+        RangeIncludesMaxBuilder::default()
             .set_min(&'A')
             .set_max(&'Z')
             .build(),
     );
     let lower_case = El::RangeIncludesMax(
-        RangeContainsMaxBuilder::default()
+        RangeIncludesMaxBuilder::default()
             .set_min(&'a')
             .set_max(&'z')
             .build(),
@@ -140,58 +140,58 @@ fn main() {
         .build();
 
     assert!(MachineBuilder::default()
-        .set_actual_items(&act1_ssss1)
-        .set_expected_items(&expected1_wsss1)
+        .set_actual(&act1_ssss1)
+        .set_expected(&expected1_wsss1)
         .build()
         .matching());
     assert!(MachineBuilder::default()
-        .set_actual_items(&act2_tsss1)
-        .set_expected_items(&expected1_wsss1)
+        .set_actual(&act2_tsss1)
+        .set_expected(&expected1_wsss1)
         .build()
         .matching());
     assert!(!MachineBuilder::default()
-        .set_actual_items(&act3_xsss1)
-        .set_expected_items(&expected1_wsss1)
+        .set_actual(&act3_xsss1)
+        .set_expected(&expected1_wsss1)
         .build()
         .matching());
     assert!(MachineBuilder::default()
-        .set_actual_items(&act1_ssss1)
-        .set_expected_items(&expected2_ws1max)
+        .set_actual(&act1_ssss1)
+        .set_expected(&expected2_ws1max)
         .build()
         .matching());
     assert!(!MachineBuilder::default()
-        .set_actual_items(&act1_ssss1)
-        .set_expected_items(&expected3_ws5max)
+        .set_actual(&act1_ssss1)
+        .set_expected(&expected3_ws5max)
         .build()
         .matching());
     assert!(!MachineBuilder::default()
-        .set_actual_items(&act1_ssss1)
-        .set_expected_items(&expected4_ws03)
+        .set_actual(&act1_ssss1)
+        .set_expected(&expected4_ws03)
         .build()
         .matching());
     assert!(MachineBuilder::default()
-        .set_actual_items(&act1_ssss1)
-        .set_expected_items(&expected5_ws1max)
+        .set_actual(&act1_ssss1)
+        .set_expected(&expected5_ws1max)
         .build()
         .matching());
     assert!(MachineBuilder::default()
-        .set_actual_items(&act4_a)
-        .set_expected_items(&expected6_alpha)
+        .set_actual(&act4_a)
+        .set_expected(&expected6_alpha)
         .build()
         .matching());
     assert!(MachineBuilder::default()
-        .set_actual_items(&act5_bc)
-        .set_expected_items(&expected7_alpha1to3)
+        .set_actual(&act5_bc)
+        .set_expected(&expected7_alpha1to3)
         .build()
         .matching());
     assert!(MachineBuilder::default()
-        .set_actual_items(&act6_de)
-        .set_expected_items(&expected7_alpha1to3)
+        .set_actual(&act6_de)
+        .set_expected(&expected7_alpha1to3)
         .build()
         .matching());
     assert!(MachineBuilder::default()
-        .set_actual_items(&act7_fgh)
-        .set_expected_items(&expected8_alpha1to_max)
+        .set_actual(&act7_fgh)
+        .set_expected(&expected8_alpha1to_max)
         .build()
         .matching());
     println!("Finished.");

@@ -29,8 +29,8 @@ pub mod repeat;
 pub mod repeat_builder;
 
 pub struct MachineBuilder<T> {
-    actual_items: Option<Actual<T>>,
-    expected_items: Option<Expected<T>>,
+    actual: Option<Actual<T>>,
+    expected: Option<Expected<T>>,
 }
 
 pub struct MachineState {
@@ -41,8 +41,8 @@ pub struct MachineState {
 }
 
 pub struct Machine<T> {
-    actual_items: Actual<T>,
-    expected_items: Expected<T>,
+    actual: Actual<T>,
+    expected: Expected<T>,
 }
 
 pub struct ActualBuilder<T> {
@@ -85,7 +85,7 @@ pub enum Element<T> {
     RangeIncludesMax(RangeIncludesMax<T>),
 }
 
-pub struct RangeContainsMaxBuilder<T> {
+pub struct RangeIncludesMaxBuilder<T> {
     min: Option<T>,
     max: Option<T>,
 }

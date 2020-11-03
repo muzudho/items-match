@@ -1,20 +1,20 @@
 //! Create `RangeIncludesMax`.  
 //! `RangeIncludesMax` を作成します。  
-use crate::{RangeContainsMaxBuilder, RangeIncludesMax};
+use crate::{RangeIncludesMax, RangeIncludesMaxBuilder};
 
-impl<T> Default for RangeContainsMaxBuilder<T>
+impl<T> Default for RangeIncludesMaxBuilder<T>
 where
     T: std::clone::Clone,
 {
     fn default() -> Self {
-        RangeContainsMaxBuilder {
+        RangeIncludesMaxBuilder {
             min: None,
             max: None,
         }
     }
 }
 
-impl<T> RangeContainsMaxBuilder<T>
+impl<T> RangeIncludesMaxBuilder<T>
 where
     T: std::clone::Clone,
 {

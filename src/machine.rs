@@ -12,14 +12,14 @@ where
     pub fn matching(&self) -> bool {
         let mut machine_state = MachineState::default();
 
-        for (i, act) in self.actual_items.get_items().iter().enumerate() {
+        for (i, act) in self.actual.get_items().iter().enumerate() {
             machine_state.actual_index = i;
-            if machine_state.actual_index + 1 == self.actual_items.len() {
+            if machine_state.actual_index + 1 == self.actual.len() {
                 machine_state.is_final = true;
             }
 
             // TODO expected_index カーソルを勧めるのはあとで。
-            if let Some(mut exp) = self.expected_items.get(machine_state.expected_index) {
+            if let Some(mut exp) = self.expected.get(machine_state.expected_index) {
                 match self.matching2(&mut machine_state, act, &mut exp) {
                     MatchingResult::Matched => {
                         // println!("(trace.30) マッチしたという判断。ループ続行。");

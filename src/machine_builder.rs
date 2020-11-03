@@ -8,8 +8,8 @@ where
 {
     fn default() -> Self {
         MachineBuilder {
-            actual_items: None,
-            expected_items: None,
+            actual: None,
+            expected: None,
         }
     }
 }
@@ -22,17 +22,17 @@ where
     //! `Machine` を作成します。  
     pub fn build(&self) -> Machine<T> {
         Machine {
-            actual_items: self.actual_items.clone().unwrap(),
-            expected_items: self.expected_items.clone().unwrap(),
+            actual: self.actual.clone().unwrap(),
+            expected: self.expected.clone().unwrap(),
         }
     }
 
-    pub fn set_actual_items<'a>(&'a mut self, item: &Actual<T>) -> &'a mut Self {
-        self.actual_items = Some(item.clone());
+    pub fn set_actual<'a>(&'a mut self, item: &Actual<T>) -> &'a mut Self {
+        self.actual = Some(item.clone());
         self
     }
-    pub fn set_expected_items<'a>(&'a mut self, item: &Expected<T>) -> &'a mut Self {
-        self.expected_items = Some(item.clone());
+    pub fn set_expected<'a>(&'a mut self, item: &Expected<T>) -> &'a mut Self {
+        self.expected = Some(item.clone());
         self
     }
 }
