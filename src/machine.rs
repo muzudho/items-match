@@ -32,11 +32,13 @@ where
         }
     }
 
-    pub fn set_actual<'a>(&'a mut self, item: &ActualVal<T>) -> &'a mut Self {
+    /// Set an actual.  
+    pub fn actual<'a>(&'a mut self, item: &ActualVal<T>) -> &'a mut Self {
         self.actual = Some(item.clone());
         self
     }
-    pub fn set_expected<'a>(&'a mut self, item: &ExpectedVal<T>) -> &'a mut Self {
+    /// Set an expected.  
+    pub fn expected<'a>(&'a mut self, item: &ExpectedVal<T>) -> &'a mut Self {
         self.expected = Some(item.clone());
         self
     }

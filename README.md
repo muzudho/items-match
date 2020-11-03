@@ -31,18 +31,15 @@ You can think that you can't do anything that isn't written here.
 ```rust
 extern crate rattle_items_match;
 
-use rattle_items_match::Element;
-use rattle_items_match::Machine;
-use rattle_items_match::Quantity;
-use rattle_items_match::RangeIncludesMax;
 use rattle_items_match::{
-    Actual, Any, Controls, Expected, Repeat,
+    Actual, Any, Controls as Co, Element as El, Expected, Machine, Quantity as Qu,
+    RangeIncludesMax, Repeat,
 };
 
 fn main() {
     println!("Start.");
 
-    let act1_ssss1 = Actual::default()
+    let ac1_ssss1 = Actual::default()
         .push(&' ')
         .push(&' ')
         .push(&' ')
@@ -50,7 +47,7 @@ fn main() {
         .push(&'1')
         .build();
 
-    let act2_tsss1 = Actual::default()
+    let ac2_tsss1 = Actual::default()
         .push(&'\t')
         .push(&' ')
         .push(&' ')
@@ -58,176 +55,154 @@ fn main() {
         .push(&'1')
         .build();
 
-    let act3_xsss1 = Actual::default()
+    let ac3_xsss1 = Actual::default()
         .push(&'x')
         .push(&' ')
         .push(&' ')
         .push(&' ')
         .push(&'1')
         .build();
-    let act4_a = Actual::default().push(&'A').build();
-    let act5_bc = Actual::default().push(&'B').push(&'C').build();
-    let act6_de = Actual::default().push(&'d').push(&'e').build();
-    let act7_fgh = Actual::default()
-        .push(&'f')
-        .push(&'g')
-        .push(&'h')
-        .build();
+    let ac4_a = Actual::default().push(&'A').build();
+    let ac5_bc = Actual::default().push(&'B').push(&'C').build();
+    let ac6_de = Actual::default().push(&'d').push(&'e').build();
+    let ac7_fgh = Actual::default().push(&'f').push(&'g').push(&'h').build();
 
     // Whitespace characters.
     let wschar = Any::default()
-        .push(&Element::Exact('\t'))
-        .push(&Element::Exact(' '))
+        .push(&El::Exact('\t'))
+        .push(&El::Exact(' '))
         .build();
 
     // Digit.
-    let digit = RangeIncludesMax::default()
-        .set_min(&'0')
-        .set_max(&'9')
-        .build();
+    let digit = RangeIncludesMax::default().min(&'0').max(&'9').build();
     // Alphabet.
-    let upper_case = Element::RangeIncludesMax(
-        RangeIncludesMax::default()
-            .set_min(&'A')
-            .set_max(&'Z')
-            .build(),
-    );
-    let lower_case = Element::RangeIncludesMax(
-        RangeIncludesMax::default()
-            .set_min(&'a')
-            .set_max(&'z')
-            .build(),
-    );
-    let alpha = Any::default()
-        .push(&upper_case)
-        .push(&lower_case)
+    let upper_case = El::RangeIncludesMax(RangeIncludesMax::default().min(&'A').max(&'Z').build());
+    let lower_case = El::RangeIncludesMax(RangeIncludesMax::default().min(&'a').max(&'z').build());
+    let alpha = Any::default().push(&upper_case).push(&lower_case).build();
+
+    let ex1_wsss1 = Expected::default()
+        .push(&Co::Once(Qu::Any(wschar.clone())))
+        .push(&Co::Once(Qu::One(El::Exact(' '))))
+        .push(&Co::Once(Qu::One(El::Exact(' '))))
+        .push(&Co::Once(Qu::One(El::Exact(' '))))
+        .push(&Co::Once(Qu::One(El::Exact('1'))))
         .build();
 
-    let expected1_wsss1 = Expected::default()
-        .push(&Controls::Once(Quantity::Any(wschar.clone())))
-        .push(&Controls::Once(Quantity::One(Element::Exact(' '))))
-        .push(&Controls::Once(Quantity::One(Element::Exact(' '))))
-        .push(&Controls::Once(Quantity::One(Element::Exact(' '))))
-        .push(&Controls::Once(Quantity::One(Element::Exact('1'))))
-        .build();
-
-    let expected2_ws1max = Expected::default()
-        .push(&Controls::Repeat(
+    let ex2_ws1max = Expected::default()
+        .push(&Co::Repeat(
             Repeat::default()
-                .set_quantity(&Quantity::Any(wschar.clone()))
-                .set_min(1)
-                .set_max_not_included(usize::MAX)
+                .quantity(&Qu::Any(wschar.clone()))
+                .min(1)
+                .max_not_included(usize::MAX)
                 .build(),
         ))
-        .push(&Controls::Once(Quantity::One(Element::Exact('1'))))
+        .push(&Co::Once(Qu::One(El::Exact('1'))))
         .build();
-    let expected3_ws5max = Expected::default()
-        .push(&Controls::Repeat(
+    let ex3_ws5max = Expected::default()
+        .push(&Co::Repeat(
             Repeat::default()
-                .set_quantity(&Quantity::Any(wschar.clone()))
-                .set_min(5)
-                .set_max_not_included(usize::MAX)
+                .quantity(&Qu::Any(wschar.clone()))
+                .min(5)
+                .max_not_included(usize::MAX)
                 .build(),
         ))
-        .push(&Controls::Once(Quantity::One(Element::Exact('1'))))
+        .push(&Co::Once(Qu::One(El::Exact('1'))))
         .build();
-    let expected4_ws03 = Expected::default()
-        .push(&Controls::Repeat(
+    let ex4_ws03 = Expected::default()
+        .push(&Co::Repeat(
             Repeat::default()
-                .set_quantity(&Quantity::Any(wschar.clone()))
-                .set_min(0)
-                .set_max_not_included(3)
+                .quantity(&Qu::Any(wschar.clone()))
+                .min(0)
+                .max_not_included(3)
                 .build(),
         ))
-        .push(&Controls::Once(Quantity::One(Element::Exact('1'))))
+        .push(&Co::Once(Qu::One(El::Exact('1'))))
         .build();
-    let expected5_ws1max = Expected::default()
-        .push(&Controls::Repeat(
+    let ex5_ws1max = Expected::default()
+        .push(&Co::Repeat(
             Repeat::default()
-                .set_quantity(&Quantity::Any(wschar.clone()))
-                .set_min(1)
-                .set_max_not_included(usize::MAX)
+                .quantity(&Qu::Any(wschar.clone()))
+                .min(1)
+                .max_not_included(usize::MAX)
                 .build(),
         ))
-        .push(&Controls::Once(Quantity::One(Element::RangeIncludesMax(
-            digit,
-        ))))
+        .push(&Co::Once(Qu::One(El::RangeIncludesMax(digit))))
         .build();
-    let expected6_alpha = Expected::default()
-        .push(&Controls::Once(Quantity::Any(alpha.clone())))
+    let ex6_alpha = Expected::default()
+        .push(&Co::Once(Qu::Any(alpha.clone())))
         .build();
-    let expected7_alpha1to3 = Expected::default()
-        .push(&Controls::Repeat(
+    let ex7_alpha1to3 = Expected::default()
+        .push(&Co::Repeat(
             Repeat::default()
-                .set_quantity(&Quantity::Any(alpha.clone()))
-                .set_min(1)
-                .set_max_not_included(3)
+                .quantity(&Qu::Any(alpha.clone()))
+                .min(1)
+                .max_not_included(3)
                 .build(),
         ))
         .build();
-    let expected8_alpha1to_max = Expected::default()
-        .push(&Controls::Repeat(
+    let ex8_alpha1to_max = Expected::default()
+        .push(&Co::Repeat(
             Repeat::default()
-                .set_quantity(&Quantity::Any(alpha.clone()))
-                .set_min(1)
-                .set_max_not_included(usize::MAX)
+                .quantity(&Qu::Any(alpha.clone()))
+                .min(1)
+                .max_not_included(usize::MAX)
                 .build(),
         ))
         .build();
 
     assert!(Machine::default()
-        .set_actual(&act1_ssss1)
-        .set_expected(&expected1_wsss1)
+        .actual(&ac1_ssss1)
+        .expected(&ex1_wsss1)
         .build()
         .matching());
     assert!(Machine::default()
-        .set_actual(&act2_tsss1)
-        .set_expected(&expected1_wsss1)
+        .actual(&ac2_tsss1)
+        .expected(&ex1_wsss1)
         .build()
         .matching());
     assert!(!Machine::default()
-        .set_actual(&act3_xsss1)
-        .set_expected(&expected1_wsss1)
+        .actual(&ac3_xsss1)
+        .expected(&ex1_wsss1)
         .build()
         .matching());
     assert!(Machine::default()
-        .set_actual(&act1_ssss1)
-        .set_expected(&expected2_ws1max)
+        .actual(&ac1_ssss1)
+        .expected(&ex2_ws1max)
         .build()
         .matching());
     assert!(!Machine::default()
-        .set_actual(&act1_ssss1)
-        .set_expected(&expected3_ws5max)
+        .actual(&ac1_ssss1)
+        .expected(&ex3_ws5max)
         .build()
         .matching());
     assert!(!Machine::default()
-        .set_actual(&act1_ssss1)
-        .set_expected(&expected4_ws03)
+        .actual(&ac1_ssss1)
+        .expected(&ex4_ws03)
         .build()
         .matching());
     assert!(Machine::default()
-        .set_actual(&act1_ssss1)
-        .set_expected(&expected5_ws1max)
+        .actual(&ac1_ssss1)
+        .expected(&ex5_ws1max)
         .build()
         .matching());
     assert!(Machine::default()
-        .set_actual(&act4_a)
-        .set_expected(&expected6_alpha)
+        .actual(&ac4_a)
+        .expected(&ex6_alpha)
         .build()
         .matching());
     assert!(Machine::default()
-        .set_actual(&act5_bc)
-        .set_expected(&expected7_alpha1to3)
+        .actual(&ac5_bc)
+        .expected(&ex7_alpha1to3)
         .build()
         .matching());
     assert!(Machine::default()
-        .set_actual(&act6_de)
-        .set_expected(&expected7_alpha1to3)
+        .actual(&ac6_de)
+        .expected(&ex7_alpha1to3)
         .build()
         .matching());
     assert!(Machine::default()
-        .set_actual(&act7_fgh)
-        .set_expected(&expected8_alpha1to_max)
+        .actual(&ac7_fgh)
+        .expected(&ex8_alpha1to_max)
         .build()
         .matching());
     println!("Finished.");
