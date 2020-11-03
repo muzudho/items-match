@@ -11,7 +11,7 @@ where
 {
     fn default() -> Self {
         Repeat {
-            quantity: None,
+            op: None,
             min: 0,
             max_not_included: 0,
         }
@@ -29,16 +29,16 @@ where
         T: std::clone::Clone,
     {
         RepeatVal {
-            quantity: self.quantity.clone().unwrap(),
+            op: self.op.clone().unwrap(),
             min: self.min,
             max_not_included: self.max_not_included,
         }
     }
 
-    /// Set a quantity.  
-    /// 最低何回繰り返すか。  
-    pub fn quantity<'a>(&'a mut self, quantity: &Operator<T>) -> &'a mut Self {
-        self.quantity = Some(Box::new(quantity.clone()));
+    /// Set a operator.  
+    /// 演算子をセットしてください。  
+    pub fn op<'a>(&'a mut self, op: &Operator<T>) -> &'a mut Self {
+        self.op = Some(Box::new(op.clone()));
         self
     }
     /// Set a min.  

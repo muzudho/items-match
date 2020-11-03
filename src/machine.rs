@@ -105,7 +105,7 @@ where
             Controls::Repeat(rep) => {
                 if rep.is_cutoff(machine_state.matched_length_in_repeat) {
                     //  || self.is_final
-                    match self.matching3_quantity(machine_state, act, &rep.quantity) {
+                    match self.matching3_quantity(machine_state, act, &rep.op) {
                         MatchingResult::NotMatch => {
                             // println!("(trace.85) rep={}", rep);
                             return MatchingResult::NotMatch;
@@ -130,7 +130,7 @@ where
                         }
                     }
                 } else {
-                    match self.matching3_quantity(machine_state, act, &rep.quantity) {
+                    match self.matching3_quantity(machine_state, act, &rep.op) {
                         MatchingResult::NotMatch => {
                             if rep.is_cutoff(machine_state.matched_length_in_repeat) {
                                 /*

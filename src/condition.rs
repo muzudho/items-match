@@ -29,10 +29,17 @@ where
         }
     }
 
-    /// Set the number of items to read ahead.  
-    /// 先読みする項目数を設定します。  
+    /// Push the condition.  
+    /// 条件を追加します。  
     pub fn push<'a>(&'a mut self, cnd: &Condition<T>) -> &'a mut Self {
         self.conditions.push(cnd.clone());
+        self
+    }
+
+    /// Push the conditions.  
+    /// 条件リストを追加します。  
+    pub fn extend<'a>(&'a mut self, cnds: &ConditionsVal<T>) -> &'a mut Self {
+        self.conditions.extend(cnds.conditions.clone());
         self
     }
 }

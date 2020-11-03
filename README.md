@@ -83,6 +83,14 @@ fn main() {
         .push(&'あ')
         .push(&'.')
         .build();
+    let ac10 = Actual::default() // 'No-1_0' - Unquloted key.
+        .push(&'N')
+        .push(&'o')
+        .push(&'-')
+        .push(&'1')
+        .push(&'_')
+        .push(&'0')
+        .build();
 
     // Whitespace characters.
     let wschar = Cnds::default()
@@ -97,7 +105,7 @@ fn main() {
         .build();
 
     // Digit.
-    let digit = RangeIncludesMax::default().min(&'0').max(&'9').build();
+    let digit = Cnd::RangeIncludesMax(RangeIncludesMax::default().min(&'0').max(&'9').build());
     // Alphabet.
     let upper_case = Cnd::RangeIncludesMax(RangeIncludesMax::default().min(&'A').max(&'Z').build());
     let lower_case = Cnd::RangeIncludesMax(RangeIncludesMax::default().min(&'a').max(&'z').build());
@@ -134,7 +142,7 @@ fn main() {
     let ex2 = Expected::default() // "+(wschar)"
         .push(&Co::Repeat(
             Repeat::default()
-                .quantity(&Op::Or(wschar.clone()))
+                .op(&Op::Or(wschar.clone()))
                 .min(1)
                 .max_not_included(usize::MAX)
                 .build(),
@@ -144,7 +152,7 @@ fn main() {
     let ex3 = Expected::default() // "(wschar){5,}"
         .push(&Co::Repeat(
             Repeat::default()
-                .quantity(&Op::Or(wschar.clone()))
+                .op(&Op::Or(wschar.clone()))
                 .min(5)
                 .max_not_included(usize::MAX)
                 .build(),
@@ -154,7 +162,7 @@ fn main() {
     let ex4 = Expected::default() // "(wschar){0,3}"
         .push(&Co::Repeat(
             Repeat::default()
-                .quantity(&Op::Or(wschar.clone()))
+                .op(&Op::Or(wschar.clone()))
                 .min(0)
                 .max_not_included(3)
                 .build(),
@@ -164,12 +172,12 @@ fn main() {
     let ex5 = Expected::default() // "(wschar){1,}"
         .push(&Co::Repeat(
             Repeat::default()
-                .quantity(&Op::Or(wschar.clone()))
+                .op(&Op::Or(wschar.clone()))
                 .min(1)
                 .max_not_included(usize::MAX)
                 .build(),
         ))
-        .push(&Co::Once(Op::One(Cnd::RangeIncludesMax(digit))))
+        .push(&Co::Once(Op::One(digit.clone())))
         .build();
     let ex6 = Expected::default() // "(alpha)"
         .push(&Co::Once(Op::Or(alpha.clone())))
@@ -177,7 +185,7 @@ fn main() {
     let ex7 = Expected::default() // "(alpha){1,3}"
         .push(&Co::Repeat(
             Repeat::default()
-                .quantity(&Op::Or(alpha.clone()))
+                .op(&Op::Or(alpha.clone()))
                 .min(1)
                 .max_not_included(3)
                 .build(),
@@ -186,7 +194,7 @@ fn main() {
     let ex8 = Expected::default() // "(alpha){1,}"
         .push(&Co::Repeat(
             Repeat::default()
-                .quantity(&Op::Or(alpha.clone()))
+                .op(&Op::Or(alpha.clone()))
                 .min(1)
                 .max_not_included(usize::MAX)
                 .build(),
@@ -199,9 +207,25 @@ fn main() {
         .push(&Co::Once(Op::One(comment_start_symbol)))
         .push(&Co::Repeat(
             Repeat::default()
-                .quantity(&non_eol)
+                .op(&non_eol)
                 .min(0)
                 .max_not_included(usize::MAX)
+                .build(),
+        ))
+        .build();
+    let unquoted_key = Expected::default() // 'No-1_0' - Unquloted key.
+        .push(&Co::Repeat(
+            Repeat::default()
+                .min(1)
+                .max_not_included(usize::MAX)
+                .op(&Op::Or(
+                    Cnds::default()
+                        .extend(&alpha) // A-Z, a-z.
+                        .push(&digit) // 0-9.
+                        .push(&Cnd::Pin(0x2D as char)) // -
+                        .push(&Cnd::Pin(0x5F as char)) // _
+                        .build(),
+                ))
                 .build(),
         ))
         .build();
@@ -222,6 +246,19 @@ fn main() {
     assert!(Ma::default().actual(&ac9).expected(&comment).build().exec());
     // コメントではないもののテスト
     assert!(!Ma::default().actual(&ac5).expected(&comment).build().exec());
+    // 'No-1_0' - Unquloted key.
+    assert!(Ma::default()
+        .actual(&ac10)
+        .expected(&unquoted_key)
+        .build()
+        .exec());
+    // Newline is not Unquloted key.
+    assert!(!Ma::default()
+        .actual(&ac8)
+        .expected(&unquoted_key)
+        .build()
+        .exec());
+
     println!("Finished.");
 }
 ```

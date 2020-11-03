@@ -111,14 +111,16 @@ pub struct ConditionsVal<T> {
 }
 
 pub struct Repeat<T> {
-    quantity: Option<Box<Operator<T>>>,
+    /// Operator.  
+    /// 演算子。
+    op: Option<Box<Operator<T>>>,
     min: usize,
     max_not_included: usize,
 }
 
 #[derive(Clone)]
 pub struct RepeatVal<T> {
-    quantity: Box<Operator<T>>,
+    op: Box<Operator<T>>,
     min: usize,
     max_not_included: usize,
 }
