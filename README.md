@@ -36,7 +36,7 @@ use rattle_items_match::Machine;
 use rattle_items_match::Quantity;
 use rattle_items_match::RangeIncludesMaxBuilder;
 use rattle_items_match::{
-    Actual, AnyBuilder, Controls, Expected, RepeatBuilder,
+    Actual, Any, Controls, Expected, RepeatBuilder,
 };
 
 fn main() {
@@ -75,7 +75,7 @@ fn main() {
         .build();
 
     // Whitespace characters.
-    let wschar = AnyBuilder::default()
+    let wschar = Any::default()
         .push(&Element::Exact('\t'))
         .push(&Element::Exact(' '))
         .build();
@@ -98,7 +98,7 @@ fn main() {
             .set_max(&'z')
             .build(),
     );
-    let alpha = AnyBuilder::default()
+    let alpha = Any::default()
         .push(&upper_case)
         .push(&lower_case)
         .build();

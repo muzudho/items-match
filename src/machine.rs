@@ -1,5 +1,5 @@
 use crate::ActualVal;
-use crate::Any;
+use crate::AnyVal;
 use crate::ExpectedVal;
 use crate::Machine;
 use crate::MachineState;
@@ -174,7 +174,7 @@ where
         }
     }
 
-    fn matching4_any(&self, act: &T, any: &Any<T>) -> MatchingResult
+    fn matching4_any(&self, act: &T, any: &AnyVal<T>) -> MatchingResult
     where
         T: std::cmp::PartialEq + std::cmp::PartialOrd,
     {

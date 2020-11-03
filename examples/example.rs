@@ -1,7 +1,7 @@
 extern crate rattle_items_match;
 
 use rattle_items_match::{
-    Actual, AnyBuilder, Controls as Co, Element as El, Expected, Machine, Quantity as Qu,
+    Actual, Any, Controls as Co, Element as El, Expected, Machine, Quantity as Qu,
     RangeIncludesMaxBuilder, RepeatBuilder,
 };
 
@@ -37,7 +37,7 @@ fn main() {
     let ac7_fgh = Actual::default().push(&'f').push(&'g').push(&'h').build();
 
     // Whitespace characters.
-    let wschar = AnyBuilder::default()
+    let wschar = Any::default()
         .push(&El::Exact('\t'))
         .push(&El::Exact(' '))
         .build();
@@ -60,10 +60,7 @@ fn main() {
             .set_max(&'z')
             .build(),
     );
-    let alpha = AnyBuilder::default()
-        .push(&upper_case)
-        .push(&lower_case)
-        .build();
+    let alpha = Any::default().push(&upper_case).push(&lower_case).build();
 
     let ex1_wsss1 = Expected::default()
         .push(&Co::Once(Qu::Any(wschar.clone())))

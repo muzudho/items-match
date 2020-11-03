@@ -16,7 +16,6 @@
 
 pub mod actual;
 pub mod any;
-pub mod any_builder;
 pub mod expected;
 pub mod machine;
 pub mod range_contains_max;
@@ -71,7 +70,7 @@ pub enum Controls<T> {
 #[derive(Clone)]
 pub enum Quantity<T> {
     One(Element<T>),
-    Any(Any<T>),
+    Any(AnyVal<T>),
 }
 /// Element.
 /// 期待値。
@@ -94,12 +93,12 @@ pub struct RangeIncludesMax<T> {
     max: Option<T>,
 }
 
-pub struct AnyBuilder<T> {
+pub struct Any<T> {
     items: Vec<Element<T>>,
 }
 
 #[derive(Clone)]
-pub struct Any<T> {
+pub struct AnyVal<T> {
     items: Vec<Element<T>>,
 }
 
