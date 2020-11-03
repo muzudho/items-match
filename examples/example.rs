@@ -61,16 +61,47 @@ fn main() {
         .push(&'0')
         .build();
 
+    // https://github.com/toml-lang/toml/blob/1.0.0-rc.3/toml.abnf
+    // 18 toml = expression *( newline expression )
+    // 20 expression =  ws [ comment ]
+    // 21 expression =/ ws keyval ws [ comment ]
+    // 22 expression =/ ws table ws [ comment ]
+
+    // 26 ws = *wschar
+
     // Whitespace characters.
+    // 27 wschar =  %x20  ; Space
+    // 28 wschar =/ %x09  ; Horizontal tab
     let wschar = Cnds::default()
         .push(&Cnd::Pin('\t'))
         .push(&Cnd::Pin(' '))
         .build();
 
     // Newline.
+    // 32 newline =  %x0A     ; LF
+    // 33 newline =/ %x0D.0A  ; CRLF
     let newline = Cnds::default()
         .push(&Cnd::Pin('\n')) // LF
         .push(&Cnd::Seq(vec!['\r', '\n'])) // CR LF
+        .build();
+
+    // 37 comment-start-symbol = %x23 ; #
+    let comment_start_symbol = Cnd::Pin('#'); // #
+
+    // 38 non-ascii = %x80-D7FF / %xE000-10FFFF
+    let non_ascii = Cnds::default()
+        .push(&Cnd::RangeIncludesMax(
+            RangeIncludesMax::default()
+                .min(&(0x80 as char))
+                .max(&'\u{D7FF}')
+                .build(),
+        ))
+        .push(&Cnd::RangeIncludesMax(
+            RangeIncludesMax::default()
+                .min(&'\u{E000}')
+                .max(&'\u{10FFFF}')
+                .build(),
+        ))
         .build();
 
     // Digit.
@@ -80,13 +111,6 @@ fn main() {
     let lower_case = Cnd::RangeIncludesMax(RangeIncludesMax::default().min(&'a').max(&'z').build());
     let alpha = Cnds::default().push(&upper_case).push(&lower_case).build();
 
-    let comment_start_symbol = Cnd::Pin('#'); // #
-    let non_ascii = &Cnd::RangeIncludesMax(
-        RangeIncludesMax::default()
-            .min(&(0x80 as char))
-            .max(&'\u{D7FF}')
-            .build(),
-    );
     let non_eol = Op::Or(
         Cnds::default()
             .push(&Cnd::Pin(0x09 as char))
@@ -96,7 +120,7 @@ fn main() {
                     .max(&(0x7F as char))
                     .build(),
             ))
-            .push(&non_ascii)
+            .extend(&non_ascii)
             .build(),
     );
 
