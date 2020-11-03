@@ -20,6 +20,7 @@ pub mod expected;
 pub mod machine;
 pub mod range_includes_max;
 pub mod repeat;
+pub mod routine;
 
 pub struct MachineBuilder<T> {
     actual: Option<ActualVal<T>>,
@@ -57,6 +58,10 @@ pub struct ExpectedBuilder<T> {
 pub struct ExpectedVal<T> {
     items: Vec<Control<T>>,
     // TODO routine: Routine<T>,
+}
+
+pub struct RoutineBuilder<T> {
+    controls: Vec<Control<T>>,
 }
 
 #[derive(Clone)]
