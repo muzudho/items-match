@@ -88,7 +88,7 @@ fn main() {
     let alpha = Any::default().push(&upper_case).push(&lower_case).build();
 
     // #
-    let comment_start_symbol = El::Pin('#');
+    // let comment_start_symbol = El::Pin('#');
 
     let ex1_wsss1 = Expected::default()
         .push(&Co::Once(Qu::Any(wschar.clone())))
