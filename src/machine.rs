@@ -2,6 +2,7 @@ use crate::{
     ActualVal, Condition, ConditionsVal, Control, ExpectedVal, MachineBuilder, MachineState,
     MachineVal, MatchingResult, Operator, RangeIncludesMaxVal,
 };
+use std::fmt;
 
 impl<T> Default for MachineBuilder<T>
 where
@@ -63,28 +64,28 @@ where
             {
                 match self.matching2(&mut machine_state, act, &mut co) {
                     MatchingResult::Matched => {
-                        // println!("(trace.30) マッチしたという判断。ループ続行。");
+                        println!("(trace.66) マッチしたという判断。ループ続行。");
                         machine_state.expected_index += 1;
                         machine_state.matched_length_in_repeat = 0; // reset.
                         machine_state.matched_length_in_seq = 0; // reset.
                     }
                     MatchingResult::NotMatch => {
-                        // println!("(trace.35) マッチしていないという判断。");
+                        println!("(trace.72) マッチしていないという判断。");
                         return false;
                     }
                     MatchingResult::Ongoing => {
-                        // println!("(trace.38) マッチ中という判断。ループ続行。");
+                        println!("(trace.76) マッチ中という判断。ループ続行。");
                     }
                 }
             } else {
                 // マッチしていないという判断。
-                // println!("(trace.44) マッチしていないという判断。");
+                println!("(trace.81) マッチしていないという判断。");
                 return false;
             }
         }
 
         // 失敗していなければ成功という判断。
-        // println!("(trace.51) 失敗していなければ成功という判断。");
+        println!("(trace.87) 失敗していなければ成功という判断。");
         return true;
     }
 
@@ -107,24 +108,24 @@ where
                     //  || self.is_final
                     match self.matching3_quantity(machine_state, act, &rep.op) {
                         MatchingResult::NotMatch => {
-                            // println!("(trace.85) rep={}", rep);
+                            println!("(trace.110) rep={}", rep);
                             return MatchingResult::NotMatch;
                         }
                         MatchingResult::Matched | MatchingResult::Ongoing => {
                             machine_state.matched_length_in_repeat += 1;
                             if rep.is_cutoff(machine_state.matched_length_in_repeat) {
-                                /*
-                                // println!(
-                                    "(trace.93) Cutoff. 上限までマッチしたので切上げ。 rep={}",
+                                //*
+                                println!(
+                                    "(trace.118) Cutoff. 上限までマッチしたので切上げ。 rep={}",
                                     rep
                                 );
-                                */
+                                // */
                                 return MatchingResult::Matched;
                             } else if rep.is_success(machine_state.matched_length_in_repeat) {
-                                // println!("(trace.87) rep={}", rep);
+                                println!("(trace.124) rep={}", rep);
                                 return MatchingResult::Matched;
                             } else {
-                                // println!("(trace.90) fail. rep={}", rep);
+                                println!("(trace.127) fail. rep={}", rep);
                                 return MatchingResult::NotMatch;
                             }
                         }
@@ -133,34 +134,34 @@ where
                     match self.matching3_quantity(machine_state, act, &rep.op) {
                         MatchingResult::NotMatch => {
                             if rep.is_cutoff(machine_state.matched_length_in_repeat) {
-                                /*
-                                // println!(
-                                    "(trace.93) Cutoff. 上限までマッチしたので切上げ。 rep={}",
+                                //*
+                                println!(
+                                    "(trace.138) Cutoff. 上限までマッチしたので切上げ。 rep={}",
                                     rep
                                 );
-                                */
+                                // */
                                 return MatchingResult::Matched;
                             } else if rep.is_success(machine_state.matched_length_in_repeat) {
-                                /*
-                                // println!(
-                                    "(trace.104) マッチしなくなったところで再判定。 rep={}",
+                                //*
+                                println!(
+                                    "(trace.146) マッチしなくなったところで再判定。 rep={}",
                                     rep
                                 );
                                 // */
                                 return MatchingResult::Matched;
                             } else {
-                                // println!("(trace.107) fail. rep={}", rep);
+                                println!("(trace.152) fail. rep={}", rep);
                                 return MatchingResult::NotMatch;
                             }
                         }
                         MatchingResult::Matched => {
                             machine_state.matched_length_in_repeat += 1;
-                            // println!("(trace.112) マッチ中なので続行。 rep={}", rep);
+                            println!("(trace.158) マッチ中なので続行。 rep={}", rep);
                             return MatchingResult::Ongoing;
                         }
                         MatchingResult::Ongoing => {
                             machine_state.matched_length_in_repeat += 1;
-                            // println!("(trace.115) rep={}", rep);
+                            println!("(trace.163) rep={}", rep);
                             return MatchingResult::Ongoing;
                         }
                     }
@@ -200,7 +201,7 @@ where
                 MatchingResult::NotMatch => {} // 続行。
             }
         }
-        // println!("(trace.67) Anyでぜんぶ不一致。");
+        println!("(trace.203) Anyでぜんぶ不一致。");
         return MatchingResult::NotMatch;
     }
     fn matching4_el(
@@ -212,7 +213,7 @@ where
         match cnd {
             Condition::Pin(x) => {
                 if *x == *act {
-                    // println!("(trace.138) matching_any/matched.");
+                    println!("(trace.215) matching_any/matched.");
                     MatchingResult::Matched
                 } else {
                     MatchingResult::NotMatch
@@ -247,20 +248,26 @@ where
             // Ongoing.
             let x = &vec[machine_state.matched_length_in_seq];
             if *x == *act {
-                // println!("(trace.72)");
+                println!("(trace.250) seq/Ongoing machine_state={}", machine_state);
                 MatchingResult::Ongoing
             } else {
-                // println!("(trace.75)");
+                println!("(trace.253) seq/NotMatch machine_state={}", machine_state);
                 MatchingResult::NotMatch
             }
         } else if machine_state.matched_length_in_seq < vec.len() {
             // Last
             let x = &vec[machine_state.matched_length_in_seq];
             if *x == *act {
-                // println!("(trace.72)");
+                println!(
+                    "(trace.260) seq/Last/Matched machine_state={}",
+                    machine_state
+                );
                 MatchingResult::Matched
             } else {
-                // println!("(trace.75)");
+                println!(
+                    "(trace.263) seq/Last?NotMatch machine_state={}",
+                    machine_state
+                );
                 MatchingResult::NotMatch
             }
         } else {
@@ -289,32 +296,6 @@ where
         return MatchingResult::Matched;
     }
 }
-/*
-impl<T> fmt::Display for MachineVal<T> {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let mut buf = String::new();
-        buf.push_str(&format!("actual_index={} ", self.actual_index));
-        buf.push_str(&format!("expected_index={} ", self.expected_index));
-        buf.push_str(&format!(
-            "matched_length_in_repeat={} ",
-            self.matched_length_in_repeat
-        ));
-        write!(f, "{}", buf)
-    }
-}
-impl<T> fmt::Debug for MachineVal<T> {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let mut buf = String::new();
-        buf.push_str(&format!("actual_index={} ", self.actual_index));
-        buf.push_str(&format!("expected_index={:?} ", self.expected_index));
-        buf.push_str(&format!(
-            "matched_length_in_repeat={} ",
-            self.matched_length_in_repeat
-        ));
-        write!(f, "{}", buf)
-    }
-}
-*/
 
 impl Default for MachineState {
     fn default() -> Self {
@@ -325,5 +306,39 @@ impl Default for MachineState {
             matched_length_in_repeat: 0,
             matched_length_in_seq: 0,
         }
+    }
+}
+impl fmt::Display for MachineState {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let mut buf = String::new();
+        buf.push_str(&format!("actual_index={} ", self.actual_index));
+        buf.push_str(&format!("expected_index={} ", self.expected_index));
+        buf.push_str(&format!("is_final={} ", self.is_final));
+        buf.push_str(&format!(
+            "matched_length_in_repeat={} ",
+            self.matched_length_in_repeat
+        ));
+        buf.push_str(&format!(
+            "matched_length_in_seq={} ",
+            self.matched_length_in_seq
+        ));
+        write!(f, "{}", buf)
+    }
+}
+impl fmt::Debug for MachineState {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let mut buf = String::new();
+        buf.push_str(&format!("actual_index={} ", self.actual_index));
+        buf.push_str(&format!("expected_index={:?} ", self.expected_index));
+        buf.push_str(&format!("is_final={} ", self.is_final));
+        buf.push_str(&format!(
+            "matched_length_in_repeat={} ",
+            self.matched_length_in_repeat
+        ));
+        buf.push_str(&format!(
+            "matched_length_in_seq={} ",
+            self.matched_length_in_seq
+        ));
+        write!(f, "{}", buf)
     }
 }

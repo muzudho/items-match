@@ -436,6 +436,7 @@ fn main() {
         .routine(&Ro::default().push(&Co::Once(boolean)).build())
         .build();
 
+    /*
     assert!(Ma::default().actual(&ac1).expected(&ex1).build().exec());
     assert!(Ma::default().actual(&ac2).expected(&ex1).build().exec());
     assert!(!Ma::default().actual(&ac3).expected(&ex1).build().exec());
@@ -458,6 +459,7 @@ fn main() {
     assert!(!Ma::default().actual(&ac8).expected(&ex11).build().exec());
     // 'true' is boolean.
     assert!(Ma::default().actual(&ac11).expected(&ex12).build().exec());
+    */
     // 'false' is boolean.
     assert!(Ma::default().actual(&ac12).expected(&ex12).build().exec());
     // 'No-1_0' is not boolean.
