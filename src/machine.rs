@@ -1,4 +1,5 @@
 use crate::ActualVal;
+use crate::Element;
 use crate::ExpectedVal;
 use crate::MachineBuilder;
 use crate::MachineState;
@@ -193,32 +194,36 @@ where
     where
         T: std::cmp::PartialEq + std::cmp::PartialOrd,
     {
-        for exp in &any.operands {
-            match exp {
-                Operand::Pin(exa) => {
-                    if *exa == *act {
-                        // println!("(trace.138) matching_any/matched.");
-                        return MatchingResult::Matched;
+        for nd in &any.operands {
+            match nd {
+                Operand::El(el) => {
+                    match el {
+                        Element::Pin(exa) => {
+                            if *exa == *act {
+                                // println!("(trace.138) matching_any/matched.");
+                                return MatchingResult::Matched;
+                            }
+                        }
+                        Element::RangeIncludesMax(rng) => {
+                            match self.matching5_range_contains_max(act, rng) {
+                                MatchingResult::Matched => {
+                                    // println!("(trace.138) matching_any/rng/matched.");
+                                    return MatchingResult::Matched;
+                                }
+                                MatchingResult::Ongoing => {
+                                    // println!("(trace.138) matching_any/rng/ongoing.");
+                                    return MatchingResult::Ongoing;
+                                }
+                                MatchingResult::NotMatch => {
+                                    // 続行。
+                                    // println!("(trace.138) matching_any/rng/notmatch.");
+                                }
+                            }
+                        }
+                        Element::Seq(vec) => {
+                            return self.matching5_seq(machine_state, act, vec);
+                        }
                     }
-                }
-                Operand::RangeIncludesMax(rng) => {
-                    match self.matching5_range_contains_max(act, rng) {
-                        MatchingResult::Matched => {
-                            // println!("(trace.138) matching_any/rng/matched.");
-                            return MatchingResult::Matched;
-                        }
-                        MatchingResult::Ongoing => {
-                            // println!("(trace.138) matching_any/rng/ongoing.");
-                            return MatchingResult::Ongoing;
-                        }
-                        MatchingResult::NotMatch => {
-                            // 続行。
-                            // println!("(trace.138) matching_any/rng/notmatch.");
-                        }
-                    }
-                }
-                Operand::Seq(vec) => {
-                    return self.matching5_seq(machine_state, act, vec);
                 }
             }
         }
@@ -229,26 +234,30 @@ where
         &self,
         machine_state: &mut MachineState,
         act: &T,
-        exp: &Operand<T>,
+        nd: &Operand<T>,
     ) -> MatchingResult
     where
         T: std::cmp::PartialEq + std::cmp::PartialOrd,
     {
-        match exp {
-            Operand::Pin(exa) => {
-                if *exa == *act {
-                    // println!("(trace.72)");
-                    MatchingResult::Matched
-                } else {
-                    // println!("(trace.75)");
-                    MatchingResult::NotMatch
+        match nd {
+            Operand::El(el) => {
+                match el {
+                    Element::Pin(exa) => {
+                        if *exa == *act {
+                            // println!("(trace.72)");
+                            MatchingResult::Matched
+                        } else {
+                            // println!("(trace.75)");
+                            MatchingResult::NotMatch
+                        }
+                    }
+                    Element::RangeIncludesMax(rng) => {
+                        return self.matching5_range_contains_max(act, rng);
+                    }
+                    Element::Seq(vec) => {
+                        return self.matching5_seq(machine_state, act, vec);
+                    }
                 }
-            }
-            Operand::RangeIncludesMax(rng) => {
-                return self.matching5_range_contains_max(act, rng);
-            }
-            Operand::Seq(vec) => {
-                return self.matching5_seq(machine_state, act, vec);
             }
         }
     }

@@ -75,6 +75,13 @@ pub enum Quantity<T> {
 /// 項。論理演算子は含みません。  
 #[derive(Clone)]
 pub enum Operand<T> {
+    /// Element.  
+    /// 要素。  
+    El(Element<T>),
+}
+
+#[derive(Clone)]
+pub enum Element<T> {
     /// 1つだけのもの。  
     Pin(T),
     /// Sequence.  
