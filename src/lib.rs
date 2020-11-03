@@ -50,6 +50,7 @@ pub struct ActualVal<T> {
 
 pub struct ExpectedBuilder<T> {
     items: Vec<Control<T>>,
+    // TODO routine: Routine<T>,
 }
 
 #[derive(Clone)]
@@ -59,8 +60,8 @@ pub struct ExpectedVal<T> {
 }
 
 #[derive(Clone)]
-pub enum Routine<T> {
-    Controls(Vec<Control<T>>),
+pub struct Routine<T> {
+    controls: Vec<Control<T>>,
 }
 
 /// Control.  

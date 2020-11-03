@@ -26,8 +26,8 @@ where
         }
     }
 
-    /// Set the number of items to read ahead.  
-    /// 先読みする項目数を設定します。  
+    /// Push the comtrol.  
+    /// 制御を追加します。  
     pub fn push<'a>(&'a mut self, item: &Control<T>) -> &'a mut Self {
         self.items.push(item.clone());
         self
