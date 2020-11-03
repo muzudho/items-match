@@ -82,13 +82,6 @@ pub enum OrOperator<T> {
 /// 項。論理演算子は含みません。  
 #[derive(Clone)]
 pub enum OrOperand<T> {
-    /// This is the unary operator.  
-    /// 単項演算子にするならこれ。  
-    El(Element<T>),
-}
-
-#[derive(Clone)]
-pub enum Element<T> {
     /// 1つだけのもの。  
     Pin(T),
     /// Sequence.  

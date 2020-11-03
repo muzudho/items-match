@@ -1,5 +1,4 @@
 use crate::ActualVal;
-use crate::Element;
 use crate::ExpectedVal;
 use crate::MachineBuilder;
 use crate::MachineState;
@@ -195,14 +194,10 @@ where
         T: std::cmp::PartialEq + std::cmp::PartialOrd,
     {
         for nd in &any.operands {
-            match nd {
-                OrOperand::El(el) => {
-                    match self.matching4_el(machine_state, act, el) {
-                        MatchingResult::Matched => return MatchingResult::Matched,
-                        MatchingResult::Ongoing => return MatchingResult::Ongoing,
-                        MatchingResult::NotMatch => {} // 続行。
-                    }
-                }
+            match self.matching4_el(machine_state, act, nd) {
+                MatchingResult::Matched => return MatchingResult::Matched,
+                MatchingResult::Ongoing => return MatchingResult::Ongoing,
+                MatchingResult::NotMatch => {} // 続行。
             }
         }
         // println!("(trace.67) Anyでぜんぶ不一致。");
@@ -212,10 +207,10 @@ where
         &self,
         machine_state: &mut MachineState,
         act: &T,
-        el: &Element<T>,
+        el: &OrOperand<T>,
     ) -> MatchingResult {
         match el {
-            Element::Pin(exa) => {
+            OrOperand::Pin(exa) => {
                 if *exa == *act {
                     // println!("(trace.138) matching_any/matched.");
                     MatchingResult::Matched
@@ -223,8 +218,8 @@ where
                     MatchingResult::NotMatch
                 }
             }
-            Element::RangeIncludesMax(rng) => self.matching5_range_contains_max(act, rng),
-            Element::Seq(vec) => self.matching5_seq(machine_state, act, vec),
+            OrOperand::RangeIncludesMax(rng) => self.matching5_range_contains_max(act, rng),
+            OrOperand::Seq(vec) => self.matching5_seq(machine_state, act, vec),
         }
     }
     fn matching4_one(
@@ -236,11 +231,7 @@ where
     where
         T: std::cmp::PartialEq + std::cmp::PartialOrd,
     {
-        match nd {
-            OrOperand::El(el) => {
-                return self.matching4_el(machine_state, act, el);
-            }
-        }
+        return self.matching4_el(machine_state, act, nd);
     }
     fn matching5_seq(
         &self,
