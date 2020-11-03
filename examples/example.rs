@@ -43,23 +43,10 @@ fn main() {
         .build();
 
     // Digit.
-    let digit = RangeIncludesMax::default()
-        .set_min(&'0')
-        .set_max(&'9')
-        .build();
+    let digit = RangeIncludesMax::default().min(&'0').max(&'9').build();
     // Alphabet.
-    let upper_case = El::RangeIncludesMax(
-        RangeIncludesMax::default()
-            .set_min(&'A')
-            .set_max(&'Z')
-            .build(),
-    );
-    let lower_case = El::RangeIncludesMax(
-        RangeIncludesMax::default()
-            .set_min(&'a')
-            .set_max(&'z')
-            .build(),
-    );
+    let upper_case = El::RangeIncludesMax(RangeIncludesMax::default().min(&'A').max(&'Z').build());
+    let lower_case = El::RangeIncludesMax(RangeIncludesMax::default().min(&'a').max(&'z').build());
     let alpha = Any::default().push(&upper_case).push(&lower_case).build();
 
     let ex1_wsss1 = Expected::default()
@@ -73,9 +60,9 @@ fn main() {
     let ex2_ws1max = Expected::default()
         .push(&Co::Repeat(
             Repeat::default()
-                .set_quantity(&Qu::Any(wschar.clone()))
-                .set_min(1)
-                .set_max_not_included(usize::MAX)
+                .quantity(&Qu::Any(wschar.clone()))
+                .min(1)
+                .max_not_included(usize::MAX)
                 .build(),
         ))
         .push(&Co::Once(Qu::One(El::Exact('1'))))
@@ -83,9 +70,9 @@ fn main() {
     let ex3_ws5max = Expected::default()
         .push(&Co::Repeat(
             Repeat::default()
-                .set_quantity(&Qu::Any(wschar.clone()))
-                .set_min(5)
-                .set_max_not_included(usize::MAX)
+                .quantity(&Qu::Any(wschar.clone()))
+                .min(5)
+                .max_not_included(usize::MAX)
                 .build(),
         ))
         .push(&Co::Once(Qu::One(El::Exact('1'))))
@@ -93,9 +80,9 @@ fn main() {
     let ex4_ws03 = Expected::default()
         .push(&Co::Repeat(
             Repeat::default()
-                .set_quantity(&Qu::Any(wschar.clone()))
-                .set_min(0)
-                .set_max_not_included(3)
+                .quantity(&Qu::Any(wschar.clone()))
+                .min(0)
+                .max_not_included(3)
                 .build(),
         ))
         .push(&Co::Once(Qu::One(El::Exact('1'))))
@@ -103,9 +90,9 @@ fn main() {
     let ex5_ws1max = Expected::default()
         .push(&Co::Repeat(
             Repeat::default()
-                .set_quantity(&Qu::Any(wschar.clone()))
-                .set_min(1)
-                .set_max_not_included(usize::MAX)
+                .quantity(&Qu::Any(wschar.clone()))
+                .min(1)
+                .max_not_included(usize::MAX)
                 .build(),
         ))
         .push(&Co::Once(Qu::One(El::RangeIncludesMax(digit))))
@@ -116,18 +103,18 @@ fn main() {
     let ex7_alpha1to3 = Expected::default()
         .push(&Co::Repeat(
             Repeat::default()
-                .set_quantity(&Qu::Any(alpha.clone()))
-                .set_min(1)
-                .set_max_not_included(3)
+                .quantity(&Qu::Any(alpha.clone()))
+                .min(1)
+                .max_not_included(3)
                 .build(),
         ))
         .build();
     let ex8_alpha1to_max = Expected::default()
         .push(&Co::Repeat(
             Repeat::default()
-                .set_quantity(&Qu::Any(alpha.clone()))
-                .set_min(1)
-                .set_max_not_included(usize::MAX)
+                .quantity(&Qu::Any(alpha.clone()))
+                .min(1)
+                .max_not_included(usize::MAX)
                 .build(),
         ))
         .build();

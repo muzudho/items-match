@@ -35,19 +35,22 @@ where
         }
     }
 
+    /// Set a quantity.  
     /// 最低何回繰り返すか。  
-    pub fn set_quantity<'a>(&'a mut self, quantity: &Quantity<T>) -> &'a mut Self {
+    pub fn quantity<'a>(&'a mut self, quantity: &Quantity<T>) -> &'a mut Self {
         self.quantity = Some(Box::new(quantity.clone()));
         self
     }
+    /// Set a min.  
     /// 最低何回繰り返すか。  
-    pub fn set_min<'a>(&'a mut self, val: usize) -> &'a mut Self {
+    pub fn min<'a>(&'a mut self, val: usize) -> &'a mut Self {
         self.min = val;
         self
     }
 
+    /// Set max not included.  
     /// 最大何回繰り返すか。最大値は含まない。  
-    pub fn set_max_not_included<'a>(&'a mut self, val: usize) -> &'a mut Self {
+    pub fn max_not_included<'a>(&'a mut self, val: usize) -> &'a mut Self {
         self.max_not_included = val;
         self
     }

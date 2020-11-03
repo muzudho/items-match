@@ -33,11 +33,13 @@ where
         }
     }
 
-    pub fn set_max<'a>(&'a mut self, item: &T) -> &'a mut Self {
+    /// Set a max.
+    pub fn max<'a>(&'a mut self, item: &T) -> &'a mut Self {
         self.max = Some(item.clone());
         self
     }
-    pub fn set_min<'a>(&'a mut self, item: &T) -> &'a mut Self {
+    /// Set a min.
+    pub fn min<'a>(&'a mut self, item: &T) -> &'a mut Self {
         self.min = Some(item.clone());
         self
     }
