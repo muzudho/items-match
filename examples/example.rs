@@ -61,6 +61,19 @@ fn main() {
         .push(&'_')
         .push(&'0')
         .build();
+    let ac11 = Actual::default() // 'true'
+        .push(&'t')
+        .push(&'r')
+        .push(&'u')
+        .push(&'e')
+        .build();
+    let ac12 = Actual::default() // 'false'
+        .push(&'f')
+        .push(&'a')
+        .push(&'l')
+        .push(&'s')
+        .push(&'e')
+        .build();
 
     // https://github.com/toml-lang/toml/blob/1.0.0-rc.3/toml.abnf
     // TODO 18 toml = expression *( newline expression )
@@ -255,12 +268,13 @@ fn main() {
     // 151 nan = %x6e.61.6e  ; nan
     let _nan = Cnd::Seq(vec!['n', 'a', 'n']);
 
-    // TODO 155 boolean = true / false
-
     // 157 true    = %x74.72.75.65     ; true
-    let _true_ = Cnd::Seq(vec!['t', 'r', 'u', 'e']);
+    let true_ = Cnd::Seq(vec!['t', 'r', 'u', 'e']);
     // 158 false   = %x66.61.6C.73.65  ; false
-    let _false_ = Cnd::Seq(vec!['f', 'a', 'l', 's', 'e']);
+    let false_ = Cnd::Seq(vec!['f', 'a', 'l', 's', 'e']);
+
+    // TODO 155 boolean = true / false
+    let boolean = Op::Or(Cnds::default().push(&true_).push(&false_).build());
 
     // TODO 162 date-time      = offset-date-time / local-date-time / local-date / local-time
     // TODO 164 date-fullyear  = 4DIGIT
@@ -418,6 +432,9 @@ fn main() {
 
     let ex10 = Expected::default().routine(&comment).build();
     let ex11 = Expected::default().routine(&unquoted_key).build();
+    let ex12 = Expected::default()
+        .routine(&Ro::default().push(&Co::Once(boolean)).build())
+        .build();
 
     assert!(Ma::default().actual(&ac1).expected(&ex1).build().exec());
     assert!(Ma::default().actual(&ac2).expected(&ex1).build().exec());
@@ -439,6 +456,12 @@ fn main() {
     assert!(Ma::default().actual(&ac10).expected(&ex11).build().exec());
     // Newline is not Unquloted key.
     assert!(!Ma::default().actual(&ac8).expected(&ex11).build().exec());
+    // 'true' is boolean.
+    assert!(Ma::default().actual(&ac11).expected(&ex12).build().exec());
+    // 'false' is boolean.
+    assert!(Ma::default().actual(&ac12).expected(&ex12).build().exec());
+    // 'No-1_0' is not boolean.
+    assert!(!Ma::default().actual(&ac10).expected(&ex12).build().exec());
 
     println!("Finished.");
 }
