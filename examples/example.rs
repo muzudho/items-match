@@ -2,7 +2,7 @@ extern crate rattle_items_match;
 
 use rattle_items_match::{
     Actual, Any, Controls as Co, Element as El, Expected, Machine, Quantity as Qu,
-    RangeIncludesMax, RepeatBuilder,
+    RangeIncludesMax, Repeat,
 };
 
 fn main() {
@@ -72,7 +72,7 @@ fn main() {
 
     let ex2_ws1max = Expected::default()
         .push(&Co::Repeat(
-            RepeatBuilder::default()
+            Repeat::default()
                 .set_quantity(&Qu::Any(wschar.clone()))
                 .set_min(1)
                 .set_max_not_included(usize::MAX)
@@ -82,7 +82,7 @@ fn main() {
         .build();
     let ex3_ws5max = Expected::default()
         .push(&Co::Repeat(
-            RepeatBuilder::default()
+            Repeat::default()
                 .set_quantity(&Qu::Any(wschar.clone()))
                 .set_min(5)
                 .set_max_not_included(usize::MAX)
@@ -92,7 +92,7 @@ fn main() {
         .build();
     let ex4_ws03 = Expected::default()
         .push(&Co::Repeat(
-            RepeatBuilder::default()
+            Repeat::default()
                 .set_quantity(&Qu::Any(wschar.clone()))
                 .set_min(0)
                 .set_max_not_included(3)
@@ -102,7 +102,7 @@ fn main() {
         .build();
     let ex5_ws1max = Expected::default()
         .push(&Co::Repeat(
-            RepeatBuilder::default()
+            Repeat::default()
                 .set_quantity(&Qu::Any(wschar.clone()))
                 .set_min(1)
                 .set_max_not_included(usize::MAX)
@@ -115,7 +115,7 @@ fn main() {
         .build();
     let ex7_alpha1to3 = Expected::default()
         .push(&Co::Repeat(
-            RepeatBuilder::default()
+            Repeat::default()
                 .set_quantity(&Qu::Any(alpha.clone()))
                 .set_min(1)
                 .set_max_not_included(3)
@@ -124,7 +124,7 @@ fn main() {
         .build();
     let ex8_alpha1to_max = Expected::default()
         .push(&Co::Repeat(
-            RepeatBuilder::default()
+            Repeat::default()
                 .set_quantity(&Qu::Any(alpha.clone()))
                 .set_min(1)
                 .set_max_not_included(usize::MAX)

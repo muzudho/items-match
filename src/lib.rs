@@ -20,7 +20,6 @@ pub mod expected;
 pub mod machine;
 pub mod range_contains_max;
 pub mod repeat;
-pub mod repeat_builder;
 
 pub struct Machine<T> {
     actual: Option<ActualVal<T>>,
@@ -62,7 +61,7 @@ pub struct ExpectedVal<T> {
 #[derive(Clone)]
 pub enum Controls<T> {
     Once(Quantity<T>),
-    Repeat(Repeat<T>),
+    Repeat(RepeatVal<T>),
 }
 /// Quantity.  
 /// 量。  
@@ -101,14 +100,14 @@ pub struct AnyVal<T> {
     items: Vec<Element<T>>,
 }
 
-pub struct RepeatBuilder<T> {
+pub struct Repeat<T> {
     quantity: Option<Box<Quantity<T>>>,
     min: usize,
     max_not_included: usize,
 }
 
 #[derive(Clone)]
-pub struct Repeat<T> {
+pub struct RepeatVal<T> {
     quantity: Box<Quantity<T>>,
     min: usize,
     max_not_included: usize,

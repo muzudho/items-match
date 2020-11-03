@@ -36,7 +36,7 @@ use rattle_items_match::Machine;
 use rattle_items_match::Quantity;
 use rattle_items_match::RangeIncludesMax;
 use rattle_items_match::{
-    Actual, Any, Controls, Expected, RepeatBuilder,
+    Actual, Any, Controls, Expected, Repeat,
 };
 
 fn main() {
@@ -113,7 +113,7 @@ fn main() {
 
     let expected2_ws1max = Expected::default()
         .push(&Controls::Repeat(
-            RepeatBuilder::default()
+            Repeat::default()
                 .set_quantity(&Quantity::Any(wschar.clone()))
                 .set_min(1)
                 .set_max_not_included(usize::MAX)
@@ -123,7 +123,7 @@ fn main() {
         .build();
     let expected3_ws5max = Expected::default()
         .push(&Controls::Repeat(
-            RepeatBuilder::default()
+            Repeat::default()
                 .set_quantity(&Quantity::Any(wschar.clone()))
                 .set_min(5)
                 .set_max_not_included(usize::MAX)
@@ -133,7 +133,7 @@ fn main() {
         .build();
     let expected4_ws03 = Expected::default()
         .push(&Controls::Repeat(
-            RepeatBuilder::default()
+            Repeat::default()
                 .set_quantity(&Quantity::Any(wschar.clone()))
                 .set_min(0)
                 .set_max_not_included(3)
@@ -143,7 +143,7 @@ fn main() {
         .build();
     let expected5_ws1max = Expected::default()
         .push(&Controls::Repeat(
-            RepeatBuilder::default()
+            Repeat::default()
                 .set_quantity(&Quantity::Any(wschar.clone()))
                 .set_min(1)
                 .set_max_not_included(usize::MAX)
@@ -158,7 +158,7 @@ fn main() {
         .build();
     let expected7_alpha1to3 = Expected::default()
         .push(&Controls::Repeat(
-            RepeatBuilder::default()
+            Repeat::default()
                 .set_quantity(&Quantity::Any(alpha.clone()))
                 .set_min(1)
                 .set_max_not_included(3)
@@ -167,7 +167,7 @@ fn main() {
         .build();
     let expected8_alpha1to_max = Expected::default()
         .push(&Controls::Repeat(
-            RepeatBuilder::default()
+            Repeat::default()
                 .set_quantity(&Quantity::Any(alpha.clone()))
                 .set_min(1)
                 .set_max_not_included(usize::MAX)
