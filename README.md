@@ -32,8 +32,8 @@ You can think that you can't do anything that isn't written here.
 extern crate rattle_items_match;
 
 use rattle_items_match::{
-    ActualBuilder, ConditionsBuilder, Controls as Co, Condition as El, ExpectedBuilder, MachineBuilder as Ma, Operator as Qu,
-    RangeIncludesMax, Repeat,
+    ActualBuilder as Actual, Condition as Cnd, ConditionsBuilder as Cnds, Controls as Co,
+    ExpectedBuilder as Expected, MachineBuilder as Ma, Operator as Op, RangeIncludesMax, Repeat,
 };
 
 fn main() {
@@ -41,7 +41,7 @@ fn main() {
 
     // `Actual` is sequence only.
     // 比較対象値は シーケンスのみです。
-    let ac1 = ActualBuilder::default() // "    1"
+    let ac1 = Actual::default() // "    1"
         .push(&' ')
         .push(&' ')
         .push(&' ')
@@ -49,7 +49,7 @@ fn main() {
         .push(&'1')
         .build();
 
-    let ac2 = ActualBuilder::default() // "\t   1"
+    let ac2 = Actual::default() // "\t   1"
         .push(&'\t')
         .push(&' ')
         .push(&' ')
@@ -57,112 +57,153 @@ fn main() {
         .push(&'1')
         .build();
 
-    let ac3 = ActualBuilder::default() // 'x   1'
+    let ac3 = Actual::default() // 'x   1'
         .push(&'x')
         .push(&' ')
         .push(&' ')
         .push(&' ')
         .push(&'1')
         .build();
-    let ac4 = ActualBuilder::default().push(&'A').build(); // 'A'
-    let ac5 = ActualBuilder::default().push(&'B').push(&'C').build(); // 'BC'
-    let ac6 = ActualBuilder::default().push(&'d').push(&'e').build(); // 'de'
-    let ac7 = ActualBuilder::default().push(&'f').push(&'g').push(&'h').build(); // 'fgh'
-    let ac8 = ActualBuilder::default().push(&'\r').push(&'\n').build(); // "\r\n"
+    let ac4 = Actual::default().push(&'A').build(); // 'A'
+    let ac5 = Actual::default().push(&'B').push(&'C').build(); // 'BC'
+    let ac6 = Actual::default().push(&'d').push(&'e').build(); // 'de'
+    let ac7 = Actual::default().push(&'f').push(&'g').push(&'h').build(); // 'fgh'
+    let ac8 = Actual::default().push(&'\r').push(&'\n').build(); // "\r\n"
+    let ac9 = Actual::default() // '# Comment あ.'
+        .push(&'#')
+        .push(&' ')
+        .push(&'C')
+        .push(&'o')
+        .push(&'m')
+        .push(&'m')
+        .push(&'e')
+        .push(&'n')
+        .push(&'t')
+        .push(&' ')
+        .push(&'あ')
+        .push(&'.')
+        .build();
 
     // Whitespace characters.
-    let wschar = ConditionsBuilder::default()
-        .push(&El::Pin('\t'))
-        .push(&El::Pin(' '))
+    let wschar = Cnds::default()
+        .push(&Cnd::Pin('\t'))
+        .push(&Cnd::Pin(' '))
         .build();
 
     // Newline.
-    let newline = ConditionsBuilder::default()
-        .push(&El::Pin('\n')) // LF
-        .push(&El::Seq(vec!['\r', '\n'])) // CR LF
+    let newline = Cnds::default()
+        .push(&Cnd::Pin('\n')) // LF
+        .push(&Cnd::Seq(vec!['\r', '\n'])) // CR LF
         .build();
 
     // Digit.
     let digit = RangeIncludesMax::default().min(&'0').max(&'9').build();
     // Alphabet.
-    let upper_case = El::RangeIncludesMax(RangeIncludesMax::default().min(&'A').max(&'Z').build());
-    let lower_case = El::RangeIncludesMax(RangeIncludesMax::default().min(&'a').max(&'z').build());
-    let alpha = ConditionsBuilder::default().push(&upper_case).push(&lower_case).build();
+    let upper_case = Cnd::RangeIncludesMax(RangeIncludesMax::default().min(&'A').max(&'Z').build());
+    let lower_case = Cnd::RangeIncludesMax(RangeIncludesMax::default().min(&'a').max(&'z').build());
+    let alpha = Cnds::default().push(&upper_case).push(&lower_case).build();
 
-    // #
-    // TODO let comment_start_symbol = El::Pin('#');
+    let comment_start_symbol = Cnd::Pin('#'); // #
+    let non_ascii = &Cnd::RangeIncludesMax(
+        RangeIncludesMax::default()
+            .min(&(0x80 as char))
+            .max(&'\u{D7FF}')
+            .build(),
+    );
+    let non_eol = Op::Or(
+        Cnds::default()
+            .push(&Cnd::Pin(0x09 as char))
+            .push(&Cnd::RangeIncludesMax(
+                RangeIncludesMax::default()
+                    .min(&(0x20 as char))
+                    .max(&(0x7F as char))
+                    .build(),
+            ))
+            .push(&non_ascii)
+            .build(),
+    );
 
-    let ex1 = ExpectedBuilder::default() // "(wschar)   1"
-        .push(&Co::Once(Qu::Or(wschar.clone())))
-        .push(&Co::Once(Qu::One(El::Pin(' '))))
-        .push(&Co::Once(Qu::One(El::Pin(' '))))
-        .push(&Co::Once(Qu::One(El::Pin(' '))))
-        .push(&Co::Once(Qu::One(El::Pin('1'))))
+    let ex1 = Expected::default() // "(wschar)   1"
+        .push(&Co::Once(Op::Or(wschar.clone())))
+        .push(&Co::Once(Op::One(Cnd::Pin(' '))))
+        .push(&Co::Once(Op::One(Cnd::Pin(' '))))
+        .push(&Co::Once(Op::One(Cnd::Pin(' '))))
+        .push(&Co::Once(Op::One(Cnd::Pin('1'))))
         .build();
 
-    let ex2 = ExpectedBuilder::default() // "+(wschar)"
+    let ex2 = Expected::default() // "+(wschar)"
         .push(&Co::Repeat(
             Repeat::default()
-                .quantity(&Qu::Or(wschar.clone()))
+                .quantity(&Op::Or(wschar.clone()))
                 .min(1)
                 .max_not_included(usize::MAX)
                 .build(),
         ))
-        .push(&Co::Once(Qu::One(El::Pin('1'))))
+        .push(&Co::Once(Op::One(Cnd::Pin('1'))))
         .build();
-    let ex3 = ExpectedBuilder::default() // "(wschar){5,}"
+    let ex3 = Expected::default() // "(wschar){5,}"
         .push(&Co::Repeat(
             Repeat::default()
-                .quantity(&Qu::Or(wschar.clone()))
+                .quantity(&Op::Or(wschar.clone()))
                 .min(5)
                 .max_not_included(usize::MAX)
                 .build(),
         ))
-        .push(&Co::Once(Qu::One(El::Pin('1'))))
+        .push(&Co::Once(Op::One(Cnd::Pin('1'))))
         .build();
-    let ex4 = ExpectedBuilder::default() // "(wschar){0,3}"
+    let ex4 = Expected::default() // "(wschar){0,3}"
         .push(&Co::Repeat(
             Repeat::default()
-                .quantity(&Qu::Or(wschar.clone()))
+                .quantity(&Op::Or(wschar.clone()))
                 .min(0)
                 .max_not_included(3)
                 .build(),
         ))
-        .push(&Co::Once(Qu::One(El::Pin('1'))))
+        .push(&Co::Once(Op::One(Cnd::Pin('1'))))
         .build();
-    let ex5 = ExpectedBuilder::default() // "(wschar){1,}"
+    let ex5 = Expected::default() // "(wschar){1,}"
         .push(&Co::Repeat(
             Repeat::default()
-                .quantity(&Qu::Or(wschar.clone()))
+                .quantity(&Op::Or(wschar.clone()))
                 .min(1)
                 .max_not_included(usize::MAX)
                 .build(),
         ))
-        .push(&Co::Once(Qu::One(El::RangeIncludesMax(digit))))
+        .push(&Co::Once(Op::One(Cnd::RangeIncludesMax(digit))))
         .build();
-    let ex6 = ExpectedBuilder::default() // "(alpha)"
-        .push(&Co::Once(Qu::Or(alpha.clone())))
+    let ex6 = Expected::default() // "(alpha)"
+        .push(&Co::Once(Op::Or(alpha.clone())))
         .build();
-    let ex7 = ExpectedBuilder::default() // "(alpha){1,3}"
+    let ex7 = Expected::default() // "(alpha){1,3}"
         .push(&Co::Repeat(
             Repeat::default()
-                .quantity(&Qu::Or(alpha.clone()))
+                .quantity(&Op::Or(alpha.clone()))
                 .min(1)
                 .max_not_included(3)
                 .build(),
         ))
         .build();
-    let ex8 = ExpectedBuilder::default() // "(alpha){1,}"
+    let ex8 = Expected::default() // "(alpha){1,}"
         .push(&Co::Repeat(
             Repeat::default()
-                .quantity(&Qu::Or(alpha.clone()))
+                .quantity(&Op::Or(alpha.clone()))
                 .min(1)
                 .max_not_included(usize::MAX)
                 .build(),
         ))
         .build();
-    let ex9 = ExpectedBuilder::default() // "(newline)"
-        .push(&Co::Once(Qu::Or(newline.clone())))
+    let ex9 = Expected::default() // "(newline)"
+        .push(&Co::Once(Op::Or(newline.clone())))
+        .build();
+    let comment = Expected::default() // "# Comment."
+        .push(&Co::Once(Op::One(comment_start_symbol)))
+        .push(&Co::Repeat(
+            Repeat::default()
+                .quantity(&non_eol)
+                .min(0)
+                .max_not_included(usize::MAX)
+                .build(),
+        ))
         .build();
 
     assert!(Ma::default().actual(&ac1).expected(&ex1).build().exec());
@@ -177,6 +218,10 @@ fn main() {
     assert!(Ma::default().actual(&ac6).expected(&ex7).build().exec());
     assert!(Ma::default().actual(&ac7).expected(&ex8).build().exec());
     assert!(Ma::default().actual(&ac8).expected(&ex9).build().exec());
+    // コメントのテスト
+    assert!(Ma::default().actual(&ac9).expected(&comment).build().exec());
+    // コメントではないもののテスト
+    assert!(!Ma::default().actual(&ac5).expected(&comment).build().exec());
     println!("Finished.");
 }
 ```

@@ -15,9 +15,9 @@
 // (10) `cargo publish`
 
 pub mod actual;
+pub mod condition;
 pub mod expected;
 pub mod machine;
-pub mod or_operand;
 pub mod range_includes_max;
 pub mod repeat;
 
@@ -57,26 +57,23 @@ pub struct ExpectedVal<T> {
     items: Vec<Controls<T>>,
 }
 
-/// Controls item.  
-/// 制御項目。  
+/// Controls.  
+/// 制御。  
 #[derive(Clone)]
 pub enum Controls<T> {
     Once(Operator<T>),
     Repeat(RepeatVal<T>),
 }
-/// OR operator.  
-/// OR演算子(||)で、条件式をつないでいることに相当します。  
 #[derive(Clone)]
 pub enum Operator<T> {
     /// １つしかなければ、これが簡便。  
     One(Condition<T>),
+    /// OR operator.  
+    /// OR演算子(||)で、条件式をつないでいることに相当します。  
+    ///
     /// This is for multinomial operators.  
     /// 多項演算子にするならこれ。どれか１つでもマッチすれば、マッチ。  
-    ///
-    /// WIP. Anyがシーケンスに並んでいるときは、 Actual のカーソルを進めずにパターンマッチしてほしい。  
-    /// マッチしたら、後ろの Or は全て飛ばして欲しい。 すると Actual[1]のAny と Actual[2]のAny の切れ目がいるか？  
-    /// Or はリストにするか？
-    Or(OrOperandsVal<T>),
+    Or(ConditionsVal<T>),
 }
 /// Condition. Logical operator not included.  
 /// 条件式。この並びに論理演算子は含みません。  
@@ -109,7 +106,7 @@ pub struct ConditionsBuilder<T> {
 }
 
 #[derive(Clone)]
-pub struct OrOperandsVal<T> {
+pub struct ConditionsVal<T> {
     conditions: Vec<Condition<T>>,
 }
 

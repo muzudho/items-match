@@ -38,7 +38,7 @@ fn main() {
     let ac6 = Actual::default().push(&'d').push(&'e').build(); // 'de'
     let ac7 = Actual::default().push(&'f').push(&'g').push(&'h').build(); // 'fgh'
     let ac8 = Actual::default().push(&'\r').push(&'\n').build(); // "\r\n"
-    let ac9 = Actual::default() // '# Comment.'
+    let ac9 = Actual::default() // '# Comment あ.'
         .push(&'#')
         .push(&' ')
         .push(&'C')
@@ -48,6 +48,8 @@ fn main() {
         .push(&'e')
         .push(&'n')
         .push(&'t')
+        .push(&' ')
+        .push(&'あ')
         .push(&'.')
         .build();
 
@@ -71,14 +73,10 @@ fn main() {
     let alpha = Cnds::default().push(&upper_case).push(&lower_case).build();
 
     let comment_start_symbol = Cnd::Pin('#'); // #
-    let non_ascii = Op::Or(
-        Cnds::default()
-            .push(&Cnd::RangeIncludesMax(
-                RangeIncludesMax::default()
-                    .min(&(0x80 as char))
-                    .max(&'\u{D7FF}')
-                    .build(),
-            ))
+    let non_ascii = &Cnd::RangeIncludesMax(
+        RangeIncludesMax::default()
+            .min(&(0x80 as char))
+            .max(&'\u{D7FF}')
             .build(),
     );
     let non_eol = Op::Or(
@@ -90,7 +88,7 @@ fn main() {
                     .max(&(0x7F as char))
                     .build(),
             ))
-            // TODO push non_ascii
+            .push(&non_ascii)
             .build(),
     );
 
@@ -189,6 +187,9 @@ fn main() {
     assert!(Ma::default().actual(&ac6).expected(&ex7).build().exec());
     assert!(Ma::default().actual(&ac7).expected(&ex8).build().exec());
     assert!(Ma::default().actual(&ac8).expected(&ex9).build().exec());
+    // コメントのテスト
     assert!(Ma::default().actual(&ac9).expected(&comment).build().exec());
+    // コメントではないもののテスト
+    assert!(!Ma::default().actual(&ac5).expected(&comment).build().exec());
     println!("Finished.");
 }

@@ -1,7 +1,7 @@
 //! Create operands.  
 //! 項 を作成します。  
 use crate::Condition;
-use crate::{ConditionsBuilder, OrOperandsVal};
+use crate::{ConditionsBuilder, ConditionsVal};
 
 impl<T> Default for ConditionsBuilder<T>
 where
@@ -20,11 +20,11 @@ where
 {
     //! Create operands.  
     //! 項 を作成します。  
-    pub fn build(&self) -> OrOperandsVal<T>
+    pub fn build(&self) -> ConditionsVal<T>
     where
         T: std::clone::Clone,
     {
-        OrOperandsVal {
+        ConditionsVal {
             conditions: self.conditions.clone(),
         }
     }
@@ -37,9 +37,9 @@ where
     }
 }
 
-impl<T> Default for OrOperandsVal<T> {
+impl<T> Default for ConditionsVal<T> {
     fn default() -> Self {
-        OrOperandsVal {
+        ConditionsVal {
             conditions: Vec::new(),
         }
     }
