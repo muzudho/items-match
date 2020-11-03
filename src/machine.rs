@@ -197,31 +197,18 @@ where
         for nd in &any.operands {
             match nd {
                 Operand::El(el) => {
-                    match el {
-                        Element::Pin(exa) => {
-                            if *exa == *act {
-                                // println!("(trace.138) matching_any/matched.");
-                                return MatchingResult::Matched;
-                            }
-                        }
-                        Element::RangeIncludesMax(rng) => {
-                            match self.matching5_range_contains_max(act, rng) {
-                                MatchingResult::Matched => {
-                                    // println!("(trace.138) matching_any/rng/matched.");
-                                    return MatchingResult::Matched;
-                                }
-                                MatchingResult::Ongoing => {
-                                    // println!("(trace.138) matching_any/rng/ongoing.");
-                                    return MatchingResult::Ongoing;
-                                }
-                                MatchingResult::NotMatch => {
-                                    // 続行。
-                                    // println!("(trace.138) matching_any/rng/notmatch.");
-                                }
-                            }
-                        }
-                        Element::Seq(vec) => {
-                            return self.matching5_seq(machine_state, act, vec);
+                    match self.matching4_el(machine_state, act, el) {
+                        MatchingResult::Matched => return MatchingResult::Matched,
+                        MatchingResult::Ongoing => return MatchingResult::Ongoing,
+                        MatchingResult::NotMatch => {} // 続行。
+                    }
+                }
+                Operand::Els(els) => {
+                    for el in els {
+                        match self.matching4_el(machine_state, act, el) {
+                            MatchingResult::Matched => return MatchingResult::Matched,
+                            MatchingResult::Ongoing => return MatchingResult::Ongoing,
+                            MatchingResult::NotMatch => {} // 続行。
                         }
                     }
                 }
@@ -229,6 +216,25 @@ where
         }
         // println!("(trace.67) Anyでぜんぶ不一致。");
         return MatchingResult::NotMatch;
+    }
+    fn matching4_el(
+        &self,
+        machine_state: &mut MachineState,
+        act: &T,
+        el: &Element<T>,
+    ) -> MatchingResult {
+        match el {
+            Element::Pin(exa) => {
+                if *exa == *act {
+                    // println!("(trace.138) matching_any/matched.");
+                    MatchingResult::Matched
+                } else {
+                    MatchingResult::NotMatch
+                }
+            }
+            Element::RangeIncludesMax(rng) => self.matching5_range_contains_max(act, rng),
+            Element::Seq(vec) => self.matching5_seq(machine_state, act, vec),
+        }
     }
     fn matching4_one(
         &self,
@@ -241,23 +247,10 @@ where
     {
         match nd {
             Operand::El(el) => {
-                match el {
-                    Element::Pin(exa) => {
-                        if *exa == *act {
-                            // println!("(trace.72)");
-                            MatchingResult::Matched
-                        } else {
-                            // println!("(trace.75)");
-                            MatchingResult::NotMatch
-                        }
-                    }
-                    Element::RangeIncludesMax(rng) => {
-                        return self.matching5_range_contains_max(act, rng);
-                    }
-                    Element::Seq(vec) => {
-                        return self.matching5_seq(machine_state, act, vec);
-                    }
-                }
+                return self.matching4_el(machine_state, act, el);
+            }
+            Operand::Els(_els) => {
+                panic!("Quanty::Oneで 多項なのはおかしい。"); // TODO
             }
         }
     }

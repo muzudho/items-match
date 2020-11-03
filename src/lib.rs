@@ -75,9 +75,12 @@ pub enum Quantity<T> {
 /// 項。論理演算子は含みません。  
 #[derive(Clone)]
 pub enum Operand<T> {
-    /// Element.  
-    /// 要素。  
+    /// This is the unary operator.  
+    /// 単項演算子にするならこれ。  
     El(Element<T>),
+    /// WIP. This is for multinomial operators.  
+    /// 開発中。 多項演算子にするならこれ。  
+    Els(Vec<Element<T>>),
 }
 
 #[derive(Clone)]
