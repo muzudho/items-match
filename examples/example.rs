@@ -2,8 +2,8 @@ extern crate rattle_items_match;
 
 use rattle_items_match::{
     ActualBuilder as Actual, Controls as Co, Element as El, ExpectedBuilder as Expected,
-    MachineBuilder as Ma, Operand as Nd, OperandsBuilder as Nds, Quantity as Qu, RangeIncludesMax,
-    Repeat,
+    MachineBuilder as Ma, OrOperand as Nd, OrOperandsBuilder as Nds, OrOperator as Or,
+    RangeIncludesMax, Repeat,
 };
 
 fn main() {
@@ -76,7 +76,7 @@ fn main() {
     let alpha = Nds::default().push(&upper_case).push(&lower_case).build();
 
     let comment_start_symbol = Nd::El(El::Pin('#')); // #
-    let non_ascii = Qu::Any(
+    let non_ascii = Or::Any(
         Nds::default()
             .push(&Nd::El(El::RangeIncludesMax(
                 RangeIncludesMax::default()
@@ -86,7 +86,7 @@ fn main() {
             )))
             .build(),
     );
-    let non_eol = Qu::Any(
+    let non_eol = Or::Any(
         Nds::default()
             .push(&Nd::El(El::Pin(0x09 as char)))
             .push(&Nd::El(El::RangeIncludesMax(
@@ -100,60 +100,60 @@ fn main() {
     );
 
     let ex1 = Expected::default() // "(wschar)   1"
-        .push(&Co::Once(Qu::Any(wschar.clone())))
-        .push(&Co::Once(Qu::One(Nd::El(El::Pin(' ')))))
-        .push(&Co::Once(Qu::One(Nd::El(El::Pin(' ')))))
-        .push(&Co::Once(Qu::One(Nd::El(El::Pin(' ')))))
-        .push(&Co::Once(Qu::One(Nd::El(El::Pin('1')))))
+        .push(&Co::Once(Or::Any(wschar.clone())))
+        .push(&Co::Once(Or::One(Nd::El(El::Pin(' ')))))
+        .push(&Co::Once(Or::One(Nd::El(El::Pin(' ')))))
+        .push(&Co::Once(Or::One(Nd::El(El::Pin(' ')))))
+        .push(&Co::Once(Or::One(Nd::El(El::Pin('1')))))
         .build();
 
     let ex2 = Expected::default() // "+(wschar)"
         .push(&Co::Repeat(
             Repeat::default()
-                .quantity(&Qu::Any(wschar.clone()))
+                .quantity(&Or::Any(wschar.clone()))
                 .min(1)
                 .max_not_included(usize::MAX)
                 .build(),
         ))
-        .push(&Co::Once(Qu::One(Nd::El(El::Pin('1')))))
+        .push(&Co::Once(Or::One(Nd::El(El::Pin('1')))))
         .build();
     let ex3 = Expected::default() // "(wschar){5,}"
         .push(&Co::Repeat(
             Repeat::default()
-                .quantity(&Qu::Any(wschar.clone()))
+                .quantity(&Or::Any(wschar.clone()))
                 .min(5)
                 .max_not_included(usize::MAX)
                 .build(),
         ))
-        .push(&Co::Once(Qu::One(Nd::El(El::Pin('1')))))
+        .push(&Co::Once(Or::One(Nd::El(El::Pin('1')))))
         .build();
     let ex4 = Expected::default() // "(wschar){0,3}"
         .push(&Co::Repeat(
             Repeat::default()
-                .quantity(&Qu::Any(wschar.clone()))
+                .quantity(&Or::Any(wschar.clone()))
                 .min(0)
                 .max_not_included(3)
                 .build(),
         ))
-        .push(&Co::Once(Qu::One(Nd::El(El::Pin('1')))))
+        .push(&Co::Once(Or::One(Nd::El(El::Pin('1')))))
         .build();
     let ex5 = Expected::default() // "(wschar){1,}"
         .push(&Co::Repeat(
             Repeat::default()
-                .quantity(&Qu::Any(wschar.clone()))
+                .quantity(&Or::Any(wschar.clone()))
                 .min(1)
                 .max_not_included(usize::MAX)
                 .build(),
         ))
-        .push(&Co::Once(Qu::One(Nd::El(El::RangeIncludesMax(digit)))))
+        .push(&Co::Once(Or::One(Nd::El(El::RangeIncludesMax(digit)))))
         .build();
     let ex6 = Expected::default() // "(alpha)"
-        .push(&Co::Once(Qu::Any(alpha.clone())))
+        .push(&Co::Once(Or::Any(alpha.clone())))
         .build();
     let ex7 = Expected::default() // "(alpha){1,3}"
         .push(&Co::Repeat(
             Repeat::default()
-                .quantity(&Qu::Any(alpha.clone()))
+                .quantity(&Or::Any(alpha.clone()))
                 .min(1)
                 .max_not_included(3)
                 .build(),
@@ -162,17 +162,17 @@ fn main() {
     let ex8 = Expected::default() // "(alpha){1,}"
         .push(&Co::Repeat(
             Repeat::default()
-                .quantity(&Qu::Any(alpha.clone()))
+                .quantity(&Or::Any(alpha.clone()))
                 .min(1)
                 .max_not_included(usize::MAX)
                 .build(),
         ))
         .build();
     let ex9 = Expected::default() // "(newline)"
-        .push(&Co::Once(Qu::Any(newline.clone())))
+        .push(&Co::Once(Or::Any(newline.clone())))
         .build();
     let comment = Expected::default() // "# Comment."
-        .push(&Co::Once(Qu::One(comment_start_symbol)))
+        .push(&Co::Once(Or::One(comment_start_symbol)))
         .push(&Co::Repeat(
             Repeat::default()
                 .quantity(&non_eol)

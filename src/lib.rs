@@ -17,7 +17,7 @@
 pub mod actual;
 pub mod expected;
 pub mod machine;
-pub mod operand;
+pub mod or_operand;
 pub mod range_includes_max;
 pub mod repeat;
 
@@ -61,25 +61,32 @@ pub struct ExpectedVal<T> {
 /// 制御項目。  
 #[derive(Clone)]
 pub enum Controls<T> {
-    Once(Quantity<T>),
+    Once(OrOperator<T>),
     Repeat(RepeatVal<T>),
 }
-/// Quantity.  
-/// 量。  
+/// OR operator.  
+/// OR演算子(||)で、条件式をつないでいることに相当します。  
 #[derive(Clone)]
-pub enum Quantity<T> {
-    One(Operand<T>),
-    Any(OperandsVal<T>),
+pub enum OrOperator<T> {
+    /// １つしかなければ、これが簡便。  
+    One(OrOperand<T>),
+    /// This is for multinomial operators.  
+    /// 多項演算子にするならこれ。どれか１つでもマッチすれば、マッチ。  
+    ///
+    /// WIP. Anyがシーケンスに並んでいるときは、 Actual のカーソルを進めずにパターンマッチしてほしい。  
+    /// マッチしたら、後ろの Any は全て飛ばして欲しい。 すると Actual[1]のAny と Actual[2]のAny の切れ目がいるか？  
+    /// Any はリストにするか？
+    Any(OrOperandsVal<T>),
 }
-/// Operand. Logical operator not included.  
+/// OrOperand. Logical operator not included.  
 /// 項。論理演算子は含みません。  
 #[derive(Clone)]
-pub enum Operand<T> {
+pub enum OrOperand<T> {
     /// This is the unary operator.  
     /// 単項演算子にするならこれ。  
     El(Element<T>),
-    /// WIP. This is for multinomial operators.  
-    /// 開発中。 多項演算子にするならこれ。  
+    /// WIP.  
+    /// 開発中。   
     Els(Vec<Element<T>>),
 }
 
@@ -107,24 +114,24 @@ pub struct RangeIncludesMaxVal<T> {
     max: Option<T>,
 }
 
-pub struct OperandsBuilder<T> {
-    operands: Vec<Operand<T>>,
+pub struct OrOperandsBuilder<T> {
+    operands: Vec<OrOperand<T>>,
 }
 
 #[derive(Clone)]
-pub struct OperandsVal<T> {
-    operands: Vec<Operand<T>>,
+pub struct OrOperandsVal<T> {
+    operands: Vec<OrOperand<T>>,
 }
 
 pub struct Repeat<T> {
-    quantity: Option<Box<Quantity<T>>>,
+    quantity: Option<Box<OrOperator<T>>>,
     min: usize,
     max_not_included: usize,
 }
 
 #[derive(Clone)]
 pub struct RepeatVal<T> {
-    quantity: Box<Quantity<T>>,
+    quantity: Box<OrOperator<T>>,
     min: usize,
     max_not_included: usize,
 }

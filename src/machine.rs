@@ -4,9 +4,9 @@ use crate::ExpectedVal;
 use crate::MachineBuilder;
 use crate::MachineState;
 use crate::MatchingResult;
-use crate::OperandsVal;
+use crate::OrOperandsVal;
 use crate::RangeIncludesMaxVal;
-use crate::{Controls, MachineVal, Operand, Quantity};
+use crate::{Controls, MachineVal, OrOperand, OrOperator};
 
 impl<T> Default for MachineBuilder<T>
 where
@@ -100,8 +100,8 @@ where
     {
         match exp {
             Controls::Once(exp) => match exp {
-                Quantity::Any(any) => self.matching4_any(machine_state, act, any),
-                Quantity::One(exp) => self.matching4_one(machine_state, act, exp),
+                OrOperator::Any(any) => self.matching4_any(machine_state, act, any),
+                OrOperator::One(exp) => self.matching4_one(machine_state, act, exp),
             },
             Controls::Repeat(rep) => {
                 if rep.is_cutoff(machine_state.matched_length_in_repeat) {
@@ -174,14 +174,14 @@ where
         &self,
         machine_state: &mut MachineState,
         act: &T,
-        exp: &Quantity<T>,
+        exp: &OrOperator<T>,
     ) -> MatchingResult
     where
         T: std::cmp::PartialEq + std::cmp::PartialOrd,
     {
         match exp {
-            Quantity::Any(any) => self.matching4_any(machine_state, act, any),
-            Quantity::One(exp) => self.matching4_one(machine_state, act, exp),
+            OrOperator::Any(any) => self.matching4_any(machine_state, act, any),
+            OrOperator::One(exp) => self.matching4_one(machine_state, act, exp),
         }
     }
 
@@ -189,21 +189,21 @@ where
         &self,
         machine_state: &mut MachineState,
         act: &T,
-        any: &OperandsVal<T>,
+        any: &OrOperandsVal<T>,
     ) -> MatchingResult
     where
         T: std::cmp::PartialEq + std::cmp::PartialOrd,
     {
         for nd in &any.operands {
             match nd {
-                Operand::El(el) => {
+                OrOperand::El(el) => {
                     match self.matching4_el(machine_state, act, el) {
                         MatchingResult::Matched => return MatchingResult::Matched,
                         MatchingResult::Ongoing => return MatchingResult::Ongoing,
                         MatchingResult::NotMatch => {} // 続行。
                     }
                 }
-                Operand::Els(els) => {
+                OrOperand::Els(els) => {
                     for el in els {
                         match self.matching4_el(machine_state, act, el) {
                             MatchingResult::Matched => return MatchingResult::Matched,
@@ -240,16 +240,16 @@ where
         &self,
         machine_state: &mut MachineState,
         act: &T,
-        nd: &Operand<T>,
+        nd: &OrOperand<T>,
     ) -> MatchingResult
     where
         T: std::cmp::PartialEq + std::cmp::PartialOrd,
     {
         match nd {
-            Operand::El(el) => {
+            OrOperand::El(el) => {
                 return self.matching4_el(machine_state, act, el);
             }
-            Operand::Els(_els) => {
+            OrOperand::Els(_els) => {
                 panic!("Quanty::Oneで 多項なのはおかしい。"); // TODO
             }
         }
