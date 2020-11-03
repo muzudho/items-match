@@ -121,27 +121,39 @@ fn main() {
 
     // 41 comment = comment-start-symbol *non-eol
     // TODO これを条件文として持てないか？ Control を持つ Routine レイヤーを作るか？
-    let comment = Expected::default() // "# Comment."
-        .routine(
-            &Ro::default()
-                .push(&Co::Once(Op::One(comment_start_symbol)))
-                .push(&Co::Repeat(
-                    Repeat::default()
-                        .op(&non_eol)
-                        .min(0)
-                        .max_not_included(usize::MAX)
-                        .build(),
-                ))
+    let comment = &Ro::default() // "# Comment."
+        .push(&Co::Once(Op::One(comment_start_symbol)))
+        .push(&Co::Repeat(
+            Repeat::default()
+                .op(&non_eol)
+                .min(0)
+                .max_not_included(usize::MAX)
                 .build(),
-        )
+        ))
         .build();
-
     // Digit.
     let digit = Cnd::RangeIncludesMax(RangeIncludesMax::default().min(&'0').max(&'9').build());
     // Alphabet.
     let upper_case = Cnd::RangeIncludesMax(RangeIncludesMax::default().min(&'A').max(&'Z').build());
     let lower_case = Cnd::RangeIncludesMax(RangeIncludesMax::default().min(&'a').max(&'z').build());
     let alpha = Cnds::default().push(&upper_case).push(&lower_case).build();
+
+    let unquoted_key = &Ro::default() // 'No-1_0' - Unquloted key.
+        .push(&Co::Repeat(
+            Repeat::default()
+                .min(1)
+                .max_not_included(usize::MAX)
+                .op(&Op::Or(
+                    Cnds::default()
+                        .extend(&alpha) // A-Z, a-z.
+                        .push(&digit) // 0-9.
+                        .push(&Cnd::Pin(0x2D as char)) // -
+                        .push(&Cnd::Pin(0x5F as char)) // _
+                        .build(),
+                ))
+                .build(),
+        ))
+        .build();
 
     let ex1 = Expected::default() // "(wschar)   1"
         .routine(
@@ -252,26 +264,8 @@ fn main() {
         )
         .build();
 
-    let unquoted_key = Expected::default() // 'No-1_0' - Unquloted key.
-        .routine(
-            &Ro::default()
-                .push(&Co::Repeat(
-                    Repeat::default()
-                        .min(1)
-                        .max_not_included(usize::MAX)
-                        .op(&Op::Or(
-                            Cnds::default()
-                                .extend(&alpha) // A-Z, a-z.
-                                .push(&digit) // 0-9.
-                                .push(&Cnd::Pin(0x2D as char)) // -
-                                .push(&Cnd::Pin(0x5F as char)) // _
-                                .build(),
-                        ))
-                        .build(),
-                ))
-                .build(),
-        )
-        .build();
+    let ex10 = Expected::default().routine(&comment).build();
+    let ex11 = Expected::default().routine(&unquoted_key).build();
 
     assert!(Ma::default().actual(&ac1).expected(&ex1).build().exec());
     assert!(Ma::default().actual(&ac2).expected(&ex1).build().exec());
@@ -286,21 +280,13 @@ fn main() {
     assert!(Ma::default().actual(&ac7).expected(&ex8).build().exec());
     assert!(Ma::default().actual(&ac8).expected(&ex9).build().exec());
     // コメントのテスト
-    assert!(Ma::default().actual(&ac9).expected(&comment).build().exec());
+    assert!(Ma::default().actual(&ac9).expected(&ex10).build().exec());
     // コメントではないもののテスト
-    assert!(!Ma::default().actual(&ac5).expected(&comment).build().exec());
+    assert!(!Ma::default().actual(&ac5).expected(&ex10).build().exec());
     // 'No-1_0' - Unquloted key.
-    assert!(Ma::default()
-        .actual(&ac10)
-        .expected(&unquoted_key)
-        .build()
-        .exec());
+    assert!(Ma::default().actual(&ac10).expected(&ex11).build().exec());
     // Newline is not Unquloted key.
-    assert!(!Ma::default()
-        .actual(&ac8)
-        .expected(&unquoted_key)
-        .build()
-        .exec());
+    assert!(!Ma::default().actual(&ac8).expected(&ex11).build().exec());
 
     println!("Finished.");
 }
