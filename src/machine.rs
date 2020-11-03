@@ -1,25 +1,25 @@
 use crate::ActualVal;
 use crate::ExpectedVal;
-use crate::Machine;
+use crate::MachineBuilder;
 use crate::MachineState;
 use crate::MatchingResult;
 use crate::OperandsVal;
 use crate::RangeIncludesMaxVal;
 use crate::{Controls, MachineVal, Operand, Quantity};
 
-impl<T> Default for Machine<T>
+impl<T> Default for MachineBuilder<T>
 where
     T: std::clone::Clone,
 {
     fn default() -> Self {
-        Machine {
+        MachineBuilder {
             actual: None,
             expected: None,
         }
     }
 }
 
-impl<T> Machine<T>
+impl<T> MachineBuilder<T>
 where
     T: std::clone::Clone,
 {
@@ -193,7 +193,7 @@ where
     where
         T: std::cmp::PartialEq + std::cmp::PartialOrd,
     {
-        for exp in &any.items {
+        for exp in &any.operands {
             match exp {
                 Operand::Pin(exa) => {
                     if *exa == *act {

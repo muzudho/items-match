@@ -1,8 +1,8 @@
 extern crate rattle_items_match;
 
 use rattle_items_match::{
-    Actual, Controls as Co, Expected, Machine as Ma, Operand as Nd, Operands as Nds,
-    Quantity as Qu, RangeIncludesMax, Repeat,
+    ActualBuilder as Actual, Controls as Co, Expected, MachineBuilder as Ma, Operand as Nd,
+    OperandsBuilder as Nds, Quantity as Qu, RangeIncludesMax, Repeat,
 };
 
 fn main() {

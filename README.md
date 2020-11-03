@@ -32,7 +32,7 @@ You can think that you can't do anything that isn't written here.
 extern crate rattle_items_match;
 
 use rattle_items_match::{
-    Actual, Operands, Controls as Co, Operand as El, Expected, Machine as Ma, Quantity as Qu,
+    ActualBuilder, OperandsBuilder, Controls as Co, Operand as El, Expected, MachineBuilder as Ma, Quantity as Qu,
     RangeIncludesMax, Repeat,
 };
 
@@ -41,7 +41,7 @@ fn main() {
 
     // `Actual` is sequence only.
     // 比較対象値は シーケンスのみです。
-    let ac1 = Actual::default() // "    1"
+    let ac1 = ActualBuilder::default() // "    1"
         .push(&' ')
         .push(&' ')
         .push(&' ')
@@ -49,7 +49,7 @@ fn main() {
         .push(&'1')
         .build();
 
-    let ac2 = Actual::default() // "\t   1"
+    let ac2 = ActualBuilder::default() // "\t   1"
         .push(&'\t')
         .push(&' ')
         .push(&' ')
@@ -57,27 +57,27 @@ fn main() {
         .push(&'1')
         .build();
 
-    let ac3 = Actual::default() // 'x   1'
+    let ac3 = ActualBuilder::default() // 'x   1'
         .push(&'x')
         .push(&' ')
         .push(&' ')
         .push(&' ')
         .push(&'1')
         .build();
-    let ac4 = Actual::default().push(&'A').build(); // 'A'
-    let ac5 = Actual::default().push(&'B').push(&'C').build(); // 'BC'
-    let ac6 = Actual::default().push(&'d').push(&'e').build(); // 'de'
-    let ac7 = Actual::default().push(&'f').push(&'g').push(&'h').build(); // 'fgh'
-    let ac8 = Actual::default().push(&'\r').push(&'\n').build(); // "\r\n"
+    let ac4 = ActualBuilder::default().push(&'A').build(); // 'A'
+    let ac5 = ActualBuilder::default().push(&'B').push(&'C').build(); // 'BC'
+    let ac6 = ActualBuilder::default().push(&'d').push(&'e').build(); // 'de'
+    let ac7 = ActualBuilder::default().push(&'f').push(&'g').push(&'h').build(); // 'fgh'
+    let ac8 = ActualBuilder::default().push(&'\r').push(&'\n').build(); // "\r\n"
 
     // Whitespace characters.
-    let wschar = Operands::default()
+    let wschar = OperandsBuilder::default()
         .push(&El::Pin('\t'))
         .push(&El::Pin(' '))
         .build();
 
     // Newline.
-    let newline = Operands::default()
+    let newline = OperandsBuilder::default()
         .push(&El::Pin('\n')) // LF
         .push(&El::Seq(vec!['\r', '\n'])) // CR LF
         .build();
@@ -87,7 +87,7 @@ fn main() {
     // Alphabet.
     let upper_case = El::RangeIncludesMax(RangeIncludesMax::default().min(&'A').max(&'Z').build());
     let lower_case = El::RangeIncludesMax(RangeIncludesMax::default().min(&'a').max(&'z').build());
-    let alpha = Operands::default().push(&upper_case).push(&lower_case).build();
+    let alpha = OperandsBuilder::default().push(&upper_case).push(&lower_case).build();
 
     // #
     // TODO let comment_start_symbol = El::Pin('#');

@@ -1,17 +1,17 @@
 //! Create `ActualVal`.  
 //! `ActualVal` を作成します。  
-use crate::{Actual, ActualVal};
+use crate::{ActualBuilder, ActualVal};
 
-impl<T> Default for Actual<T>
+impl<T> Default for ActualBuilder<T>
 where
     T: std::clone::Clone,
 {
     fn default() -> Self {
-        Actual { items: Vec::new() }
+        ActualBuilder { items: Vec::new() }
     }
 }
 
-impl<T> Actual<T>
+impl<T> ActualBuilder<T>
 where
     T: std::clone::Clone,
 {

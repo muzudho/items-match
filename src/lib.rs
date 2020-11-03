@@ -21,7 +21,7 @@ pub mod operand;
 pub mod range_includes_max;
 pub mod repeat;
 
-pub struct Machine<T> {
+pub struct MachineBuilder<T> {
     actual: Option<ActualVal<T>>,
     expected: Option<ExpectedVal<T>>,
 }
@@ -39,7 +39,7 @@ pub struct MachineVal<T> {
     expected: ExpectedVal<T>,
 }
 
-pub struct Actual<T> {
+pub struct ActualBuilder<T> {
     items: Vec<T>,
 }
 
@@ -97,13 +97,13 @@ pub struct RangeIncludesMaxVal<T> {
     max: Option<T>,
 }
 
-pub struct Operands<T> {
-    items: Vec<Operand<T>>,
+pub struct OperandsBuilder<T> {
+    operands: Vec<Operand<T>>,
 }
 
 #[derive(Clone)]
 pub struct OperandsVal<T> {
-    items: Vec<Operand<T>>,
+    operands: Vec<Operand<T>>,
 }
 
 pub struct Repeat<T> {
