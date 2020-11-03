@@ -1,8 +1,8 @@
 extern crate rattle_items_match;
 
 use rattle_items_match::{
-    ActualBuilder as Actual, Condition as Cnd, Controls as Co, ExpectedBuilder as Expected,
-    MachineBuilder as Ma, Operator as Op, OrOperandsBuilder as Nds, RangeIncludesMax, Repeat,
+    ActualBuilder as Actual, Condition as Cnd, ConditionsBuilder as Cnds, Controls as Co,
+    ExpectedBuilder as Expected, MachineBuilder as Ma, Operator as Op, RangeIncludesMax, Repeat,
 };
 
 fn main() {
@@ -52,13 +52,13 @@ fn main() {
         .build();
 
     // Whitespace characters.
-    let wschar = Nds::default()
+    let wschar = Cnds::default()
         .push(&Cnd::Pin('\t'))
         .push(&Cnd::Pin(' '))
         .build();
 
     // Newline.
-    let newline = Nds::default()
+    let newline = Cnds::default()
         .push(&Cnd::Pin('\n')) // LF
         .push(&Cnd::Seq(vec!['\r', '\n'])) // CR LF
         .build();
@@ -68,11 +68,11 @@ fn main() {
     // Alphabet.
     let upper_case = Cnd::RangeIncludesMax(RangeIncludesMax::default().min(&'A').max(&'Z').build());
     let lower_case = Cnd::RangeIncludesMax(RangeIncludesMax::default().min(&'a').max(&'z').build());
-    let alpha = Nds::default().push(&upper_case).push(&lower_case).build();
+    let alpha = Cnds::default().push(&upper_case).push(&lower_case).build();
 
     let comment_start_symbol = Cnd::Pin('#'); // #
     let non_ascii = Op::Or(
-        Nds::default()
+        Cnds::default()
             .push(&Cnd::RangeIncludesMax(
                 RangeIncludesMax::default()
                     .min(&(0x80 as char))
@@ -82,7 +82,7 @@ fn main() {
             .build(),
     );
     let non_eol = Op::Or(
-        Nds::default()
+        Cnds::default()
             .push(&Cnd::Pin(0x09 as char))
             .push(&Cnd::RangeIncludesMax(
                 RangeIncludesMax::default()

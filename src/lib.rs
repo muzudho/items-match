@@ -104,7 +104,7 @@ pub struct RangeIncludesMaxVal<T> {
     max: Option<T>,
 }
 
-pub struct OrOperandsBuilder<T> {
+pub struct ConditionsBuilder<T> {
     conditions: Vec<Condition<T>>,
 }
 

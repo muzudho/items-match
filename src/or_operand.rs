@@ -1,20 +1,20 @@
 //! Create operands.  
 //! 項 を作成します。  
 use crate::Condition;
-use crate::{OrOperandsBuilder, OrOperandsVal};
+use crate::{ConditionsBuilder, OrOperandsVal};
 
-impl<T> Default for OrOperandsBuilder<T>
+impl<T> Default for ConditionsBuilder<T>
 where
     T: std::clone::Clone,
 {
     fn default() -> Self {
-        OrOperandsBuilder {
+        ConditionsBuilder {
             conditions: Vec::new(),
         }
     }
 }
 
-impl<T> OrOperandsBuilder<T>
+impl<T> ConditionsBuilder<T>
 where
     T: std::clone::Clone,
 {
