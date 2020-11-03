@@ -1,11 +1,7 @@
-use crate::ActualVal;
-use crate::ConditionsVal;
-use crate::ExpectedVal;
-use crate::MachineBuilder;
-use crate::MachineState;
-use crate::MatchingResult;
-use crate::RangeIncludesMaxVal;
-use crate::{Condition, Control, MachineVal, Operator};
+use crate::{
+    ActualVal, Condition, ConditionsVal, Control, ExpectedVal, MachineBuilder, MachineState,
+    MachineVal, MatchingResult, Operator, RangeIncludesMaxVal,
+};
 
 impl<T> Default for MachineBuilder<T>
 where
@@ -33,13 +29,13 @@ where
     }
 
     /// Set an actual.  
-    pub fn actual<'a>(&'a mut self, item: &ActualVal<T>) -> &'a mut Self {
-        self.actual = Some(item.clone());
+    pub fn actual<'a>(&'a mut self, ac: &ActualVal<T>) -> &'a mut Self {
+        self.actual = Some(ac.clone());
         self
     }
     /// Set an expected.  
-    pub fn expected<'a>(&'a mut self, item: &ExpectedVal<T>) -> &'a mut Self {
-        self.expected = Some(item.clone());
+    pub fn expected<'a>(&'a mut self, ex: &ExpectedVal<T>) -> &'a mut Self {
+        self.expected = Some(ex.clone());
         self
     }
 }
@@ -60,12 +56,12 @@ where
             }
 
             // TODO expected_index カーソルを勧めるのはあとで。
-            if let Some(mut exp) = self
+            if let Some(mut co) = self
                 .expected
                 .get_routine()
                 .get_control(machine_state.expected_index)
             {
-                match self.matching2(&mut machine_state, act, &mut exp) {
+                match self.matching2(&mut machine_state, act, &mut co) {
                     MatchingResult::Matched => {
                         // println!("(trace.30) マッチしたという判断。ループ続行。");
                         machine_state.expected_index += 1;
@@ -96,15 +92,15 @@ where
         &self,
         machine_state: &mut MachineState,
         act: &T,
-        exp: &Control<T>,
+        co: &Control<T>,
     ) -> MatchingResult
     where
         T: std::cmp::PartialEq + std::cmp::PartialOrd,
     {
-        match exp {
-            Control::Once(exp) => match exp {
-                Operator::Or(any) => self.matching4_any(machine_state, act, any),
-                Operator::One(exp) => self.matching4_one(machine_state, act, exp),
+        match co {
+            Control::Once(co) => match co {
+                Operator::Or(cnds) => self.matching4_any(machine_state, act, cnds),
+                Operator::One(cnd) => self.matching4_one(machine_state, act, cnd),
             },
             Control::Repeat(rep) => {
                 if rep.is_cutoff(machine_state.matched_length_in_repeat) {
@@ -177,14 +173,14 @@ where
         &self,
         machine_state: &mut MachineState,
         act: &T,
-        exp: &Operator<T>,
+        op: &Operator<T>,
     ) -> MatchingResult
     where
         T: std::cmp::PartialEq + std::cmp::PartialOrd,
     {
-        match exp {
-            Operator::Or(any) => self.matching4_any(machine_state, act, any),
-            Operator::One(exp) => self.matching4_one(machine_state, act, exp),
+        match op {
+            Operator::Or(cnds) => self.matching4_any(machine_state, act, cnds),
+            Operator::One(cnd) => self.matching4_one(machine_state, act, cnd),
         }
     }
 
@@ -192,12 +188,12 @@ where
         &self,
         machine_state: &mut MachineState,
         act: &T,
-        any: &ConditionsVal<T>,
+        cnds: &ConditionsVal<T>,
     ) -> MatchingResult
     where
         T: std::cmp::PartialEq + std::cmp::PartialOrd,
     {
-        for cnd in &any.conditions {
+        for cnd in &cnds.conditions {
             match self.matching4_el(machine_state, act, cnd) {
                 MatchingResult::Matched => return MatchingResult::Matched,
                 MatchingResult::Ongoing => return MatchingResult::Ongoing,
@@ -211,11 +207,11 @@ where
         &self,
         machine_state: &mut MachineState,
         act: &T,
-        el: &Condition<T>,
+        cnd: &Condition<T>,
     ) -> MatchingResult {
-        match el {
-            Condition::Pin(exa) => {
-                if *exa == *act {
+        match cnd {
+            Condition::Pin(x) => {
+                if *x == *act {
                     // println!("(trace.138) matching_any/matched.");
                     MatchingResult::Matched
                 } else {
@@ -226,17 +222,21 @@ where
             Condition::Seq(vec) => self.matching5_seq(machine_state, act, vec),
         }
     }
+
+    /// One.  
     fn matching4_one(
         &self,
         machine_state: &mut MachineState,
         act: &T,
-        nd: &Condition<T>,
+        cnd: &Condition<T>,
     ) -> MatchingResult
     where
         T: std::cmp::PartialEq + std::cmp::PartialOrd,
     {
-        return self.matching4_el(machine_state, act, nd);
+        return self.matching4_el(machine_state, act, cnd);
     }
+
+    /// Seq.  
     fn matching5_seq(
         &self,
         machine_state: &mut MachineState,
@@ -245,8 +245,8 @@ where
     ) -> MatchingResult {
         let result = if machine_state.matched_length_in_seq < vec.len() + 1 {
             // Ongoing.
-            let el = &vec[machine_state.matched_length_in_seq];
-            if *el == *act {
+            let x = &vec[machine_state.matched_length_in_seq];
+            if *x == *act {
                 // println!("(trace.72)");
                 MatchingResult::Ongoing
             } else {
@@ -255,8 +255,8 @@ where
             }
         } else if machine_state.matched_length_in_seq < vec.len() {
             // Last
-            let el = &vec[machine_state.matched_length_in_seq];
-            if *el == *act {
+            let x = &vec[machine_state.matched_length_in_seq];
+            if *x == *act {
                 // println!("(trace.72)");
                 MatchingResult::Matched
             } else {
@@ -270,6 +270,8 @@ where
         machine_state.matched_length_in_seq += 1;
         return result;
     }
+
+    /// Range.  
     fn matching5_range_contains_max(&self, act: &T, rng: &RangeIncludesMaxVal<T>) -> MatchingResult
     where
         T: std::cmp::PartialEq + std::cmp::PartialOrd,
