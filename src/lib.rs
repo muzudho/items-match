@@ -19,7 +19,6 @@ pub mod any;
 pub mod expected;
 pub mod machine;
 pub mod range_contains_max;
-pub mod range_contains_max_builder;
 pub mod repeat;
 pub mod repeat_builder;
 
@@ -77,10 +76,10 @@ pub enum Quantity<T> {
 #[derive(Clone)]
 pub enum Element<T> {
     Exact(T),
-    RangeIncludesMax(RangeIncludesMax<T>),
+    RangeIncludesMax(RangeIncludesMaxVal<T>),
 }
 
-pub struct RangeIncludesMaxBuilder<T> {
+pub struct RangeIncludesMax<T> {
     min: Option<T>,
     max: Option<T>,
 }
@@ -88,7 +87,7 @@ pub struct RangeIncludesMaxBuilder<T> {
 /// Specify by range. Includes maximum value.  
 /// 範囲で指定。最大値を含みます。  
 #[derive(Clone)]
-pub struct RangeIncludesMax<T> {
+pub struct RangeIncludesMaxVal<T> {
     min: Option<T>,
     max: Option<T>,
 }

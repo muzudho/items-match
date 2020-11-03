@@ -4,7 +4,7 @@ use crate::ExpectedVal;
 use crate::Machine;
 use crate::MachineState;
 use crate::MatchingResult;
-use crate::RangeIncludesMax;
+use crate::RangeIncludesMaxVal;
 use crate::{Controls, Element, MachineVal, Quantity};
 
 impl<T> Default for Machine<T>
@@ -226,7 +226,7 @@ where
             }
         }
     }
-    fn matching5_range_contains_max(&self, act: &T, rng: &RangeIncludesMax<T>) -> MatchingResult
+    fn matching5_range_contains_max(&self, act: &T, rng: &RangeIncludesMaxVal<T>) -> MatchingResult
     where
         T: std::cmp::PartialEq + std::cmp::PartialOrd,
     {

@@ -2,7 +2,7 @@ extern crate rattle_items_match;
 
 use rattle_items_match::{
     Actual, Any, Controls as Co, Element as El, Expected, Machine, Quantity as Qu,
-    RangeIncludesMaxBuilder, RepeatBuilder,
+    RangeIncludesMax, RepeatBuilder,
 };
 
 fn main() {
@@ -43,19 +43,19 @@ fn main() {
         .build();
 
     // Digit.
-    let digit = RangeIncludesMaxBuilder::default()
+    let digit = RangeIncludesMax::default()
         .set_min(&'0')
         .set_max(&'9')
         .build();
     // Alphabet.
     let upper_case = El::RangeIncludesMax(
-        RangeIncludesMaxBuilder::default()
+        RangeIncludesMax::default()
             .set_min(&'A')
             .set_max(&'Z')
             .build(),
     );
     let lower_case = El::RangeIncludesMax(
-        RangeIncludesMaxBuilder::default()
+        RangeIncludesMax::default()
             .set_min(&'a')
             .set_max(&'z')
             .build(),
