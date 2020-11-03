@@ -1,6 +1,6 @@
 //! Specify by range. Includes maximum value.  
-//! 範囲で指定。最大値を含みます。  
 //! Create `RangeIncludesMaxVal`.  
+//! 範囲で指定。最大値を含みます。  
 //! `RangeIncludesMaxVal` を作成します。  
 
 use crate::{RangeIncludesMax, RangeIncludesMaxVal};

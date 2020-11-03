@@ -69,8 +69,8 @@ fn main() {
 
     // Whitespace characters.
     let wschar = Any::default()
-        .push(&El::Exact('\t'))
-        .push(&El::Exact(' '))
+        .push(&El::Pin('\t'))
+        .push(&El::Pin(' '))
         .build();
 
     // Digit.
@@ -82,10 +82,10 @@ fn main() {
 
     let ex1_wsss1 = Expected::default()
         .push(&Co::Once(Qu::Any(wschar.clone())))
-        .push(&Co::Once(Qu::One(El::Exact(' '))))
-        .push(&Co::Once(Qu::One(El::Exact(' '))))
-        .push(&Co::Once(Qu::One(El::Exact(' '))))
-        .push(&Co::Once(Qu::One(El::Exact('1'))))
+        .push(&Co::Once(Qu::One(El::Pin(' '))))
+        .push(&Co::Once(Qu::One(El::Pin(' '))))
+        .push(&Co::Once(Qu::One(El::Pin(' '))))
+        .push(&Co::Once(Qu::One(El::Pin('1'))))
         .build();
 
     let ex2_ws1max = Expected::default()
@@ -96,7 +96,7 @@ fn main() {
                 .max_not_included(usize::MAX)
                 .build(),
         ))
-        .push(&Co::Once(Qu::One(El::Exact('1'))))
+        .push(&Co::Once(Qu::One(El::Pin('1'))))
         .build();
     let ex3_ws5max = Expected::default()
         .push(&Co::Repeat(
@@ -106,7 +106,7 @@ fn main() {
                 .max_not_included(usize::MAX)
                 .build(),
         ))
-        .push(&Co::Once(Qu::One(El::Exact('1'))))
+        .push(&Co::Once(Qu::One(El::Pin('1'))))
         .build();
     let ex4_ws03 = Expected::default()
         .push(&Co::Repeat(
@@ -116,7 +116,7 @@ fn main() {
                 .max_not_included(3)
                 .build(),
         ))
-        .push(&Co::Once(Qu::One(El::Exact('1'))))
+        .push(&Co::Once(Qu::One(El::Pin('1'))))
         .build();
     let ex5_ws1max = Expected::default()
         .push(&Co::Repeat(

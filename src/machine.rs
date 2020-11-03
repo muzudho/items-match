@@ -182,7 +182,7 @@ where
     {
         for exp in &any.items {
             match exp {
-                Element::Exact(exa) => {
+                Element::Pin(exa) => {
                     if *exa == *act {
                         // println!("(trace.138) matching_any/matched.");
                         return MatchingResult::Matched;
@@ -214,7 +214,7 @@ where
         T: std::cmp::PartialEq + std::cmp::PartialOrd,
     {
         match exp {
-            Element::Exact(exa) => {
+            Element::Pin(exa) => {
                 if *exa == *act {
                     // println!("(trace.72)");
                     MatchingResult::Matched

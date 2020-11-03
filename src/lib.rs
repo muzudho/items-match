@@ -74,7 +74,9 @@ pub enum Quantity<T> {
 /// 期待値。
 #[derive(Clone)]
 pub enum Element<T> {
-    Exact(T),
+    /// 1つだけのもの。
+    Pin(T),
+    /// 範囲指定。
     RangeIncludesMax(RangeIncludesMaxVal<T>),
 }
 
