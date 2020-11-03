@@ -64,6 +64,7 @@ where
                         // println!("(trace.30) マッチしたという判断。ループ続行。");
                         machine_state.expected_index += 1;
                         machine_state.matched_length_in_repeat = 0; // reset.
+                        machine_state.matched_length_in_seq = 0; // reset.
                     }
                     MatchingResult::NotMatch => {
                         // println!("(trace.35) マッチしていないという判断。");
@@ -204,6 +205,9 @@ where
                         }
                     }
                 }
+                Element::Seq(vec) => {
+                    panic!("Uninplemented"); //TODO
+                }
             }
         }
         // println!("(trace.67) Anyでぜんぶ不一致。");
@@ -225,6 +229,9 @@ where
             }
             Element::RangeIncludesMax(rng) => {
                 return self.matching5_range_contains_max(act, rng);
+            }
+            Element::Seq(vec) => {
+                panic!("Uninplemented"); //TODO
             }
         }
     }
@@ -279,6 +286,7 @@ impl Default for MachineState {
             expected_index: 0,
             is_final: false,
             matched_length_in_repeat: 0,
+            matched_length_in_seq: 0,
         }
     }
 }

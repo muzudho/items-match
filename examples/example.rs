@@ -35,6 +35,7 @@ fn main() {
     let ac5_bc = Actual::default().push(&'B').push(&'C').build();
     let ac6_de = Actual::default().push(&'d').push(&'e').build();
     let ac7_fgh = Actual::default().push(&'f').push(&'g').push(&'h').build();
+    let ac8_cr_lf = Actual::default().push(&'\r').push(&'\n').build();
 
     // Whitespace characters.
     let wschar = Any::default()
@@ -42,13 +43,11 @@ fn main() {
         .push(&El::Pin(' '))
         .build();
 
-    /*
     // Newline.
-    let wschar = Any::default()
-        .push(&El::Pin(0x20))
-        .push(&El::Pin(' '))
+    let newline = Any::default()
+        .push(&El::Pin('\n')) // LF
+        .push(&El::Seq(vec!['\r', '\n'])) // CR LF
         .build();
-    */
 
     // Digit.
     let digit = RangeIncludesMax::default().min(&'0').max(&'9').build();
@@ -129,6 +128,9 @@ fn main() {
                 .build(),
         ))
         .build();
+    let ex9_cr_lf = Expected::default()
+        .push(&Co::Once(Qu::Any(newline.clone())))
+        .build();
 
     assert!(Machine::default()
         .actual(&ac1_ssss1)
@@ -183,6 +185,11 @@ fn main() {
     assert!(Machine::default()
         .actual(&ac7_fgh)
         .expected(&ex8_alpha1to_max)
+        .build()
+        .matching());
+    assert!(Machine::default()
+        .actual(&ac8_cr_lf)
+        .expected(&ex9_cr_lf)
         .build()
         .matching());
     println!("Finished.");

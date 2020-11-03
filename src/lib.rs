@@ -31,6 +31,7 @@ pub struct MachineState {
     expected_index: usize,
     is_final: bool,
     matched_length_in_repeat: usize,
+    matched_length_in_seq: usize,
 }
 
 pub struct MachineVal<T> {
@@ -74,9 +75,12 @@ pub enum Quantity<T> {
 /// 期待値。
 #[derive(Clone)]
 pub enum Element<T> {
-    /// 1つだけのもの。
+    /// 1つだけのもの。  
     Pin(T),
-    /// 範囲指定。
+    /// Sequence.  
+    /// 連続のもの。  
+    Seq(Vec<T>),
+    /// 範囲で指定。  
     RangeIncludesMax(RangeIncludesMaxVal<T>),
 }
 
