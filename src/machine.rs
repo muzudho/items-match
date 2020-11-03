@@ -97,13 +97,13 @@ where
     {
         match exp {
             Controls::Once(exp) => match exp {
-                Quantity::Any(any) => self.matching4_any(act, any),
-                Quantity::One(exp) => self.matching4_one(act, exp),
+                Quantity::Any(any) => self.matching4_any(machine_state, act, any),
+                Quantity::One(exp) => self.matching4_one(machine_state, act, exp),
             },
             Controls::Repeat(rep) => {
                 if rep.is_cutoff(machine_state.matched_length_in_repeat) {
                     //  || self.is_final
-                    match self.matching3_quantity(act, &rep.quantity) {
+                    match self.matching3_quantity(machine_state, act, &rep.quantity) {
                         MatchingResult::NotMatch => {
                             // println!("(trace.85) rep={}", rep);
                             return MatchingResult::NotMatch;
@@ -128,7 +128,7 @@ where
                         }
                     }
                 } else {
-                    match self.matching3_quantity(act, &rep.quantity) {
+                    match self.matching3_quantity(machine_state, act, &rep.quantity) {
                         MatchingResult::NotMatch => {
                             if rep.is_cutoff(machine_state.matched_length_in_repeat) {
                                 /*
@@ -167,17 +167,27 @@ where
         }
     }
 
-    pub fn matching3_quantity(&self, act: &T, exp: &Quantity<T>) -> MatchingResult
+    pub fn matching3_quantity(
+        &self,
+        machine_state: &mut MachineState,
+        act: &T,
+        exp: &Quantity<T>,
+    ) -> MatchingResult
     where
         T: std::cmp::PartialEq + std::cmp::PartialOrd,
     {
         match exp {
-            Quantity::Any(any) => self.matching4_any(act, any),
-            Quantity::One(exp) => self.matching4_one(act, exp),
+            Quantity::Any(any) => self.matching4_any(machine_state, act, any),
+            Quantity::One(exp) => self.matching4_one(machine_state, act, exp),
         }
     }
 
-    fn matching4_any(&self, act: &T, any: &AnyVal<T>) -> MatchingResult
+    fn matching4_any(
+        &self,
+        machine_state: &mut MachineState,
+        act: &T,
+        any: &AnyVal<T>,
+    ) -> MatchingResult
     where
         T: std::cmp::PartialEq + std::cmp::PartialOrd,
     {
@@ -206,14 +216,19 @@ where
                     }
                 }
                 Element::Seq(vec) => {
-                    panic!("Uninplemented"); //TODO
+                    return self.matching5_seq(machine_state, act, vec);
                 }
             }
         }
         // println!("(trace.67) Anyでぜんぶ不一致。");
         return MatchingResult::NotMatch;
     }
-    fn matching4_one(&self, act: &T, exp: &Element<T>) -> MatchingResult
+    fn matching4_one(
+        &self,
+        machine_state: &mut MachineState,
+        act: &T,
+        exp: &Element<T>,
+    ) -> MatchingResult
     where
         T: std::cmp::PartialEq + std::cmp::PartialOrd,
     {
@@ -231,9 +246,42 @@ where
                 return self.matching5_range_contains_max(act, rng);
             }
             Element::Seq(vec) => {
-                panic!("Uninplemented"); //TODO
+                return self.matching5_seq(machine_state, act, vec);
             }
         }
+    }
+    fn matching5_seq(
+        &self,
+        machine_state: &mut MachineState,
+        act: &T,
+        vec: &Vec<T>,
+    ) -> MatchingResult {
+        let result = if machine_state.matched_length_in_seq < vec.len() + 1 {
+            // Ongoing.
+            let el = &vec[machine_state.matched_length_in_seq];
+            if *el == *act {
+                // println!("(trace.72)");
+                MatchingResult::Ongoing
+            } else {
+                // println!("(trace.75)");
+                MatchingResult::NotMatch
+            }
+        } else if machine_state.matched_length_in_seq < vec.len() {
+            // Last
+            let el = &vec[machine_state.matched_length_in_seq];
+            if *el == *act {
+                // println!("(trace.72)");
+                MatchingResult::Matched
+            } else {
+                // println!("(trace.75)");
+                MatchingResult::NotMatch
+            }
+        } else {
+            // Last or more.
+            panic!("(233) Out of bounds in sequence."); //TODO
+        };
+        machine_state.matched_length_in_seq += 1;
+        return result;
     }
     fn matching5_range_contains_max(&self, act: &T, rng: &RangeIncludesMaxVal<T>) -> MatchingResult
     where

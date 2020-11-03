@@ -66,11 +66,18 @@ fn main() {
     let ac5_bc = Actual::default().push(&'B').push(&'C').build();
     let ac6_de = Actual::default().push(&'d').push(&'e').build();
     let ac7_fgh = Actual::default().push(&'f').push(&'g').push(&'h').build();
+    let ac8_cr_lf = Actual::default().push(&'\r').push(&'\n').build();
 
     // Whitespace characters.
     let wschar = Any::default()
         .push(&El::Pin('\t'))
         .push(&El::Pin(' '))
+        .build();
+
+    // Newline.
+    let newline = Any::default()
+        .push(&El::Pin('\n')) // LF
+        .push(&El::Seq(vec!['\r', '\n'])) // CR LF
         .build();
 
     // Digit.
@@ -79,6 +86,9 @@ fn main() {
     let upper_case = El::RangeIncludesMax(RangeIncludesMax::default().min(&'A').max(&'Z').build());
     let lower_case = El::RangeIncludesMax(RangeIncludesMax::default().min(&'a').max(&'z').build());
     let alpha = Any::default().push(&upper_case).push(&lower_case).build();
+
+    // #
+    let comment_start_symbol = El::Pin('#');
 
     let ex1_wsss1 = Expected::default()
         .push(&Co::Once(Qu::Any(wschar.clone())))
@@ -149,6 +159,9 @@ fn main() {
                 .build(),
         ))
         .build();
+    let ex9_cr_lf = Expected::default()
+        .push(&Co::Once(Qu::Any(newline.clone())))
+        .build();
 
     assert!(Machine::default()
         .actual(&ac1_ssss1)
@@ -203,6 +216,11 @@ fn main() {
     assert!(Machine::default()
         .actual(&ac7_fgh)
         .expected(&ex8_alpha1to_max)
+        .build()
+        .matching());
+    assert!(Machine::default()
+        .actual(&ac8_cr_lf)
+        .expected(&ex9_cr_lf)
         .build()
         .matching());
     println!("Finished.");
