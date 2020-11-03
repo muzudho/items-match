@@ -208,15 +208,33 @@ fn main() {
     // TODO 111 mll-char = %x09 / %x20-26 / %x28-7E / non-ascii
     // TODO 112 mll-quotes = 1*2apostrophe
     // TODO 116 integer = dec-int / hex-int / oct-int / bin-int
-    // TODO 118 minus = %x2D                       ; -
-    // TODO 119 plus = %x2B                        ; +
-    // TODO 120 underscore = %x5F                  ; _
-    // TODO 121 digit1-9 = %x31-39                 ; 1-9
-    // TODO 122 digit0-7 = %x30-37                 ; 0-7
-    // TODO 123 digit0-1 = %x30-31                 ; 0-1
-    // TODO 125 hex-prefix = %x30.78               ; 0x
-    // TODO 126 oct-prefix = %x30.6f               ; 0o
-    // TODO 127 bin-prefix = %x30.62               ; 0b
+    // 118 minus = %x2D                       ; -
+    let _minus = Cnd::Pin(&'-');
+
+    // 119 plus = %x2B                        ; +
+    let _plus = Cnd::Pin(&'+');
+
+    // 120 underscore = %x5F                  ; _
+    let _underscore = Cnd::Pin(&'_');
+
+    // 121 digit1-9 = %x31-39                 ; 1-9
+    let _digit1_9 = Cnd::RangeIncludesMax(RangeIncludesMax::default().min(&'1').max(&'9').build());
+
+    // 122 digit0-7 = %x30-37                 ; 0-7
+    let _digit0_7 = Cnd::RangeIncludesMax(RangeIncludesMax::default().min(&'0').max(&'7').build());
+
+    // 123 digit0-1 = %x30-31                 ; 0-1
+    let _digit0_1 = Cnd::RangeIncludesMax(RangeIncludesMax::default().min(&'0').max(&'1').build());
+
+    // 125 hex-prefix = %x30.78               ; 0x
+    let _hex_prefix = Cnd::Seq(vec!['0', 'x']);
+
+    // 126 oct-prefix = %x30.6f               ; 0o
+    let _oct_prefix = Cnd::Seq(vec!['0', '0']);
+
+    // 127 bin-prefix = %x30.62               ; 0b
+    let _bin_prefix = Cnd::Seq(vec!['0', 'b']);
+
     // TODO 129 dec-int = [ minus / plus ] unsigned-dec-int
     // TODO 130 unsigned-dec-int = DIGIT / digit1-9 1*( DIGIT / underscore DIGIT )
     // TODO 132 hex-int = hex-prefix HEXDIG *( HEXDIG / underscore HEXDIG )
@@ -231,11 +249,19 @@ fn main() {
     // TODO 146 exp = "e" float-exp-part
     // TODO 147 float-exp-part = [ minus / plus ] zero-prefixable-int
     // TODO 149 special-float = [ minus / plus ] ( inf / nan )
-    // TODO 150 inf = %x69.6e.66  ; inf
-    // TODO 151 nan = %x6e.61.6e  ; nan
+    // 150 inf = %x69.6e.66  ; inf
+    let _inf = Cnd::Seq(vec!['i', 'n', 'f']);
+
+    // 151 nan = %x6e.61.6e  ; nan
+    let _nan = Cnd::Seq(vec!['n', 'a', 'n']);
+
     // TODO 155 boolean = true / false
-    // TODO 157 true    = %x74.72.75.65     ; true
-    // TODO 158 false   = %x66.61.6C.73.65  ; false
+
+    // 157 true    = %x74.72.75.65     ; true
+    let _true_ = Cnd::Seq(vec!['t', 'r', 'u', 'e']);
+    // 158 false   = %x66.61.6C.73.65  ; false
+    let _false_ = Cnd::Seq(vec!['f', 'a', 'l', 's', 'e']);
+
     // TODO 162 date-time      = offset-date-time / local-date-time / local-date / local-time
     // TODO 164 date-fullyear  = 4DIGIT
     // TODO 165 date-month     = 2DIGIT  ; 01-12
@@ -255,11 +281,17 @@ fn main() {
     // TODO 189 local-date = full-date
     // TODO 193 local-time = partial-time
     // TODO 197 array = array-open [ array-values ] ws-comment-newline array-close
-    // TODO 199 array-open =  %x5B ; [
-    // TODO 200 array-close = %x5D ; ]
+    // 199 array-open =  %x5B ; [
+    let _array_open = Cnd::Pin(&'[');
+
+    // 200 array-close = %x5D ; ]
+    let _array_close = Cnd::Pin(&']');
+
     // TODO 202 array-values =  ws-comment-newline val ws-comment-newline array-sep array-values
     // TODO 203 array-values =/ ws-comment-newline val ws-comment-newline [ array-sep ]
     // TODO 205 array-sep = %x2C  ; , Comma
+    let _array_sep = Cnd::Pin(&',');
+
     // TODO 207 ws-comment-newline = *( wschar / [ comment ] newline )
     // TODO 211 table = std-table / array-table
     // TODO 215 std-table = std-table-open key std-table-close
