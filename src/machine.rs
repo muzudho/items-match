@@ -43,7 +43,7 @@ where
 
 impl<T> MachineVal<T>
 where
-    T: std::cmp::PartialEq + std::cmp::PartialOrd,
+    T: std::cmp::PartialEq + std::cmp::PartialOrd + std::fmt::Debug,
 {
     /// Compare actual and expected for an exact match.  
     /// 完全一致するかどうか actual と expected を比較します。  
@@ -238,6 +238,9 @@ where
     }
 
     /// Seq.  
+    ///
+    /// TODO true/false の一致を調べるときに、 tause のように混ざるとまずい。
+    /// TODO 複数のシーケンスを指定したとき、樹形図状にマージできないか？
     fn matching5_seq(
         &self,
         machine_state: &mut MachineState,
@@ -248,10 +251,16 @@ where
             // Ongoing.
             let x = &vec[machine_state.matched_length_in_seq];
             if *x == *act {
-                println!("(trace.250) seq/Ongoing machine_state={}", machine_state);
+                println!(
+                    "(trace.250) seq/Ongoing machine_state={} act={:?} x={:?}",
+                    machine_state, act, x
+                );
                 MatchingResult::Ongoing
             } else {
-                println!("(trace.253) seq/NotMatch machine_state={}", machine_state);
+                println!(
+                    "(trace.253) seq/NotMatch machine_state={} act={:?} x={:?}",
+                    machine_state, act, x
+                );
                 MatchingResult::NotMatch
             }
         } else if machine_state.matched_length_in_seq < vec.len() {
@@ -259,14 +268,14 @@ where
             let x = &vec[machine_state.matched_length_in_seq];
             if *x == *act {
                 println!(
-                    "(trace.260) seq/Last/Matched machine_state={}",
-                    machine_state
+                    "(trace.260) seq/Last/Matched machine_state={:?} act={:?} x={:?}",
+                    machine_state, act, x
                 );
                 MatchingResult::Matched
             } else {
                 println!(
-                    "(trace.263) seq/Last?NotMatch machine_state={}",
-                    machine_state
+                    "(trace.263) seq/Last?NotMatch machine_state={} act={:?} x={:?}",
+                    machine_state, act, x
                 );
                 MatchingResult::NotMatch
             }

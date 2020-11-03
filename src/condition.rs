@@ -1,5 +1,5 @@
-//! Create operands.  
-//! 項 を作成します。  
+//! Create a condition.  
+//! 条件 を作成します。  
 use crate::Condition;
 use crate::{ConditionsBuilder, ConditionsVal};
 
@@ -31,6 +31,9 @@ where
 
     /// Push the condition.  
     /// 条件を追加します。  
+    ///
+    // TODO true/false の一致を調べるときに、 tause のように混ざるとまずい。
+    // TODO 複数のシーケンスを指定したとき、樹形図状にマージできないか？
     pub fn push<'a>(&'a mut self, cnd: &Condition<T>) -> &'a mut Self {
         self.conditions.push(cnd.clone());
         self
