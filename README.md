@@ -32,7 +32,7 @@ You can think that you can't do anything that isn't written here.
 extern crate rattle_items_match;
 
 use rattle_items_match::{
-    ActualBuilder, OperandsBuilder, Controls as Co, Operand as El, Expected, MachineBuilder as Ma, Quantity as Qu,
+    ActualBuilder, OperandsBuilder, Controls as Co, Operand as El, ExpectedBuilder, MachineBuilder as Ma, Quantity as Qu,
     RangeIncludesMax, Repeat,
 };
 
@@ -92,7 +92,7 @@ fn main() {
     // #
     // TODO let comment_start_symbol = El::Pin('#');
 
-    let ex1 = Expected::default() // "(wschar)   1"
+    let ex1 = ExpectedBuilder::default() // "(wschar)   1"
         .push(&Co::Once(Qu::Any(wschar.clone())))
         .push(&Co::Once(Qu::One(El::Pin(' '))))
         .push(&Co::Once(Qu::One(El::Pin(' '))))
@@ -100,7 +100,7 @@ fn main() {
         .push(&Co::Once(Qu::One(El::Pin('1'))))
         .build();
 
-    let ex2 = Expected::default() // "+(wschar)"
+    let ex2 = ExpectedBuilder::default() // "+(wschar)"
         .push(&Co::Repeat(
             Repeat::default()
                 .quantity(&Qu::Any(wschar.clone()))
@@ -110,7 +110,7 @@ fn main() {
         ))
         .push(&Co::Once(Qu::One(El::Pin('1'))))
         .build();
-    let ex3 = Expected::default() // "(wschar){5,}"
+    let ex3 = ExpectedBuilder::default() // "(wschar){5,}"
         .push(&Co::Repeat(
             Repeat::default()
                 .quantity(&Qu::Any(wschar.clone()))
@@ -120,7 +120,7 @@ fn main() {
         ))
         .push(&Co::Once(Qu::One(El::Pin('1'))))
         .build();
-    let ex4 = Expected::default() // "(wschar){0,3}"
+    let ex4 = ExpectedBuilder::default() // "(wschar){0,3}"
         .push(&Co::Repeat(
             Repeat::default()
                 .quantity(&Qu::Any(wschar.clone()))
@@ -130,7 +130,7 @@ fn main() {
         ))
         .push(&Co::Once(Qu::One(El::Pin('1'))))
         .build();
-    let ex5 = Expected::default() // "(wschar){1,}"
+    let ex5 = ExpectedBuilder::default() // "(wschar){1,}"
         .push(&Co::Repeat(
             Repeat::default()
                 .quantity(&Qu::Any(wschar.clone()))
@@ -140,10 +140,10 @@ fn main() {
         ))
         .push(&Co::Once(Qu::One(El::RangeIncludesMax(digit))))
         .build();
-    let ex6 = Expected::default() // "(alpha)"
+    let ex6 = ExpectedBuilder::default() // "(alpha)"
         .push(&Co::Once(Qu::Any(alpha.clone())))
         .build();
-    let ex7 = Expected::default() // "(alpha){1,3}"
+    let ex7 = ExpectedBuilder::default() // "(alpha){1,3}"
         .push(&Co::Repeat(
             Repeat::default()
                 .quantity(&Qu::Any(alpha.clone()))
@@ -152,7 +152,7 @@ fn main() {
                 .build(),
         ))
         .build();
-    let ex8 = Expected::default() // "(alpha){1,}"
+    let ex8 = ExpectedBuilder::default() // "(alpha){1,}"
         .push(&Co::Repeat(
             Repeat::default()
                 .quantity(&Qu::Any(alpha.clone()))
@@ -161,7 +161,7 @@ fn main() {
                 .build(),
         ))
         .build();
-    let ex9 = Expected::default() // "(newline)"
+    let ex9 = ExpectedBuilder::default() // "(newline)"
         .push(&Co::Once(Qu::Any(newline.clone())))
         .build();
 

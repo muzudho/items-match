@@ -1,17 +1,17 @@
 //! Create `ExpectedVal`.  
 //! `ExpectedVal` を作成します。  
-use crate::{Controls, Expected, ExpectedVal};
+use crate::{Controls, ExpectedBuilder, ExpectedVal};
 
-impl<T> Default for Expected<T>
+impl<T> Default for ExpectedBuilder<T>
 where
     T: std::clone::Clone,
 {
     fn default() -> Self {
-        Expected { items: Vec::new() }
+        ExpectedBuilder { items: Vec::new() }
     }
 }
 
-impl<T> Expected<T>
+impl<T> ExpectedBuilder<T>
 where
     T: std::clone::Clone,
 {

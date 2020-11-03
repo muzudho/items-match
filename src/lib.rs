@@ -48,7 +48,7 @@ pub struct ActualVal<T> {
     items: Vec<T>,
 }
 
-pub struct Expected<T> {
+pub struct ExpectedBuilder<T> {
     items: Vec<Controls<T>>,
 }
 
