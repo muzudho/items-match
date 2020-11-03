@@ -1,14 +1,14 @@
 extern crate rattle_items_match;
 
 use rattle_items_match::{
-    ActualBuilder, AnyBuilder, Controls as Co, Element as El, ExpectedBuilder, MachineBuilder,
+    Actual, AnyBuilder, Controls as Co, Element as El, ExpectedBuilder, MachineBuilder,
     Quantity as Qu, RangeIncludesMaxBuilder, RepeatBuilder,
 };
 
 fn main() {
     println!("Start.");
 
-    let act1_ssss1 = ActualBuilder::default()
+    let ac1_ssss1 = Actual::default()
         .push(&' ')
         .push(&' ')
         .push(&' ')
@@ -16,7 +16,7 @@ fn main() {
         .push(&'1')
         .build();
 
-    let act2_tsss1 = ActualBuilder::default()
+    let ac2_tsss1 = Actual::default()
         .push(&'\t')
         .push(&' ')
         .push(&' ')
@@ -24,21 +24,17 @@ fn main() {
         .push(&'1')
         .build();
 
-    let act3_xsss1 = ActualBuilder::default()
+    let ac3_xsss1 = Actual::default()
         .push(&'x')
         .push(&' ')
         .push(&' ')
         .push(&' ')
         .push(&'1')
         .build();
-    let act4_a = ActualBuilder::default().push(&'A').build();
-    let act5_bc = ActualBuilder::default().push(&'B').push(&'C').build();
-    let act6_de = ActualBuilder::default().push(&'d').push(&'e').build();
-    let act7_fgh = ActualBuilder::default()
-        .push(&'f')
-        .push(&'g')
-        .push(&'h')
-        .build();
+    let ac4_a = Actual::default().push(&'A').build();
+    let ac5_bc = Actual::default().push(&'B').push(&'C').build();
+    let ac6_de = Actual::default().push(&'d').push(&'e').build();
+    let ac7_fgh = Actual::default().push(&'f').push(&'g').push(&'h').build();
 
     // Whitespace characters.
     let wschar = AnyBuilder::default()
@@ -69,7 +65,7 @@ fn main() {
         .push(&lower_case)
         .build();
 
-    let expected1_wsss1 = ExpectedBuilder::default()
+    let ex1_wsss1 = ExpectedBuilder::default()
         .push(&Co::Once(Qu::Any(wschar.clone())))
         .push(&Co::Once(Qu::One(El::Exact(' '))))
         .push(&Co::Once(Qu::One(El::Exact(' '))))
@@ -77,7 +73,7 @@ fn main() {
         .push(&Co::Once(Qu::One(El::Exact('1'))))
         .build();
 
-    let expected2_ws1max = ExpectedBuilder::default()
+    let ex2_ws1max = ExpectedBuilder::default()
         .push(&Co::Repeat(
             RepeatBuilder::default()
                 .set_quantity(&Qu::Any(wschar.clone()))
@@ -87,7 +83,7 @@ fn main() {
         ))
         .push(&Co::Once(Qu::One(El::Exact('1'))))
         .build();
-    let expected3_ws5max = ExpectedBuilder::default()
+    let ex3_ws5max = ExpectedBuilder::default()
         .push(&Co::Repeat(
             RepeatBuilder::default()
                 .set_quantity(&Qu::Any(wschar.clone()))
@@ -97,7 +93,7 @@ fn main() {
         ))
         .push(&Co::Once(Qu::One(El::Exact('1'))))
         .build();
-    let expected4_ws03 = ExpectedBuilder::default()
+    let ex4_ws03 = ExpectedBuilder::default()
         .push(&Co::Repeat(
             RepeatBuilder::default()
                 .set_quantity(&Qu::Any(wschar.clone()))
@@ -107,7 +103,7 @@ fn main() {
         ))
         .push(&Co::Once(Qu::One(El::Exact('1'))))
         .build();
-    let expected5_ws1max = ExpectedBuilder::default()
+    let ex5_ws1max = ExpectedBuilder::default()
         .push(&Co::Repeat(
             RepeatBuilder::default()
                 .set_quantity(&Qu::Any(wschar.clone()))
@@ -117,10 +113,10 @@ fn main() {
         ))
         .push(&Co::Once(Qu::One(El::RangeIncludesMax(digit))))
         .build();
-    let expected6_alpha = ExpectedBuilder::default()
+    let ex6_alpha = ExpectedBuilder::default()
         .push(&Co::Once(Qu::Any(alpha.clone())))
         .build();
-    let expected7_alpha1to3 = ExpectedBuilder::default()
+    let ex7_alpha1to3 = ExpectedBuilder::default()
         .push(&Co::Repeat(
             RepeatBuilder::default()
                 .set_quantity(&Qu::Any(alpha.clone()))
@@ -129,7 +125,7 @@ fn main() {
                 .build(),
         ))
         .build();
-    let expected8_alpha1to_max = ExpectedBuilder::default()
+    let ex8_alpha1to_max = ExpectedBuilder::default()
         .push(&Co::Repeat(
             RepeatBuilder::default()
                 .set_quantity(&Qu::Any(alpha.clone()))
@@ -140,58 +136,58 @@ fn main() {
         .build();
 
     assert!(MachineBuilder::default()
-        .set_actual(&act1_ssss1)
-        .set_expected(&expected1_wsss1)
+        .set_actual(&ac1_ssss1)
+        .set_expected(&ex1_wsss1)
         .build()
         .matching());
     assert!(MachineBuilder::default()
-        .set_actual(&act2_tsss1)
-        .set_expected(&expected1_wsss1)
+        .set_actual(&ac2_tsss1)
+        .set_expected(&ex1_wsss1)
         .build()
         .matching());
     assert!(!MachineBuilder::default()
-        .set_actual(&act3_xsss1)
-        .set_expected(&expected1_wsss1)
+        .set_actual(&ac3_xsss1)
+        .set_expected(&ex1_wsss1)
         .build()
         .matching());
     assert!(MachineBuilder::default()
-        .set_actual(&act1_ssss1)
-        .set_expected(&expected2_ws1max)
+        .set_actual(&ac1_ssss1)
+        .set_expected(&ex2_ws1max)
         .build()
         .matching());
     assert!(!MachineBuilder::default()
-        .set_actual(&act1_ssss1)
-        .set_expected(&expected3_ws5max)
+        .set_actual(&ac1_ssss1)
+        .set_expected(&ex3_ws5max)
         .build()
         .matching());
     assert!(!MachineBuilder::default()
-        .set_actual(&act1_ssss1)
-        .set_expected(&expected4_ws03)
+        .set_actual(&ac1_ssss1)
+        .set_expected(&ex4_ws03)
         .build()
         .matching());
     assert!(MachineBuilder::default()
-        .set_actual(&act1_ssss1)
-        .set_expected(&expected5_ws1max)
+        .set_actual(&ac1_ssss1)
+        .set_expected(&ex5_ws1max)
         .build()
         .matching());
     assert!(MachineBuilder::default()
-        .set_actual(&act4_a)
-        .set_expected(&expected6_alpha)
+        .set_actual(&ac4_a)
+        .set_expected(&ex6_alpha)
         .build()
         .matching());
     assert!(MachineBuilder::default()
-        .set_actual(&act5_bc)
-        .set_expected(&expected7_alpha1to3)
+        .set_actual(&ac5_bc)
+        .set_expected(&ex7_alpha1to3)
         .build()
         .matching());
     assert!(MachineBuilder::default()
-        .set_actual(&act6_de)
-        .set_expected(&expected7_alpha1to3)
+        .set_actual(&ac6_de)
+        .set_expected(&ex7_alpha1to3)
         .build()
         .matching());
     assert!(MachineBuilder::default()
-        .set_actual(&act7_fgh)
-        .set_expected(&expected8_alpha1to_max)
+        .set_actual(&ac7_fgh)
+        .set_expected(&ex8_alpha1to_max)
         .build()
         .matching());
     println!("Finished.");

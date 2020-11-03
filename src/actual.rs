@@ -1,12 +1,46 @@
-use crate::Actual;
+//! Create `ActualVal`.  
+//! `ActualVal` を作成します。  
+use crate::{Actual, ActualVal};
 
-impl<T> Default for Actual<T> {
+impl<T> Default for Actual<T>
+where
+    T: std::clone::Clone,
+{
     fn default() -> Self {
         Actual { items: Vec::new() }
     }
 }
 
-impl<T> Actual<T> {
+impl<T> Actual<T>
+where
+    T: std::clone::Clone,
+{
+    //! Create `ActualVal`.  
+    //! `ActualVal` を作成します。  
+    pub fn build(&self) -> ActualVal<T>
+    where
+        T: std::clone::Clone,
+    {
+        ActualVal {
+            items: self.items.clone(),
+        }
+    }
+
+    /// Set the number of items to read ahead.  
+    /// 先読みする項目数を設定します。  
+    pub fn push<'a>(&'a mut self, item: &T) -> &'a mut Self {
+        self.items.push(item.clone());
+        self
+    }
+}
+
+impl<T> Default for ActualVal<T> {
+    fn default() -> Self {
+        ActualVal { items: Vec::new() }
+    }
+}
+
+impl<T> ActualVal<T> {
     pub fn get(&self, index: usize) -> Option<&T> {
         if index < self.items.len() {
             Some(&self.items[index])

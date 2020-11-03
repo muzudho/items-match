@@ -15,7 +15,6 @@
 // (10) `cargo publish`
 
 pub mod actual;
-pub mod actual_builder;
 pub mod any;
 pub mod any_builder;
 pub mod expected;
@@ -29,7 +28,7 @@ pub mod repeat;
 pub mod repeat_builder;
 
 pub struct MachineBuilder<T> {
-    actual: Option<Actual<T>>,
+    actual: Option<ActualVal<T>>,
     expected: Option<Expected<T>>,
 }
 
@@ -41,16 +40,16 @@ pub struct MachineState {
 }
 
 pub struct Machine<T> {
-    actual: Actual<T>,
+    actual: ActualVal<T>,
     expected: Expected<T>,
 }
 
-pub struct ActualBuilder<T> {
+pub struct Actual<T> {
     items: Vec<T>,
 }
 
 #[derive(Clone)]
-pub struct Actual<T> {
+pub struct ActualVal<T> {
     items: Vec<T>,
 }
 
