@@ -5,7 +5,7 @@ use crate::MachineBuilder;
 use crate::MachineState;
 use crate::MatchingResult;
 use crate::RangeIncludesMaxVal;
-use crate::{Condition, Controls, MachineVal, Operator};
+use crate::{Condition, Control, MachineVal, Operator};
 
 impl<T> Default for MachineBuilder<T>
 where
@@ -92,17 +92,17 @@ where
         &self,
         machine_state: &mut MachineState,
         act: &T,
-        exp: &Controls<T>,
+        exp: &Control<T>,
     ) -> MatchingResult
     where
         T: std::cmp::PartialEq + std::cmp::PartialOrd,
     {
         match exp {
-            Controls::Once(exp) => match exp {
+            Control::Once(exp) => match exp {
                 Operator::Or(any) => self.matching4_any(machine_state, act, any),
                 Operator::One(exp) => self.matching4_one(machine_state, act, exp),
             },
-            Controls::Repeat(rep) => {
+            Control::Repeat(rep) => {
                 if rep.is_cutoff(machine_state.matched_length_in_repeat) {
                     //  || self.is_final
                     match self.matching3_quantity(machine_state, act, &rep.op) {

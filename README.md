@@ -32,7 +32,7 @@ You can think that you can't do anything that isn't written here.
 extern crate rattle_items_match;
 
 use rattle_items_match::{
-    ActualBuilder as Actual, Condition as Cnd, ConditionsBuilder as Cnds, Controls as Co,
+    ActualBuilder as Actual, Condition as Cnd, ConditionsBuilder as Cnds, Control as Co,
     ExpectedBuilder as Expected, MachineBuilder as Ma, Operator as Op, RangeIncludesMax, Repeat,
 };
 

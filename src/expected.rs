@@ -1,6 +1,6 @@
 //! Create `ExpectedVal`.  
 //! `ExpectedVal` を作成します。  
-use crate::{Controls, ExpectedBuilder, ExpectedVal};
+use crate::{Control, ExpectedBuilder, ExpectedVal};
 
 impl<T> Default for ExpectedBuilder<T>
 where
@@ -28,7 +28,7 @@ where
 
     /// Set the number of items to read ahead.  
     /// 先読みする項目数を設定します。  
-    pub fn push<'a>(&'a mut self, item: &Controls<T>) -> &'a mut Self {
+    pub fn push<'a>(&'a mut self, item: &Control<T>) -> &'a mut Self {
         self.items.push(item.clone());
         self
     }
@@ -41,7 +41,7 @@ impl<T> Default for ExpectedVal<T> {
 }
 
 impl<T> ExpectedVal<T> {
-    pub fn get(&self, index: usize) -> Option<&Controls<T>> {
+    pub fn get(&self, index: usize) -> Option<&Control<T>> {
         if index < self.items.len() {
             Some(&self.items[index])
         } else {

@@ -49,18 +49,24 @@ pub struct ActualVal<T> {
 }
 
 pub struct ExpectedBuilder<T> {
-    items: Vec<Controls<T>>,
+    items: Vec<Control<T>>,
 }
 
 #[derive(Clone)]
 pub struct ExpectedVal<T> {
-    items: Vec<Controls<T>>,
+    items: Vec<Control<T>>,
+    // TODO routine: Routine<T>,
 }
 
-/// Controls.  
+#[derive(Clone)]
+pub enum Routine<T> {
+    Controls(Vec<Control<T>>),
+}
+
+/// Control.  
 /// 制御。  
 #[derive(Clone)]
-pub enum Controls<T> {
+pub enum Control<T> {
     Once(Operator<T>),
     Repeat(RepeatVal<T>),
 }

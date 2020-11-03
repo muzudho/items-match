@@ -1,7 +1,7 @@
 extern crate rattle_items_match;
 
 use rattle_items_match::{
-    ActualBuilder as Actual, Condition as Cnd, ConditionsBuilder as Cnds, Controls as Co,
+    ActualBuilder as Actual, Condition as Cnd, ConditionsBuilder as Cnds, Control as Co,
     ExpectedBuilder as Expected, MachineBuilder as Ma, Operator as Op, RangeIncludesMax, Repeat,
 };
 
@@ -62,12 +62,12 @@ fn main() {
         .build();
 
     // https://github.com/toml-lang/toml/blob/1.0.0-rc.3/toml.abnf
-    // 18 toml = expression *( newline expression )
-    // 20 expression =  ws [ comment ]
-    // 21 expression =/ ws keyval ws [ comment ]
-    // 22 expression =/ ws table ws [ comment ]
+    // TODO 18 toml = expression *( newline expression )
+    // TODO 20 expression =  ws [ comment ]
+    // TODO 21 expression =/ ws keyval ws [ comment ]
+    // TODO 22 expression =/ ws table ws [ comment ]
 
-    // 26 ws = *wschar
+    // TODO 26 ws = *wschar
 
     // Whitespace characters.
     // 27 wschar =  %x20  ; Space
@@ -104,13 +104,7 @@ fn main() {
         ))
         .build();
 
-    // Digit.
-    let digit = Cnd::RangeIncludesMax(RangeIncludesMax::default().min(&'0').max(&'9').build());
-    // Alphabet.
-    let upper_case = Cnd::RangeIncludesMax(RangeIncludesMax::default().min(&'A').max(&'Z').build());
-    let lower_case = Cnd::RangeIncludesMax(RangeIncludesMax::default().min(&'a').max(&'z').build());
-    let alpha = Cnds::default().push(&upper_case).push(&lower_case).build();
-
+    // 39 non-eol = %x09 / %x20-7F / non-ascii
     let non_eol = Op::Or(
         Cnds::default()
             .push(&Cnd::Pin(0x09 as char))
@@ -123,6 +117,26 @@ fn main() {
             .extend(&non_ascii)
             .build(),
     );
+
+    // 41 comment = comment-start-symbol *non-eol
+    // TODO これを条件文として持てないか？ Control を持つ Routine レイヤーを作るか？
+    let comment = Expected::default() // "# Comment."
+        .push(&Co::Once(Op::One(comment_start_symbol)))
+        .push(&Co::Repeat(
+            Repeat::default()
+                .op(&non_eol)
+                .min(0)
+                .max_not_included(usize::MAX)
+                .build(),
+        ))
+        .build();
+
+    // Digit.
+    let digit = Cnd::RangeIncludesMax(RangeIncludesMax::default().min(&'0').max(&'9').build());
+    // Alphabet.
+    let upper_case = Cnd::RangeIncludesMax(RangeIncludesMax::default().min(&'A').max(&'Z').build());
+    let lower_case = Cnd::RangeIncludesMax(RangeIncludesMax::default().min(&'a').max(&'z').build());
+    let alpha = Cnds::default().push(&upper_case).push(&lower_case).build();
 
     let ex1 = Expected::default() // "(wschar)   1"
         .push(&Co::Once(Op::Or(wschar.clone())))
@@ -195,16 +209,6 @@ fn main() {
         .build();
     let ex9 = Expected::default() // "(newline)"
         .push(&Co::Once(Op::Or(newline.clone())))
-        .build();
-    let comment = Expected::default() // "# Comment."
-        .push(&Co::Once(Op::One(comment_start_symbol)))
-        .push(&Co::Repeat(
-            Repeat::default()
-                .op(&non_eol)
-                .min(0)
-                .max_not_included(usize::MAX)
-                .build(),
-        ))
         .build();
     let unquoted_key = Expected::default() // 'No-1_0' - Unquloted key.
         .push(&Co::Repeat(
