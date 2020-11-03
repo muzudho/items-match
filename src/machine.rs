@@ -5,7 +5,7 @@ use crate::MachineState;
 use crate::MatchingResult;
 use crate::OrOperandsVal;
 use crate::RangeIncludesMaxVal;
-use crate::{Condition, Controls, MachineVal, OrOperator};
+use crate::{Condition, Controls, MachineVal, Operator};
 
 impl<T> Default for MachineBuilder<T>
 where
@@ -99,8 +99,8 @@ where
     {
         match exp {
             Controls::Once(exp) => match exp {
-                OrOperator::Any(any) => self.matching4_any(machine_state, act, any),
-                OrOperator::One(exp) => self.matching4_one(machine_state, act, exp),
+                Operator::Or(any) => self.matching4_any(machine_state, act, any),
+                Operator::One(exp) => self.matching4_one(machine_state, act, exp),
             },
             Controls::Repeat(rep) => {
                 if rep.is_cutoff(machine_state.matched_length_in_repeat) {
@@ -173,14 +173,14 @@ where
         &self,
         machine_state: &mut MachineState,
         act: &T,
-        exp: &OrOperator<T>,
+        exp: &Operator<T>,
     ) -> MatchingResult
     where
         T: std::cmp::PartialEq + std::cmp::PartialOrd,
     {
         match exp {
-            OrOperator::Any(any) => self.matching4_any(machine_state, act, any),
-            OrOperator::One(exp) => self.matching4_one(machine_state, act, exp),
+            Operator::Or(any) => self.matching4_any(machine_state, act, any),
+            Operator::One(exp) => self.matching4_one(machine_state, act, exp),
         }
     }
 
@@ -193,8 +193,8 @@ where
     where
         T: std::cmp::PartialEq + std::cmp::PartialOrd,
     {
-        for nd in &any.operands {
-            match self.matching4_el(machine_state, act, nd) {
+        for cnd in &any.conditions {
+            match self.matching4_el(machine_state, act, cnd) {
                 MatchingResult::Matched => return MatchingResult::Matched,
                 MatchingResult::Ongoing => return MatchingResult::Ongoing,
                 MatchingResult::NotMatch => {} // 続行。

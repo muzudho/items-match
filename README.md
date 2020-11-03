@@ -32,7 +32,7 @@ You can think that you can't do anything that isn't written here.
 extern crate rattle_items_match;
 
 use rattle_items_match::{
-    ActualBuilder, OrOperandsBuilder, Controls as Co, Condition as El, ExpectedBuilder, MachineBuilder as Ma, OrOperator as Qu,
+    ActualBuilder, OrOperandsBuilder, Controls as Co, Condition as El, ExpectedBuilder, MachineBuilder as Ma, Operator as Qu,
     RangeIncludesMax, Repeat,
 };
 
@@ -93,7 +93,7 @@ fn main() {
     // TODO let comment_start_symbol = El::Pin('#');
 
     let ex1 = ExpectedBuilder::default() // "(wschar)   1"
-        .push(&Co::Once(Qu::Any(wschar.clone())))
+        .push(&Co::Once(Qu::Or(wschar.clone())))
         .push(&Co::Once(Qu::One(El::Pin(' '))))
         .push(&Co::Once(Qu::One(El::Pin(' '))))
         .push(&Co::Once(Qu::One(El::Pin(' '))))
@@ -103,7 +103,7 @@ fn main() {
     let ex2 = ExpectedBuilder::default() // "+(wschar)"
         .push(&Co::Repeat(
             Repeat::default()
-                .quantity(&Qu::Any(wschar.clone()))
+                .quantity(&Qu::Or(wschar.clone()))
                 .min(1)
                 .max_not_included(usize::MAX)
                 .build(),
@@ -113,7 +113,7 @@ fn main() {
     let ex3 = ExpectedBuilder::default() // "(wschar){5,}"
         .push(&Co::Repeat(
             Repeat::default()
-                .quantity(&Qu::Any(wschar.clone()))
+                .quantity(&Qu::Or(wschar.clone()))
                 .min(5)
                 .max_not_included(usize::MAX)
                 .build(),
@@ -123,7 +123,7 @@ fn main() {
     let ex4 = ExpectedBuilder::default() // "(wschar){0,3}"
         .push(&Co::Repeat(
             Repeat::default()
-                .quantity(&Qu::Any(wschar.clone()))
+                .quantity(&Qu::Or(wschar.clone()))
                 .min(0)
                 .max_not_included(3)
                 .build(),
@@ -133,7 +133,7 @@ fn main() {
     let ex5 = ExpectedBuilder::default() // "(wschar){1,}"
         .push(&Co::Repeat(
             Repeat::default()
-                .quantity(&Qu::Any(wschar.clone()))
+                .quantity(&Qu::Or(wschar.clone()))
                 .min(1)
                 .max_not_included(usize::MAX)
                 .build(),
@@ -141,12 +141,12 @@ fn main() {
         .push(&Co::Once(Qu::One(El::RangeIncludesMax(digit))))
         .build();
     let ex6 = ExpectedBuilder::default() // "(alpha)"
-        .push(&Co::Once(Qu::Any(alpha.clone())))
+        .push(&Co::Once(Qu::Or(alpha.clone())))
         .build();
     let ex7 = ExpectedBuilder::default() // "(alpha){1,3}"
         .push(&Co::Repeat(
             Repeat::default()
-                .quantity(&Qu::Any(alpha.clone()))
+                .quantity(&Qu::Or(alpha.clone()))
                 .min(1)
                 .max_not_included(3)
                 .build(),
@@ -155,14 +155,14 @@ fn main() {
     let ex8 = ExpectedBuilder::default() // "(alpha){1,}"
         .push(&Co::Repeat(
             Repeat::default()
-                .quantity(&Qu::Any(alpha.clone()))
+                .quantity(&Qu::Or(alpha.clone()))
                 .min(1)
                 .max_not_included(usize::MAX)
                 .build(),
         ))
         .build();
     let ex9 = ExpectedBuilder::default() // "(newline)"
-        .push(&Co::Once(Qu::Any(newline.clone())))
+        .push(&Co::Once(Qu::Or(newline.clone())))
         .build();
 
     assert!(Ma::default().actual(&ac1).expected(&ex1).build().exec());

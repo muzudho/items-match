@@ -9,7 +9,7 @@ where
 {
     fn default() -> Self {
         OrOperandsBuilder {
-            operands: Vec::new(),
+            conditions: Vec::new(),
         }
     }
 }
@@ -25,14 +25,14 @@ where
         T: std::clone::Clone,
     {
         OrOperandsVal {
-            operands: self.operands.clone(),
+            conditions: self.conditions.clone(),
         }
     }
 
     /// Set the number of items to read ahead.  
     /// 先読みする項目数を設定します。  
-    pub fn push<'a>(&'a mut self, item: &Condition<T>) -> &'a mut Self {
-        self.operands.push(item.clone());
+    pub fn push<'a>(&'a mut self, cnd: &Condition<T>) -> &'a mut Self {
+        self.conditions.push(cnd.clone());
         self
     }
 }
@@ -40,7 +40,7 @@ where
 impl<T> Default for OrOperandsVal<T> {
     fn default() -> Self {
         OrOperandsVal {
-            operands: Vec::new(),
+            conditions: Vec::new(),
         }
     }
 }

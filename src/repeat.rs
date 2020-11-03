@@ -1,7 +1,7 @@
 //! Create `Repeat`.  
 //! `Repeat` を作成します。  
 
-use crate::OrOperator;
+use crate::Operator;
 use crate::{Repeat, RepeatVal};
 use std::fmt;
 
@@ -37,7 +37,7 @@ where
 
     /// Set a quantity.  
     /// 最低何回繰り返すか。  
-    pub fn quantity<'a>(&'a mut self, quantity: &OrOperator<T>) -> &'a mut Self {
+    pub fn quantity<'a>(&'a mut self, quantity: &Operator<T>) -> &'a mut Self {
         self.quantity = Some(Box::new(quantity.clone()));
         self
     }

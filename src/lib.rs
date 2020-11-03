@@ -61,22 +61,22 @@ pub struct ExpectedVal<T> {
 /// 制御項目。  
 #[derive(Clone)]
 pub enum Controls<T> {
-    Once(OrOperator<T>),
+    Once(Operator<T>),
     Repeat(RepeatVal<T>),
 }
 /// OR operator.  
 /// OR演算子(||)で、条件式をつないでいることに相当します。  
 #[derive(Clone)]
-pub enum OrOperator<T> {
+pub enum Operator<T> {
     /// １つしかなければ、これが簡便。  
     One(Condition<T>),
     /// This is for multinomial operators.  
     /// 多項演算子にするならこれ。どれか１つでもマッチすれば、マッチ。  
     ///
     /// WIP. Anyがシーケンスに並んでいるときは、 Actual のカーソルを進めずにパターンマッチしてほしい。  
-    /// マッチしたら、後ろの Any は全て飛ばして欲しい。 すると Actual[1]のAny と Actual[2]のAny の切れ目がいるか？  
-    /// Any はリストにするか？
-    Any(OrOperandsVal<T>),
+    /// マッチしたら、後ろの Or は全て飛ばして欲しい。 すると Actual[1]のAny と Actual[2]のAny の切れ目がいるか？  
+    /// Or はリストにするか？
+    Or(OrOperandsVal<T>),
 }
 /// Condition. Logical operator not included.  
 /// 条件式。この並びに論理演算子は含みません。  
@@ -105,23 +105,23 @@ pub struct RangeIncludesMaxVal<T> {
 }
 
 pub struct OrOperandsBuilder<T> {
-    operands: Vec<Condition<T>>,
+    conditions: Vec<Condition<T>>,
 }
 
 #[derive(Clone)]
 pub struct OrOperandsVal<T> {
-    operands: Vec<Condition<T>>,
+    conditions: Vec<Condition<T>>,
 }
 
 pub struct Repeat<T> {
-    quantity: Option<Box<OrOperator<T>>>,
+    quantity: Option<Box<Operator<T>>>,
     min: usize,
     max_not_included: usize,
 }
 
 #[derive(Clone)]
 pub struct RepeatVal<T> {
-    quantity: Box<OrOperator<T>>,
+    quantity: Box<Operator<T>>,
     min: usize,
     max_not_included: usize,
 }
