@@ -1,8 +1,8 @@
 extern crate rattle_items_match;
 
 use rattle_items_match::{
-    Actual, AnyBuilder, Controls as Co, Element as El, ExpectedBuilder, MachineBuilder,
-    Quantity as Qu, RangeIncludesMaxBuilder, RepeatBuilder,
+    Actual, AnyBuilder, Controls as Co, Element as El, ExpectedBuilder, Machine, Quantity as Qu,
+    RangeIncludesMaxBuilder, RepeatBuilder,
 };
 
 fn main() {
@@ -135,57 +135,57 @@ fn main() {
         ))
         .build();
 
-    assert!(MachineBuilder::default()
+    assert!(Machine::default()
         .set_actual(&ac1_ssss1)
         .set_expected(&ex1_wsss1)
         .build()
         .matching());
-    assert!(MachineBuilder::default()
+    assert!(Machine::default()
         .set_actual(&ac2_tsss1)
         .set_expected(&ex1_wsss1)
         .build()
         .matching());
-    assert!(!MachineBuilder::default()
+    assert!(!Machine::default()
         .set_actual(&ac3_xsss1)
         .set_expected(&ex1_wsss1)
         .build()
         .matching());
-    assert!(MachineBuilder::default()
+    assert!(Machine::default()
         .set_actual(&ac1_ssss1)
         .set_expected(&ex2_ws1max)
         .build()
         .matching());
-    assert!(!MachineBuilder::default()
+    assert!(!Machine::default()
         .set_actual(&ac1_ssss1)
         .set_expected(&ex3_ws5max)
         .build()
         .matching());
-    assert!(!MachineBuilder::default()
+    assert!(!Machine::default()
         .set_actual(&ac1_ssss1)
         .set_expected(&ex4_ws03)
         .build()
         .matching());
-    assert!(MachineBuilder::default()
+    assert!(Machine::default()
         .set_actual(&ac1_ssss1)
         .set_expected(&ex5_ws1max)
         .build()
         .matching());
-    assert!(MachineBuilder::default()
+    assert!(Machine::default()
         .set_actual(&ac4_a)
         .set_expected(&ex6_alpha)
         .build()
         .matching());
-    assert!(MachineBuilder::default()
+    assert!(Machine::default()
         .set_actual(&ac5_bc)
         .set_expected(&ex7_alpha1to3)
         .build()
         .matching());
-    assert!(MachineBuilder::default()
+    assert!(Machine::default()
         .set_actual(&ac6_de)
         .set_expected(&ex7_alpha1to3)
         .build()
         .matching());
-    assert!(MachineBuilder::default()
+    assert!(Machine::default()
         .set_actual(&ac7_fgh)
         .set_expected(&ex8_alpha1to_max)
         .build()

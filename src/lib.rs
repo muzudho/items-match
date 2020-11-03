@@ -20,14 +20,12 @@ pub mod any_builder;
 pub mod expected;
 pub mod expected_builder;
 pub mod machine;
-pub mod machine_builder;
-pub mod machine_state;
 pub mod range_contains_max;
 pub mod range_contains_max_builder;
 pub mod repeat;
 pub mod repeat_builder;
 
-pub struct MachineBuilder<T> {
+pub struct Machine<T> {
     actual: Option<ActualVal<T>>,
     expected: Option<Expected<T>>,
 }
@@ -39,7 +37,7 @@ pub struct MachineState {
     matched_length_in_repeat: usize,
 }
 
-pub struct Machine<T> {
+pub struct MachineVal<T> {
     actual: ActualVal<T>,
     expected: Expected<T>,
 }

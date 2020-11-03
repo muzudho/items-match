@@ -1,11 +1,48 @@
+use crate::ActualVal;
 use crate::Any;
+use crate::Expected;
+use crate::Machine;
 use crate::MachineState;
 use crate::MatchingResult;
 use crate::RangeIncludesMax;
-use crate::{Controls, Element, Machine, Quantity};
-// use std::fmt;
+use crate::{Controls, Element, MachineVal, Quantity};
+
+impl<T> Default for Machine<T>
+where
+    T: std::clone::Clone,
+{
+    fn default() -> Self {
+        Machine {
+            actual: None,
+            expected: None,
+        }
+    }
+}
 
 impl<T> Machine<T>
+where
+    T: std::clone::Clone,
+{
+    //! Create `MachineVal`.  
+    //! `MachineVal` を作成します。  
+    pub fn build(&self) -> MachineVal<T> {
+        MachineVal {
+            actual: self.actual.clone().unwrap(),
+            expected: self.expected.clone().unwrap(),
+        }
+    }
+
+    pub fn set_actual<'a>(&'a mut self, item: &ActualVal<T>) -> &'a mut Self {
+        self.actual = Some(item.clone());
+        self
+    }
+    pub fn set_expected<'a>(&'a mut self, item: &Expected<T>) -> &'a mut Self {
+        self.expected = Some(item.clone());
+        self
+    }
+}
+
+impl<T> MachineVal<T>
 where
     T: std::cmp::PartialEq + std::cmp::PartialOrd,
 {
@@ -207,7 +244,7 @@ where
     }
 }
 /*
-impl<T> fmt::Display for Machine<T> {
+impl<T> fmt::Display for MachineVal<T> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let mut buf = String::new();
         buf.push_str(&format!("actual_index={} ", self.actual_index));
@@ -219,7 +256,7 @@ impl<T> fmt::Display for Machine<T> {
         write!(f, "{}", buf)
     }
 }
-impl<T> fmt::Debug for Machine<T> {
+impl<T> fmt::Debug for MachineVal<T> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let mut buf = String::new();
         buf.push_str(&format!("actual_index={} ", self.actual_index));
@@ -232,3 +269,14 @@ impl<T> fmt::Debug for Machine<T> {
     }
 }
 */
+
+impl Default for MachineState {
+    fn default() -> Self {
+        MachineState {
+            actual_index: 0,
+            expected_index: 0,
+            is_final: false,
+            matched_length_in_repeat: 0,
+        }
+    }
+}

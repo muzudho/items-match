@@ -32,7 +32,7 @@ You can think that you can't do anything that isn't written here.
 extern crate rattle_items_match;
 
 use rattle_items_match::Element;
-use rattle_items_match::MachineBuilder;
+use rattle_items_match::Machine;
 use rattle_items_match::Quantity;
 use rattle_items_match::RangeIncludesMaxBuilder;
 use rattle_items_match::{
@@ -175,57 +175,57 @@ fn main() {
         ))
         .build();
 
-    assert!(MachineBuilder::default()
+    assert!(Machine::default()
         .set_actual(&act1_ssss1)
         .set_expected(&expected1_wsss1)
         .build()
         .matching());
-    assert!(MachineBuilder::default()
+    assert!(Machine::default()
         .set_actual(&act2_tsss1)
         .set_expected(&expected1_wsss1)
         .build()
         .matching());
-    assert!(!MachineBuilder::default()
+    assert!(!Machine::default()
         .set_actual(&act3_xsss1)
         .set_expected(&expected1_wsss1)
         .build()
         .matching());
-    assert!(MachineBuilder::default()
+    assert!(Machine::default()
         .set_actual(&act1_ssss1)
         .set_expected(&expected2_ws1max)
         .build()
         .matching());
-    assert!(!MachineBuilder::default()
+    assert!(!Machine::default()
         .set_actual(&act1_ssss1)
         .set_expected(&expected3_ws5max)
         .build()
         .matching());
-    assert!(!MachineBuilder::default()
+    assert!(!Machine::default()
         .set_actual(&act1_ssss1)
         .set_expected(&expected4_ws03)
         .build()
         .matching());
-    assert!(MachineBuilder::default()
+    assert!(Machine::default()
         .set_actual(&act1_ssss1)
         .set_expected(&expected5_ws1max)
         .build()
         .matching());
-    assert!(MachineBuilder::default()
+    assert!(Machine::default()
         .set_actual(&act4_a)
         .set_expected(&expected6_alpha)
         .build()
         .matching());
-    assert!(MachineBuilder::default()
+    assert!(Machine::default()
         .set_actual(&act5_bc)
         .set_expected(&expected7_alpha1to3)
         .build()
         .matching());
-    assert!(MachineBuilder::default()
+    assert!(Machine::default()
         .set_actual(&act6_de)
         .set_expected(&expected7_alpha1to3)
         .build()
         .matching());
-    assert!(MachineBuilder::default()
+    assert!(Machine::default()
         .set_actual(&act7_fgh)
         .set_expected(&expected8_alpha1to_max)
         .build()
