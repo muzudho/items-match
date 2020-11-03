@@ -1,7 +1,7 @@
 extern crate rattle_items_match;
 
 use rattle_items_match::{
-    Actual, Any, Controls as Co, Element as El, Expected, Machine as Ma, Quantity as Qu,
+    Actual, Any, Controls as Co, Expected, Machine as Ma, Operand as Nd, Quantity as Qu,
     RangeIncludesMax, Repeat,
 };
 
@@ -38,35 +38,68 @@ fn main() {
     let ac6 = Actual::default().push(&'d').push(&'e').build(); // 'de'
     let ac7 = Actual::default().push(&'f').push(&'g').push(&'h').build(); // 'fgh'
     let ac8 = Actual::default().push(&'\r').push(&'\n').build(); // "\r\n"
+    let ac9 = Actual::default() // '# Comment.'
+        .push(&'#')
+        .push(&' ')
+        .push(&'C')
+        .push(&'o')
+        .push(&'m')
+        .push(&'m')
+        .push(&'e')
+        .push(&'n')
+        .push(&'t')
+        .push(&'.')
+        .build();
 
     // Whitespace characters.
     let wschar = Any::default()
-        .push(&El::Pin('\t'))
-        .push(&El::Pin(' '))
+        .push(&Nd::Pin('\t'))
+        .push(&Nd::Pin(' '))
         .build();
 
     // Newline.
     let newline = Any::default()
-        .push(&El::Pin('\n')) // LF
-        .push(&El::Seq(vec!['\r', '\n'])) // CR LF
+        .push(&Nd::Pin('\n')) // LF
+        .push(&Nd::Seq(vec!['\r', '\n'])) // CR LF
         .build();
 
     // Digit.
     let digit = RangeIncludesMax::default().min(&'0').max(&'9').build();
     // Alphabet.
-    let upper_case = El::RangeIncludesMax(RangeIncludesMax::default().min(&'A').max(&'Z').build());
-    let lower_case = El::RangeIncludesMax(RangeIncludesMax::default().min(&'a').max(&'z').build());
+    let upper_case = Nd::RangeIncludesMax(RangeIncludesMax::default().min(&'A').max(&'Z').build());
+    let lower_case = Nd::RangeIncludesMax(RangeIncludesMax::default().min(&'a').max(&'z').build());
     let alpha = Any::default().push(&upper_case).push(&lower_case).build();
 
-    // #
-    // TODO let comment_start_symbol = El::Pin('#');
+    let comment_start_symbol = Nd::Pin('#'); // #
+    let non_ascii = Qu::Any(
+        Any::default()
+            .push(&Nd::RangeIncludesMax(
+                RangeIncludesMax::default()
+                    .min(&(0x80 as char))
+                    .max(&'\u{D7FF}')
+                    .build(),
+            ))
+            .build(),
+    );
+    let non_eol = Qu::Any(
+        Any::default()
+            .push(&Nd::Pin(0x09 as char))
+            .push(&Nd::RangeIncludesMax(
+                RangeIncludesMax::default()
+                    .min(&(0x20 as char))
+                    .max(&(0x7F as char))
+                    .build(),
+            ))
+            // TODO push Any
+            .build(),
+    );
 
     let ex1 = Expected::default() // "(wschar)   1"
         .push(&Co::Once(Qu::Any(wschar.clone())))
-        .push(&Co::Once(Qu::One(El::Pin(' '))))
-        .push(&Co::Once(Qu::One(El::Pin(' '))))
-        .push(&Co::Once(Qu::One(El::Pin(' '))))
-        .push(&Co::Once(Qu::One(El::Pin('1'))))
+        .push(&Co::Once(Qu::One(Nd::Pin(' '))))
+        .push(&Co::Once(Qu::One(Nd::Pin(' '))))
+        .push(&Co::Once(Qu::One(Nd::Pin(' '))))
+        .push(&Co::Once(Qu::One(Nd::Pin('1'))))
         .build();
 
     let ex2 = Expected::default() // "+(wschar)"
@@ -77,7 +110,7 @@ fn main() {
                 .max_not_included(usize::MAX)
                 .build(),
         ))
-        .push(&Co::Once(Qu::One(El::Pin('1'))))
+        .push(&Co::Once(Qu::One(Nd::Pin('1'))))
         .build();
     let ex3 = Expected::default() // "(wschar){5,}"
         .push(&Co::Repeat(
@@ -87,7 +120,7 @@ fn main() {
                 .max_not_included(usize::MAX)
                 .build(),
         ))
-        .push(&Co::Once(Qu::One(El::Pin('1'))))
+        .push(&Co::Once(Qu::One(Nd::Pin('1'))))
         .build();
     let ex4 = Expected::default() // "(wschar){0,3}"
         .push(&Co::Repeat(
@@ -97,7 +130,7 @@ fn main() {
                 .max_not_included(3)
                 .build(),
         ))
-        .push(&Co::Once(Qu::One(El::Pin('1'))))
+        .push(&Co::Once(Qu::One(Nd::Pin('1'))))
         .build();
     let ex5 = Expected::default() // "(wschar){1,}"
         .push(&Co::Repeat(
@@ -107,7 +140,7 @@ fn main() {
                 .max_not_included(usize::MAX)
                 .build(),
         ))
-        .push(&Co::Once(Qu::One(El::RangeIncludesMax(digit))))
+        .push(&Co::Once(Qu::One(Nd::RangeIncludesMax(digit))))
         .build();
     let ex6 = Expected::default() // "(alpha)"
         .push(&Co::Once(Qu::Any(alpha.clone())))
@@ -133,6 +166,16 @@ fn main() {
     let ex9 = Expected::default() // "(newline)"
         .push(&Co::Once(Qu::Any(newline.clone())))
         .build();
+    let comment = Expected::default() // "# Comment."
+        .push(&Co::Once(Qu::One(comment_start_symbol)))
+        .push(&Co::Repeat(
+            Repeat::default()
+                .quantity(&non_eol)
+                .min(0)
+                .max_not_included(usize::MAX)
+                .build(),
+        ))
+        .build();
 
     assert!(Ma::default().actual(&ac1).expected(&ex1).build().exec());
     assert!(Ma::default().actual(&ac2).expected(&ex1).build().exec());
@@ -146,5 +189,6 @@ fn main() {
     assert!(Ma::default().actual(&ac6).expected(&ex7).build().exec());
     assert!(Ma::default().actual(&ac7).expected(&ex8).build().exec());
     assert!(Ma::default().actual(&ac8).expected(&ex9).build().exec());
+    assert!(Ma::default().actual(&ac9).expected(&comment).build().exec());
     println!("Finished.");
 }

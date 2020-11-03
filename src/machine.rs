@@ -5,7 +5,7 @@ use crate::Machine;
 use crate::MachineState;
 use crate::MatchingResult;
 use crate::RangeIncludesMaxVal;
-use crate::{Controls, Element, MachineVal, Quantity};
+use crate::{Controls, MachineVal, Operand, Quantity};
 
 impl<T> Default for Machine<T>
 where
@@ -195,13 +195,13 @@ where
     {
         for exp in &any.items {
             match exp {
-                Element::Pin(exa) => {
+                Operand::Pin(exa) => {
                     if *exa == *act {
                         // println!("(trace.138) matching_any/matched.");
                         return MatchingResult::Matched;
                     }
                 }
-                Element::RangeIncludesMax(rng) => {
+                Operand::RangeIncludesMax(rng) => {
                     match self.matching5_range_contains_max(act, rng) {
                         MatchingResult::Matched => {
                             // println!("(trace.138) matching_any/rng/matched.");
@@ -217,7 +217,7 @@ where
                         }
                     }
                 }
-                Element::Seq(vec) => {
+                Operand::Seq(vec) => {
                     return self.matching5_seq(machine_state, act, vec);
                 }
             }
@@ -229,13 +229,13 @@ where
         &self,
         machine_state: &mut MachineState,
         act: &T,
-        exp: &Element<T>,
+        exp: &Operand<T>,
     ) -> MatchingResult
     where
         T: std::cmp::PartialEq + std::cmp::PartialOrd,
     {
         match exp {
-            Element::Pin(exa) => {
+            Operand::Pin(exa) => {
                 if *exa == *act {
                     // println!("(trace.72)");
                     MatchingResult::Matched
@@ -244,10 +244,10 @@ where
                     MatchingResult::NotMatch
                 }
             }
-            Element::RangeIncludesMax(rng) => {
+            Operand::RangeIncludesMax(rng) => {
                 return self.matching5_range_contains_max(act, rng);
             }
-            Element::Seq(vec) => {
+            Operand::Seq(vec) => {
                 return self.matching5_seq(machine_state, act, vec);
             }
         }

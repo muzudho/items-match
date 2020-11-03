@@ -1,6 +1,6 @@
 //! Create `Any`.  
 //! `Any` を作成します。  
-use crate::Element;
+use crate::Operand;
 use crate::{Any, AnyVal};
 
 impl<T> Default for Any<T>
@@ -29,7 +29,7 @@ where
 
     /// Set the number of items to read ahead.  
     /// 先読みする項目数を設定します。  
-    pub fn push<'a>(&'a mut self, item: &Element<T>) -> &'a mut Self {
+    pub fn push<'a>(&'a mut self, item: &Operand<T>) -> &'a mut Self {
         self.items.push(item.clone());
         self
     }

@@ -18,7 +18,7 @@ pub mod actual;
 pub mod any;
 pub mod expected;
 pub mod machine;
-pub mod range_contains_max;
+pub mod range_includes_max;
 pub mod repeat;
 
 pub struct Machine<T> {
@@ -68,13 +68,13 @@ pub enum Controls<T> {
 /// 量。  
 #[derive(Clone)]
 pub enum Quantity<T> {
-    One(Element<T>),
+    One(Operand<T>),
     Any(AnyVal<T>),
 }
-/// Element.
-/// 期待値。
+/// Operand. Logical operator not included.  
+/// 項。論理演算子は含みません。  
 #[derive(Clone)]
-pub enum Element<T> {
+pub enum Operand<T> {
     /// 1つだけのもの。  
     Pin(T),
     /// Sequence.  
@@ -98,12 +98,12 @@ pub struct RangeIncludesMaxVal<T> {
 }
 
 pub struct Any<T> {
-    items: Vec<Element<T>>,
+    items: Vec<Operand<T>>,
 }
 
 #[derive(Clone)]
 pub struct AnyVal<T> {
-    items: Vec<Element<T>>,
+    items: Vec<Operand<T>>,
 }
 
 pub struct Repeat<T> {
