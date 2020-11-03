@@ -203,15 +203,6 @@ where
                         MatchingResult::NotMatch => {} // 続行。
                     }
                 }
-                OrOperand::Els(els) => {
-                    for el in els {
-                        match self.matching4_el(machine_state, act, el) {
-                            MatchingResult::Matched => return MatchingResult::Matched,
-                            MatchingResult::Ongoing => return MatchingResult::Ongoing,
-                            MatchingResult::NotMatch => {} // 続行。
-                        }
-                    }
-                }
             }
         }
         // println!("(trace.67) Anyでぜんぶ不一致。");
@@ -248,9 +239,6 @@ where
         match nd {
             OrOperand::El(el) => {
                 return self.matching4_el(machine_state, act, el);
-            }
-            OrOperand::Els(_els) => {
-                panic!("Quanty::Oneで 多項なのはおかしい。"); // TODO
             }
         }
     }

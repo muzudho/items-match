@@ -85,9 +85,6 @@ pub enum OrOperand<T> {
     /// This is the unary operator.  
     /// 単項演算子にするならこれ。  
     El(Element<T>),
-    /// WIP.  
-    /// 開発中。   
-    Els(Vec<Element<T>>),
 }
 
 #[derive(Clone)]
