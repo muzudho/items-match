@@ -60,7 +60,11 @@ where
             }
 
             // TODO expected_index カーソルを勧めるのはあとで。
-            if let Some(mut exp) = self.expected.get(machine_state.expected_index) {
+            if let Some(mut exp) = self
+                .expected
+                .get_routine()
+                .get_control(machine_state.expected_index)
+            {
                 match self.matching2(&mut machine_state, act, &mut exp) {
                     MatchingResult::Matched => {
                         // println!("(trace.30) マッチしたという判断。ループ続行。");

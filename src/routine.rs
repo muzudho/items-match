@@ -51,3 +51,13 @@ impl<T> Default for Routine<T> {
         }
     }
 }
+
+impl<T> Routine<T> {
+    pub fn get_control(&self, index: usize) -> Option<&Control<T>> {
+        if index < self.controls.len() {
+            Some(&self.controls[index])
+        } else {
+            None
+        }
+    }
+}

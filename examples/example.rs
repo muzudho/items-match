@@ -3,6 +3,7 @@ extern crate rattle_items_match;
 use rattle_items_match::{
     ActualBuilder as Actual, Condition as Cnd, ConditionsBuilder as Cnds, Control as Co,
     ExpectedBuilder as Expected, MachineBuilder as Ma, Operator as Op, RangeIncludesMax, Repeat,
+    RoutineBuilder as Ro,
 };
 
 fn main() {
@@ -121,14 +122,18 @@ fn main() {
     // 41 comment = comment-start-symbol *non-eol
     // TODO これを条件文として持てないか？ Control を持つ Routine レイヤーを作るか？
     let comment = Expected::default() // "# Comment."
-        .push(&Co::Once(Op::One(comment_start_symbol)))
-        .push(&Co::Repeat(
-            Repeat::default()
-                .op(&non_eol)
-                .min(0)
-                .max_not_included(usize::MAX)
+        .routine(
+            &Ro::default()
+                .push(&Co::Once(Op::One(comment_start_symbol)))
+                .push(&Co::Repeat(
+                    Repeat::default()
+                        .op(&non_eol)
+                        .min(0)
+                        .max_not_included(usize::MAX)
+                        .build(),
+                ))
                 .build(),
-        ))
+        )
         .build();
 
     // Digit.
@@ -139,92 +144,133 @@ fn main() {
     let alpha = Cnds::default().push(&upper_case).push(&lower_case).build();
 
     let ex1 = Expected::default() // "(wschar)   1"
-        .push(&Co::Once(Op::Or(wschar.clone())))
-        .push(&Co::Once(Op::One(Cnd::Pin(' '))))
-        .push(&Co::Once(Op::One(Cnd::Pin(' '))))
-        .push(&Co::Once(Op::One(Cnd::Pin(' '))))
-        .push(&Co::Once(Op::One(Cnd::Pin('1'))))
+        .routine(
+            &Ro::default()
+                .push(&Co::Once(Op::Or(wschar.clone())))
+                .push(&Co::Once(Op::One(Cnd::Pin(' '))))
+                .push(&Co::Once(Op::One(Cnd::Pin(' '))))
+                .push(&Co::Once(Op::One(Cnd::Pin(' '))))
+                .push(&Co::Once(Op::One(Cnd::Pin('1'))))
+                .build(),
+        )
         .build();
 
     let ex2 = Expected::default() // "+(wschar)"
-        .push(&Co::Repeat(
-            Repeat::default()
-                .op(&Op::Or(wschar.clone()))
-                .min(1)
-                .max_not_included(usize::MAX)
+        .routine(
+            &Ro::default()
+                .push(&Co::Repeat(
+                    Repeat::default()
+                        .op(&Op::Or(wschar.clone()))
+                        .min(1)
+                        .max_not_included(usize::MAX)
+                        .build(),
+                ))
+                .push(&Co::Once(Op::One(Cnd::Pin('1'))))
                 .build(),
-        ))
-        .push(&Co::Once(Op::One(Cnd::Pin('1'))))
+        )
         .build();
+
     let ex3 = Expected::default() // "(wschar){5,}"
-        .push(&Co::Repeat(
-            Repeat::default()
-                .op(&Op::Or(wschar.clone()))
-                .min(5)
-                .max_not_included(usize::MAX)
+        .routine(
+            &Ro::default()
+                .push(&Co::Repeat(
+                    Repeat::default()
+                        .op(&Op::Or(wschar.clone()))
+                        .min(5)
+                        .max_not_included(usize::MAX)
+                        .build(),
+                ))
+                .push(&Co::Once(Op::One(Cnd::Pin('1'))))
                 .build(),
-        ))
-        .push(&Co::Once(Op::One(Cnd::Pin('1'))))
+        )
         .build();
+
     let ex4 = Expected::default() // "(wschar){0,3}"
-        .push(&Co::Repeat(
-            Repeat::default()
-                .op(&Op::Or(wschar.clone()))
-                .min(0)
-                .max_not_included(3)
+        .routine(
+            &Ro::default()
+                .push(&Co::Repeat(
+                    Repeat::default()
+                        .op(&Op::Or(wschar.clone()))
+                        .min(0)
+                        .max_not_included(3)
+                        .build(),
+                ))
+                .push(&Co::Once(Op::One(Cnd::Pin('1'))))
                 .build(),
-        ))
-        .push(&Co::Once(Op::One(Cnd::Pin('1'))))
+        )
         .build();
     let ex5 = Expected::default() // "(wschar){1,}"
-        .push(&Co::Repeat(
-            Repeat::default()
-                .op(&Op::Or(wschar.clone()))
-                .min(1)
-                .max_not_included(usize::MAX)
+        .routine(
+            &Ro::default()
+                .push(&Co::Repeat(
+                    Repeat::default()
+                        .op(&Op::Or(wschar.clone()))
+                        .min(1)
+                        .max_not_included(usize::MAX)
+                        .build(),
+                ))
+                .push(&Co::Once(Op::One(digit.clone())))
                 .build(),
-        ))
-        .push(&Co::Once(Op::One(digit.clone())))
+        )
         .build();
     let ex6 = Expected::default() // "(alpha)"
-        .push(&Co::Once(Op::Or(alpha.clone())))
+        .routine(&Ro::default().push(&Co::Once(Op::Or(alpha.clone()))).build())
         .build();
     let ex7 = Expected::default() // "(alpha){1,3}"
-        .push(&Co::Repeat(
-            Repeat::default()
-                .op(&Op::Or(alpha.clone()))
-                .min(1)
-                .max_not_included(3)
-                .build(),
-        ))
-        .build();
-    let ex8 = Expected::default() // "(alpha){1,}"
-        .push(&Co::Repeat(
-            Repeat::default()
-                .op(&Op::Or(alpha.clone()))
-                .min(1)
-                .max_not_included(usize::MAX)
-                .build(),
-        ))
-        .build();
-    let ex9 = Expected::default() // "(newline)"
-        .push(&Co::Once(Op::Or(newline.clone())))
-        .build();
-    let unquoted_key = Expected::default() // 'No-1_0' - Unquloted key.
-        .push(&Co::Repeat(
-            Repeat::default()
-                .min(1)
-                .max_not_included(usize::MAX)
-                .op(&Op::Or(
-                    Cnds::default()
-                        .extend(&alpha) // A-Z, a-z.
-                        .push(&digit) // 0-9.
-                        .push(&Cnd::Pin(0x2D as char)) // -
-                        .push(&Cnd::Pin(0x5F as char)) // _
+        .routine(
+            &Ro::default()
+                .push(&Co::Repeat(
+                    Repeat::default()
+                        .op(&Op::Or(alpha.clone()))
+                        .min(1)
+                        .max_not_included(3)
                         .build(),
                 ))
                 .build(),
-        ))
+        )
+        .build();
+
+    let ex8 = Expected::default() // "(alpha){1,}"
+        .routine(
+            &Ro::default()
+                .push(&Co::Repeat(
+                    Repeat::default()
+                        .op(&Op::Or(alpha.clone()))
+                        .min(1)
+                        .max_not_included(usize::MAX)
+                        .build(),
+                ))
+                .build(),
+        )
+        .build();
+
+    let ex9 = Expected::default() // "(newline)"
+        .routine(
+            &Ro::default()
+                .push(&Co::Once(Op::Or(newline.clone())))
+                .build(),
+        )
+        .build();
+
+    let unquoted_key = Expected::default() // 'No-1_0' - Unquloted key.
+        .routine(
+            &Ro::default()
+                .push(&Co::Repeat(
+                    Repeat::default()
+                        .min(1)
+                        .max_not_included(usize::MAX)
+                        .op(&Op::Or(
+                            Cnds::default()
+                                .extend(&alpha) // A-Z, a-z.
+                                .push(&digit) // 0-9.
+                                .push(&Cnd::Pin(0x2D as char)) // -
+                                .push(&Cnd::Pin(0x5F as char)) // _
+                                .build(),
+                        ))
+                        .build(),
+                ))
+                .build(),
+        )
         .build();
 
     assert!(Ma::default().actual(&ac1).expected(&ex1).build().exec());

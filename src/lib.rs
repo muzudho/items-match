@@ -50,14 +50,12 @@ pub struct ActualVal<T> {
 }
 
 pub struct ExpectedBuilder<T> {
-    items: Vec<Control<T>>,
-    // TODO routine: Routine<T>,
+    routine: Routine<T>,
 }
 
 #[derive(Clone)]
 pub struct ExpectedVal<T> {
-    items: Vec<Control<T>>,
-    // TODO routine: Routine<T>,
+    routine: Routine<T>,
 }
 
 pub struct RoutineBuilder<T> {

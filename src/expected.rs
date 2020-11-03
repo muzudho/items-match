@@ -1,13 +1,15 @@
 //! Create `ExpectedVal`.  
 //! `ExpectedVal` を作成します。  
-use crate::{Control, ExpectedBuilder, ExpectedVal};
+use crate::{ExpectedBuilder, ExpectedVal, Routine};
 
 impl<T> Default for ExpectedBuilder<T>
 where
     T: std::clone::Clone,
 {
     fn default() -> Self {
-        ExpectedBuilder { items: Vec::new() }
+        ExpectedBuilder {
+            routine: Routine::default(),
+        }
     }
 }
 
@@ -22,30 +24,28 @@ where
         T: std::clone::Clone,
     {
         ExpectedVal {
-            items: self.items.clone(),
+            routine: self.routine.clone(),
         }
     }
 
-    /// Push the comtrol.  
-    /// 制御を追加します。  
-    pub fn push<'a>(&'a mut self, item: &Control<T>) -> &'a mut Self {
-        self.items.push(item.clone());
+    /// Set a routine.  
+    /// ルーチンを設定します。  
+    pub fn routine<'a>(&'a mut self, ro: &Routine<T>) -> &'a mut Self {
+        self.routine = ro.clone();
         self
     }
 }
 
 impl<T> Default for ExpectedVal<T> {
     fn default() -> Self {
-        ExpectedVal { items: Vec::new() }
+        ExpectedVal {
+            routine: Routine::default(),
+        }
     }
 }
 
 impl<T> ExpectedVal<T> {
-    pub fn get(&self, index: usize) -> Option<&Control<T>> {
-        if index < self.items.len() {
-            Some(&self.items[index])
-        } else {
-            None
-        }
+    pub fn get_routine(&self) -> &Routine<T> {
+        &self.routine
     }
 }
